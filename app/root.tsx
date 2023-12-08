@@ -4,6 +4,7 @@ import {
   Links,
   LiveReload,
   Meta,
+  NavLink,
   Outlet,
   Scripts,
   ScrollRestoration,
@@ -23,7 +24,15 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <Outlet />
+        <div id="sidebar">
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <NavLink to="/characters">Characters</NavLink>
+            <NavLink to="/npcs">Npcs</NavLink>
+            <NavLink to="/items">Items</NavLink>
+          </div>
+          <Outlet />
+        </div>
+
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
