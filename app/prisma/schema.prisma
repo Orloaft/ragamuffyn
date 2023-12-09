@@ -25,4 +25,5 @@ model item {
    id      Int     @id @default(autoincrement())
   name    String?
   description  String?
+  icon    String?
 }

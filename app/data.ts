@@ -15,6 +15,7 @@ export interface Item {
   id?: number;
   name?: string;
   description?: string;
+  icon?: string;
 }
 export interface NPC {
   id?: number;
@@ -50,7 +51,7 @@ export async function getData<T extends character | item | npc>(
 export async function getCharacters(
   query?: string | null
 ): Promise<Character[]> {
-  return getData<Character>("character", query, "level");
+  return getData<Character>("character", query, "name");
 }
 
 export async function getItems(query?: string | null): Promise<Item[]> {

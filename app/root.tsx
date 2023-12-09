@@ -1,4 +1,3 @@
-import { cssBundleHref } from "@remix-run/css-bundle";
 import type { LinksFunction } from "@remix-run/node";
 import {
   Links,
@@ -11,7 +10,8 @@ import {
 } from "@remix-run/react";
 
 export const links: LinksFunction = () => [
-  ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
+  { href: "/RPGUI/dist/rpgui.css", rel: "stylesheet" },
+  { rel: "script", href: "/RPGUI/dist/rpgui.js" },
 ];
 
 export default function App() {
@@ -23,7 +23,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="rpgui-content rpgui-container framed-golden">
         <div id="sidebar">
           <div style={{ display: "flex", flexDirection: "column" }}>
             <NavLink to="/characters">Characters</NavLink>

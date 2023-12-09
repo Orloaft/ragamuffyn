@@ -18,8 +18,12 @@ export default function EditContact() {
   const { item } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
   return (
-    <Form id="contact-form" method="post">
-      <p>
+    <Form
+      id="contact-form"
+      method="post"
+      style={{ display: "flex", justifyContent: "center" }}
+    >
+      <div style={{ display: "flex", flexDirection: "column" }}>
         <span>Name</span>
         <input
           defaultValue={item.name}
@@ -28,6 +32,7 @@ export default function EditContact() {
           type="text"
           placeholder="name"
         />
+        <span>Description</span>
         <input
           aria-label="description"
           defaultValue={item.description}
@@ -35,19 +40,29 @@ export default function EditContact() {
           placeholder="description"
           type="text"
         />
-      </p>
 
-      <p>
-        <button type="submit">Save</button>
-        <button
-          onClick={() => {
-            navigate(-1);
-          }}
-          type="button"
-        >
-          Cancel
-        </button>
-      </p>
+        <select name="icon" id="iconSelect">
+          <option value="sword" className="sword">
+            Sword
+          </option>
+          <option value="shield-slot">Shield</option>
+          <option value="exclamation">Exclamation</option>
+          <option value="potion-red">Red Potion</option>
+          <option value="potion-green">Green Potion</option>
+          <option value="potion-blue">Blue Potion</option>
+        </select>
+        <p>
+          <button type="submit">Save</button>
+          <button
+            onClick={() => {
+              navigate(-1);
+            }}
+            type="button"
+          >
+            Cancel
+          </button>
+        </p>
+      </div>
     </Form>
   );
 }

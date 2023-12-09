@@ -16,23 +16,36 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 export default function Index() {
   const { npc } = useLoaderData<typeof loader>();
   return (
-    <>
-      {npc.name} {npc.bio}
-      <Form
-        action="destroy"
-        method="post"
-        onSubmit={(event) => {
-          const response = confirm(
-            "Please confirm you want to delete this record."
-          );
-          if (!response) {
-            event.preventDefault();
-          }
-        }}
-      >
-        <button type="submit">Delete</button>
-        <NavLink to={`/npcs/${npc.id}/edit`}>edit</NavLink>
-      </Form>
-    </>
+    <div
+      style={{
+        display: "flex",
+
+        justifyContent: "center",
+      }}
+    >
+      {" "}
+      <div className="rpgui-container">
+        {npc.name} {npc.bio}
+        <Form
+          action="destroy"
+          method="post"
+          onSubmit={(event) => {
+            const response = confirm(
+              "Please confirm you want to delete this record."
+            );
+            if (!response) {
+              event.preventDefault();
+            }
+          }}
+        >
+          <button type="submit" className="rpgui-button">
+            Delete
+          </button>
+          <NavLink to={`/npcs/${npc.id}/edit`} style={{ marginLeft: "5rem" }}>
+            edit
+          </NavLink>
+        </Form>
+      </div>
+    </div>
   );
 }

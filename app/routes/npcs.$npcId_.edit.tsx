@@ -18,8 +18,12 @@ export default function EditContact() {
   const { npc } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
   return (
-    <Form id="contact-form" method="post">
-      <p>
+    <Form
+      id="contact-form"
+      method="post"
+      style={{ display: "flex", justifyContent: "center" }}
+    >
+      <div style={{ display: "flex", flexDirection: "column" }}>
         <span>Name</span>
         <input
           defaultValue={npc.name}
@@ -35,19 +39,18 @@ export default function EditContact() {
           placeholder="bio"
           type="text"
         />
-      </p>
-
-      <p>
-        <button type="submit">Save</button>
-        <button
-          onClick={() => {
-            navigate(-1);
-          }}
-          type="button"
-        >
-          Cancel
-        </button>
-      </p>
+        <div>
+          <button type="submit">Save</button>
+          <button
+            onClick={() => {
+              navigate(-1);
+            }}
+            type="button"
+          >
+            Cancel
+          </button>
+        </div>{" "}
+      </div>
     </Form>
   );
 }
