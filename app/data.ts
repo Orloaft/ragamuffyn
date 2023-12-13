@@ -23,6 +23,11 @@ export interface NPC {
   race?: string;
   bio?: string;
 }
+export interface Campaign {
+  id?: number;
+  name?: string;
+  data?: string;
+}
 const prisma = new PrismaClient();
 
 // Define a mapping from model names to Prisma client methods
@@ -30,6 +35,7 @@ const modelAccessors = {
   character: prisma.character,
   item: prisma.item,
   npc: prisma.npc,
+  campaign: prisma.campaign,
 };
 
 // A generic function to get data from any model with optional query and sorting
@@ -54,6 +60,10 @@ export async function getCharacters(
   return getData<Character>("character", query, "name");
 }
 
+export async function getCampaigns(query?: string | null): Promise<Campaign[]> {
+  return getData<Campaign>("campaign", query, "name");
+}
+
 export async function getItems(query?: string | null): Promise<Item[]> {
   return getData<Item>("item", query, "name");
 }
@@ -74,8 +84,22 @@ export async function updateNpc(id: number, data: NPC): Promise<NPC> {
   });
 }
 
+export async function updateCampaign(
+  id: number,
+  data: Campaign
+): Promise<Campaign> {
+  return await prisma.campaign.update({
+    where: { id },
+    data,
+  });
+}
 export async function deleteNpc(id: number): Promise<NPC> {
   return await prisma.npc.delete({
+    where: { id },
+  });
+}
+export async function deleteCampaign(id: number): Promise<Campaign> {
+  return await prisma.campaign.delete({
     where: { id },
   });
 }
@@ -84,7 +108,11 @@ export async function createItem(data: Item): Promise<Item> {
     data,
   });
 }
-
+export async function createCampaign(data: Campaign): Promise<Campaign> {
+  return await prisma.campaign.create({
+    data,
+  });
+}
 export async function updateItem(id: number, data: Item): Promise<Item> {
   return await prisma.item.update({
     where: { id },
@@ -106,7 +134,11 @@ export async function getCharacter(id: number): Promise<Character | null> {
     where: { id },
   });
 }
-
+export async function getCampaign(id: number): Promise<Campaign | null> {
+  return await prisma.campaign.findUnique({
+    where: { id },
+  });
+}
 export async function deleteItem(id: number): Promise<Item> {
   return await prisma.item.delete({
     where: { id },

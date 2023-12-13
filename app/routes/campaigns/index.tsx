@@ -10,18 +10,18 @@ import {
 } from "@remix-run/react";
 import { useEffect } from "react";
 
-import { createCharacter, getCharacters } from "~/data";
+import { createCampaign, getCampaigns } from "~/data";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const q = url.searchParams.get("q");
-  const characters = await getCharacters(q);
-  return json({ characters, q });
+  const campaigns = await getCampaigns(q);
+  return json({ campaigns, q });
 };
 export default function Index() {
   const navigation = useNavigation();
 
-  const { characters, q } = useLoaderData<typeof loader>();
+  const { campaigns, q } = useLoaderData<typeof loader>();
   const submit = useSubmit();
   useEffect(() => {
     const searchField = document.getElementById("q");
@@ -35,7 +35,7 @@ export default function Index() {
   return (
     <div>
       <div id="sidebar">
-        <h1>Character list</h1>
+        <h1>Campaign list</h1>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <Form
             id="search-form"
@@ -63,12 +63,12 @@ export default function Index() {
           </Form>
         </div>
         <nav>
-          {characters.length ? (
+          {campaigns.length ? (
             <ul>
-              {characters.map((character: any) => (
-                <li key={character.id}>
-                  <NavLink to={`/characters/${character.id}`}>
-                    {character.name}
+              {campaigns.map((campaign: any) => (
+                <li key={campaign.id}>
+                  <NavLink to={`/campaigns/${campaign.id}`}>
+                    {campaign.name}
                   </NavLink>
                 </li>
               ))}
@@ -93,6 +93,6 @@ export default function Index() {
 export const action = async ({ request }: ActionFunctionArgs) => {
   let data;
 
-  data = await createCharacter({});
-  return redirect(`/characters/${data.id}/edit`);
+  data = await createCampaign({});
+  return redirect(`/campaigns/${data.id}/edit`);
 };

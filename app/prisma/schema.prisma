@@ -27,3 +27,9 @@ model item {
   description  String?
   icon    String?
 }
+
+model campaign {
+   id      Int     @id @default(autoincrement())
+  name    String?
+  data    String?
+}
