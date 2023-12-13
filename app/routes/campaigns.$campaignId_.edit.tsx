@@ -15,7 +15,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   return json({ campaign });
 };
 
-export default function EditContact() {
+export default function EditCampaign() {
   const { campaign } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
   return (

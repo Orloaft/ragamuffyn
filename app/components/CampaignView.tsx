@@ -1,6 +1,7 @@
 import type { character, npc } from "@prisma/client";
 import { useState } from "react";
-import { Encounters } from "./encounters";
+import { Encounters } from "./Encounters";
+import CharacterList from "./CharacterList";
 
 export interface encounter {
   id: number;
@@ -26,7 +27,19 @@ export interface campaignData {
 
 const CampaignView: React.FC<{ data: any }> = ({ data }) => {
   // Set the initial state of the form
-  const [campaign, setCampaign] = useState<campaignData>(data);
+  const [campaign, setCampaign] = useState<campaignData>(
+    data || {
+      name: "",
+      characters: [],
+      hooks: [],
+      maps: [],
+      npcs: [],
+      encounters: [],
+      players: [],
+      plot: "",
+      locations: [],
+    }
+  );
 
   // Handle changes in form fields
   const handleChange = (
@@ -37,14 +50,11 @@ const CampaignView: React.FC<{ data: any }> = ({ data }) => {
   };
 
   // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-  };
 
   return (
     <>
       {" "}
-      <form onSubmit={handleSubmit}>
+      <div>
         <div>
           <label htmlFor="name">Name:</label>
           <input name="name" value={campaign.name} onChange={handleChange} />
@@ -74,7 +84,8 @@ const CampaignView: React.FC<{ data: any }> = ({ data }) => {
           <textarea name="npcs" onChange={handleChange} />
         </div>
         <button type="submit">Submit</button>
-      </form>
+      </div>
+      <CharacterList characters={campaign.characters} />
       <Encounters encounters={campaign.encounters} />
     </>
   );
