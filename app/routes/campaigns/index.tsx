@@ -68,14 +68,14 @@ export default function Index() {
               {campaigns.map((campaign: any) => (
                 <li key={campaign.id}>
                   <NavLink to={`/campaigns/${campaign.id}`}>
-                    {campaign.name}
+                    {JSON.parse(campaign.data).name}
                   </NavLink>
                 </li>
               ))}
             </ul>
           ) : (
             <p>
-              <i>No characters</i>
+              <i>No campaigns</i>
             </p>
           )}
         </nav>
@@ -93,6 +93,18 @@ export default function Index() {
 export const action = async ({ request }: ActionFunctionArgs) => {
   let data;
 
-  data = await createCampaign({});
+  data = await createCampaign({
+    data: JSON.stringify({
+      name: "no name",
+      characters: [],
+      hooks: [],
+      maps: [],
+      npcs: [],
+      encounters: [],
+      players: [],
+      plot: "",
+      locations: [],
+    }),
+  });
   return redirect(`/campaigns/${data.id}/edit`);
 };

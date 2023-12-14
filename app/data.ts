@@ -84,13 +84,11 @@ export async function updateNpc(id: number, data: NPC): Promise<NPC> {
   });
 }
 
-export async function updateCampaign(
-  id: number,
-  data: Campaign
-): Promise<Campaign> {
+export async function updateCampaign(id: number, updates: any): Promise<any> {
+  console.log(updates.data);
   return await prisma.campaign.update({
     where: { id },
-    data,
+    data: { data: updates.data },
   });
 }
 export async function deleteNpc(id: number): Promise<NPC> {

@@ -7,5 +7,5 @@ export const action = async ({ params }: ActionFunctionArgs) => {
   invariant(params.itemId, "Missing itemId param");
 
   await deleteItem(parseInt(params.itemId, 10));
-  return redirect(`/`);
+  return redirect(`/items`);
 };

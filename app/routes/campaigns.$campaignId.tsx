@@ -15,6 +15,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 export default function Index() {
   const { campaign } = useLoaderData<typeof loader>();
+  const data = JSON.parse(campaign.data as string);
   return (
     <div
       style={{
@@ -24,8 +25,8 @@ export default function Index() {
       }}
     >
       <div className="rpgui-container">
-        {campaign.name}
-
+        <span>{data.name}</span>
+        <p>{data.plot}</p>
         <Form
           action="destroy"
           method="post"
@@ -51,6 +52,12 @@ export default function Index() {
           style={{ marginLeft: "5rem" }}
         >
           edit
+        </NavLink>
+        <NavLink
+          to={`/campaigns/${campaign.id}/battle`}
+          style={{ marginLeft: "5rem" }}
+        >
+          battle
         </NavLink>
       </div>
     </div>

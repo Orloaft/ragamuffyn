@@ -12,6 +12,7 @@ model character {
   race    String?
   class   String?
   level   Int?
+  data    String?
 }
 
 model npc {
@@ -19,6 +20,7 @@ model npc {
   name    String?
   race    String?
   bio     String?
+  data    String?
 }
 
 model item {
@@ -30,6 +32,5 @@ model item {
 
 model campaign {
    id      Int     @id @default(autoincrement())
-  name    String?
   data    String?
 }

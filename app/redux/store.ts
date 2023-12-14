@@ -1,10 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import exampleReducer from "./slice";
+import battleDataSlice from "./battleDataSlice";
 
 export const store = configureStore({
   reducer: {
-    example: exampleReducer,
-    // Add other reducers here
+    battleData: battleDataSlice,
   },
 });
 

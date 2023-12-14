@@ -13,7 +13,7 @@ export default function CharacterList({
     <div>
       {" "}
       <nav>
-        {characters.length ? (
+        {characters && characters.length ? (
           <ul>
             {characters.map((character: any) => (
               <li key={character.id}>

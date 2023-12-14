@@ -22,9 +22,9 @@ export default function EditCampaign() {
     <Form
       id="contact-form"
       method="post"
-      style={{ display: "flex", justifyContent: "center" }}
+      style={{ display: "flex", justifyContent: "center", maxHeight: "30rem" }}
     >
-      <div style={{ display: "flex", flexDirection: "row" }}>
+      <div style={{ overflowY: "scroll" }}>
         <CampaignView data={JSON.parse(campaign.data as string)} />
 
         <p>
@@ -45,7 +45,7 @@ export default function EditCampaign() {
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.campaignId, "Missing campaignId param");
   const formData = await request.formData();
-  const updates = Object.fromEntries(formData);
+  const updates = { data: JSON.stringify({ ...Object.fromEntries(formData) }) };
   await updateCampaign(parseInt(params.campaignId, 10), updates);
   return redirect(`/campaigns/${params.campaignId}`);
 };

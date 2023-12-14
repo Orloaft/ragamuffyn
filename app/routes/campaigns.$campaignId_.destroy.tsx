@@ -7,5 +7,5 @@ export const action = async ({ params }: ActionFunctionArgs) => {
   invariant(params.campaignId, "Missing campaignId param");
 
   await deleteCampaign(parseInt(params.campaignId, 10));
-  return redirect(`/`);
+  return redirect(`/campaigns`);
 };

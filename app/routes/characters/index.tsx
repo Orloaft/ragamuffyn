@@ -93,6 +93,6 @@ export default function Index() {
 export const action = async ({ request }: ActionFunctionArgs) => {
   let data;
 
-  data = await createCharacter({});
+  data = await createCharacter({ name: "no name" });
   return redirect(`/characters/${data.id}/edit`);
 };

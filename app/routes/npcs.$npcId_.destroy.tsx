@@ -7,5 +7,5 @@ export const action = async ({ params }: ActionFunctionArgs) => {
   invariant(params.npcId, "Missing npcId param");
 
   await deleteNpc(parseInt(params.npcId, 10));
-  return redirect(`/`);
+  return redirect(`/npcs`);
 };

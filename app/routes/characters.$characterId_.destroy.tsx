@@ -7,5 +7,5 @@ export const action = async ({ params }: ActionFunctionArgs) => {
   invariant(params.characterId, "Missing characterId param");
 
   await deleteCharacter(parseInt(params.characterId, 10));
-  return redirect(`/`);
+  return redirect(`/characters`);
 };
