@@ -8,15 +8,15 @@ import CampaignView from "~/components/CampaignView";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.campaignId, "Missing campaignId param");
-  const campaign = await getCampaign(parseInt(params.campaignId, 10));
+  const campaign = await getCampaign(params.campaignId);
   if (!campaign) {
     throw new Response("Not Found", { status: 404 });
   }
-  return json({ campaign });
+  return json({ campaign, campaignId: params.campaignId });
 };
 
 export default function EditCampaign() {
-  const { campaign } = useLoaderData<typeof loader>();
+  const { campaign, campaignId } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
   return (
     <Form
@@ -25,7 +25,10 @@ export default function EditCampaign() {
       style={{ display: "flex", justifyContent: "center", maxHeight: "30rem" }}
     >
       <div style={{ overflowY: "scroll" }}>
-        <CampaignView data={JSON.parse(campaign.data as string)} />
+        <CampaignView
+          id={campaignId}
+          data={JSON.parse(campaign.data as string)}
+        />
 
         <p>
           <button type="submit">Save</button>
@@ -45,7 +48,7 @@ export default function EditCampaign() {
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.campaignId, "Missing campaignId param");
   const formData = await request.formData();
-  const updates = { data: JSON.stringify({ ...Object.fromEntries(formData) }) };
-  await updateCampaign(parseInt(params.campaignId, 10), updates);
+  const updates = Object.fromEntries(formData);
+  await updateCampaign(params.campaignId, updates);
   return redirect(`/campaigns/${params.campaignId}`);
 };

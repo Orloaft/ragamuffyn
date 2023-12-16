@@ -7,7 +7,7 @@ import { getItem, updateItem } from "../data";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.itemId, "Missing itemId param");
-  const item = await getItem(parseInt(params.itemId, 10));
+  const item = await getItem(params.itemId);
   if (!item) {
     throw new Response("Not Found", { status: 404 });
   }
@@ -16,6 +16,8 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 export default function EditContact() {
   const { item } = useLoaderData<typeof loader>();
+  console.log(item);
+  let itemData = JSON.parse(item.data as string);
   const navigate = useNavigate();
   return (
     <Form
@@ -35,7 +37,7 @@ export default function EditContact() {
         <span>Description</span>
         <input
           aria-label="description"
-          defaultValue={item.description}
+          defaultValue={itemData ? itemData.description : ""}
           name="description"
           placeholder="description"
           type="text"
@@ -70,6 +72,6 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.itemId, "Missing itemId param");
   const formData = await request.formData();
   const updates = Object.fromEntries(formData);
-  await updateItem(parseInt(params.itemId, 10), updates);
+  await updateItem(params.itemId, updates);
   return redirect(`/items/${params.itemId}`);
 };

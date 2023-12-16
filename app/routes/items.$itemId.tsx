@@ -6,7 +6,7 @@ import { getItem } from "~/data";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.itemId, "Missing itemId param");
-  const item = await getItem(parseInt(params.itemId, 10));
+  const item = await getItem(params.itemId);
   if (!item) {
     throw new Response("Not Found", { status: 404 });
   }
@@ -15,6 +15,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 export default function Index() {
   const { item } = useLoaderData<typeof loader>();
+  let itemData = JSON.parse(item.data as string);
   return (
     <div
       style={{
@@ -24,8 +25,13 @@ export default function Index() {
       }}
     >
       <div className="rpgui-container">
-        {item.name} {item.description}
-        <div className={`rpgui-icon ` + item.icon}></div>
+        {item.name}{" "}
+        {itemData && (
+          <>
+            <span>{itemData.description}</span>
+            <div className={`rpgui-icon ` + itemData.icon}></div>
+          </>
+        )}
         <Form
           action="destroy"
           method="post"

@@ -6,6 +6,6 @@ import { deleteNpc } from "~/data";
 export const action = async ({ params }: ActionFunctionArgs) => {
   invariant(params.npcId, "Missing npcId param");
 
-  await deleteNpc(parseInt(params.npcId, 10));
+  await deleteNpc(params.npcId);
   return redirect(`/npcs`);
 };

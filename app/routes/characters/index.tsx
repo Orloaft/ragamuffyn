@@ -68,7 +68,7 @@ export default function Index() {
               {characters.map((character: any) => (
                 <li key={character.id}>
                   <NavLink to={`/characters/${character.id}`}>
-                    {character.name}
+                    {character.name},{character.id}
                   </NavLink>
                 </li>
               ))}

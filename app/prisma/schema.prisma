@@ -7,30 +7,38 @@ datasource db {
 }
 
 model character {
-  id      Int     @id @default(autoincrement())
+  id      String  @id
   name    String?
-  race    String?
-  class   String?
-  level   Int?
   data    String?
 }
 
 model npc {
-    id      Int     @id @default(autoincrement())
+    id     String    @id 
   name    String?
-  race    String?
-  bio     String?
   data    String?
 }
 
 model item {
-   id      Int     @id @default(autoincrement())
-  name    String?
-  description  String?
-  icon    String?
+   id      String     @id 
+    name    String?
+  data     String?
 }
 
 model campaign {
-   id      Int     @id @default(autoincrement())
+   id      String     @id 
+  name    String? 
+  data    String?
+}
+
+
+model encounter {
+   id      String     @id 
+    name    String?
+  data     String?
+}
+
+model location {
+   id      String     @id 
+  name    String? 
   data    String?
 }

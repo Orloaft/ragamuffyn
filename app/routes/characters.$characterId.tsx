@@ -2,11 +2,12 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, NavLink, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
-import { getCharacter } from "~/data";
+import { addToDataModel, getCharacter } from "~/data";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.characterId, "Missing characterId param");
-  const character = await getCharacter(parseInt(params.characterId, 10));
+  console.log(params.characterId);
+  const character = await getCharacter(params.characterId);
   if (!character) {
     throw new Response("Not Found", { status: 404 });
   }
@@ -15,6 +16,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 export default function Index() {
   const { character } = useLoaderData<typeof loader>();
+  let characterData = JSON.parse(character.data as string);
   return (
     <div
       style={{
@@ -31,9 +33,15 @@ export default function Index() {
           justifyContent: "center",
         }}
       >
-        <span> {character.name}</span> <span>{character.race}</span>
-        <span>{character.class}</span>
-        <span>{character.level}</span>
+        <span> {character.name}</span>
+        {characterData && (
+          <>
+            {" "}
+            <span>{characterData.race}</span>
+            <span>{characterData.class}</span>
+            <span>{characterData.level}</span>
+          </>
+        )}
         <Form
           style={{
             display: "flex",

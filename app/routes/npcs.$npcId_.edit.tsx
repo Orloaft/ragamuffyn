@@ -7,7 +7,7 @@ import { getNpc, updateNpc } from "../data";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.npcId, "Missing npcId param");
-  const npc = await getNpc(parseInt(params.npcId, 10));
+  const npc = await getNpc(params.npcId);
   if (!npc) {
     throw new Response("Not Found", { status: 404 });
   }
@@ -17,6 +17,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 export default function EditContact() {
   const { npc } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
+  const npcData = JSON.parse(npc.data as string);
   return (
     <Form
       id="contact-form"
@@ -34,7 +35,7 @@ export default function EditContact() {
         />
         <input
           aria-label="bio"
-          defaultValue={npc.bio}
+          defaultValue={npcData ? npcData.bio : ""}
           name="bio"
           placeholder="bio"
           type="text"
@@ -58,6 +59,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.npcId, "Missing npcId param");
   const formData = await request.formData();
   const updates = Object.fromEntries(formData);
-  await updateNpc(parseInt(params.npcId, 10), updates);
+
+  await updateNpc(params.npcId, updates);
   return redirect(`/npcs/${params.npcId}`);
 };

@@ -6,6 +6,6 @@ import { deleteCampaign } from "~/data";
 export const action = async ({ params }: ActionFunctionArgs) => {
   invariant(params.campaignId, "Missing campaignId param");
 
-  await deleteCampaign(parseInt(params.campaignId, 10));
+  await deleteCampaign(params.campaignId);
   return redirect(`/campaigns`);
 };

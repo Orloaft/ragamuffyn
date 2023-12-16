@@ -7,7 +7,7 @@ import { getCharacter, updateCharacter } from "../data";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.characterId, "Missing characterId param");
-  const character = await getCharacter(parseInt(params.characterId, 10));
+  const character = await getCharacter(params.characterId);
   if (!character) {
     throw new Response("Not Found", { status: 404 });
   }
@@ -16,6 +16,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 export default function EditContact() {
   const { character } = useLoaderData<typeof loader>();
+  let characterData = JSON.parse(character.data as string);
   const navigate = useNavigate();
   return (
     <Form
@@ -34,21 +35,21 @@ export default function EditContact() {
         />
         <input
           aria-label="level"
-          defaultValue={character.level}
+          defaultValue={characterData ? characterData.level : ""}
           name="level"
           placeholder="level"
           type="number"
         />
         <input
           aria-label="class"
-          defaultValue={character.class}
+          defaultValue={characterData ? characterData.class : ""}
           name="class"
           placeholder="class"
           type="text"
         />
         <input
           aria-label="race"
-          defaultValue={character.race}
+          defaultValue={characterData ? characterData.race : ""}
           name="race"
           placeholder="race"
           type="text"
@@ -72,6 +73,6 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.characterId, "Missing characterId param");
   const formData = await request.formData();
   const updates = Object.fromEntries(formData);
-  await updateCharacter(parseInt(params.characterId, 10), updates);
+  await updateCharacter(params.characterId, updates);
   return redirect(`/characters/${params.characterId}`);
 };

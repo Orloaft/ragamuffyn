@@ -6,6 +6,6 @@ import { deleteItem } from "~/data";
 export const action = async ({ params }: ActionFunctionArgs) => {
   invariant(params.itemId, "Missing itemId param");
 
-  await deleteItem(parseInt(params.itemId, 10));
+  await deleteItem(params.itemId);
   return redirect(`/items`);
 };

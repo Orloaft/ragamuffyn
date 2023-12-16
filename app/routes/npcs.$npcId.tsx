@@ -6,7 +6,7 @@ import { getNpc } from "~/data";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.npcId, "Missing npcId param");
-  const npc = await getNpc(parseInt(params.npcId, 10));
+  const npc = await getNpc(params.npcId);
   if (!npc) {
     throw new Response("Not Found", { status: 404 });
   }
@@ -15,6 +15,8 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 export default function Index() {
   const { npc } = useLoaderData<typeof loader>();
+  const npcData = JSON.parse(npc.data as string);
+  console.log(npcData);
   return (
     <div
       style={{
@@ -25,7 +27,7 @@ export default function Index() {
     >
       {" "}
       <div className="rpgui-container">
-        {npc.name} {npc.bio}
+        {npc.name} {npcData && <span>{npcData.bio}</span>}
         <Form
           action="destroy"
           method="post"

@@ -25,7 +25,7 @@ export interface campaignData {
   locations: string[];
 }
 
-const CampaignView: React.FC<{ data: any }> = ({ data }) => {
+const CampaignView: React.FC<{ data: any; id: string }> = ({ data, id }) => {
   // Set the initial state of the form
   const [campaign, setCampaign] = useState<campaignData>(data);
 
@@ -71,7 +71,7 @@ const CampaignView: React.FC<{ data: any }> = ({ data }) => {
       </div>
       <div>
         <label htmlFor="characters">characters:</label>
-        <CharacterList characters={campaign.characters} />
+        <CharacterList characters={campaign.characters} campaignId={id} />
         <select name="characters"></select>
       </div>
 

@@ -5,8 +5,10 @@ import CharacterLookUp from "../CharacterLookUp";
 
 export default function CharacterList({
   characters,
+  campaignId,
 }: {
   characters: character[];
+  campaignId: string;
 }) {
   const [modal, setModal] = useState<boolean>(false);
   return (
@@ -40,7 +42,7 @@ export default function CharacterList({
       >
         Add
       </button>
-      {modal && <CharacterLookUp />}
+      {modal && <CharacterLookUp campaignId={campaignId} />}
     </div>
   );
 }
