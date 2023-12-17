@@ -33,6 +33,8 @@ export default function App() {
               <NavLink to="/npcs">Npcs</NavLink>
               <NavLink to="/items">Items</NavLink>
               <NavLink to="/campaigns">Campaigns</NavLink>
+              <NavLink to="/encounters">Ecounters</NavLink>
+              <NavLink to="/locations">Locations</NavLink>
             </div>
             <Outlet />
           </div>

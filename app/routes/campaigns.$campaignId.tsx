@@ -16,7 +16,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 export default function Index() {
   const { campaign } = useLoaderData<typeof loader>();
   const data = JSON.parse(campaign.data as string);
-  console.log(data, campaign.data);
+
   return (
     <div
       style={{

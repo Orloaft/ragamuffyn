@@ -1,4 +1,4 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, NavLink, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
@@ -73,3 +73,32 @@ export default function Index() {
     </div>
   );
 }
+
+export const action = async ({ params, request }: ActionFunctionArgs) => {
+  // Parse the form data from the request
+  try {
+    // Collect stream data
+    let body = "";
+    if (request.body) {
+      const reader = request.body.getReader();
+      let done, value;
+      while (!done) {
+        ({ done, value } = await reader.read());
+        body += new TextDecoder().decode(value);
+      }
+    }
+
+    // Parse the string as JSON
+    const data = JSON.parse(body);
+    if (params.characterId) {
+      addToDataModel(params.characterId, data.campaignId);
+    }
+
+    // Handle your business logic here
+
+    return json({ message: "Data processed successfully" });
+  } catch (error) {
+    console.error("Error processing request:", error);
+    return json({ error: "Error processing data" });
+  }
+};

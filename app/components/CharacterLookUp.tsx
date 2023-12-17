@@ -1,9 +1,17 @@
 import React, { useEffect } from "react";
 
-import { NavLink, useFetcher } from "@remix-run/react";
+import { useFetcher } from "@remix-run/react";
 import axios from "axios";
 
-const CharacterLookUp = ({ campaignId }: { campaignId: string }) => {
+const CharacterLookUp = ({
+  campaignId,
+  addedCharacters,
+  submit,
+}: {
+  campaignId: string;
+  addedCharacters: any[];
+  submit: any;
+}) => {
   const fetcher = useFetcher<any>();
   useEffect(() => {
     fetcher.load("/characters");
@@ -18,20 +26,28 @@ const CharacterLookUp = ({ campaignId }: { campaignId: string }) => {
       <div>
         <ul>
           {characters.map((character: any) => {
-            return (
-              <li key={character.id}>
-                <button
-                  onClick={async (e) => {
-                    e.preventDefault();
-                    await axios.post(`/characters/${character.id}/add`, {
-                      campaignId,
-                    });
-                  }}
-                >
-                  {character.name}
-                </button>
-              </li>
-            );
+            if (
+              addedCharacters &&
+              addedCharacters.find((c) => c.id === character.id)
+            ) {
+              return null;
+            } else {
+              return (
+                <li key={character.id}>
+                  <button
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      await axios.post(`/characters/${character.id}`, {
+                        campaignId,
+                      });
+                      submit();
+                    }}
+                  >
+                    {character.name}
+                  </button>
+                </li>
+              );
+            }
           })}{" "}
         </ul>
       </div>

@@ -1,5 +1,5 @@
 import type { character } from "@prisma/client";
-import { Form, NavLink } from "@remix-run/react";
+import { Form, NavLink, useFetcher } from "@remix-run/react";
 import { useState } from "react";
 import CharacterLookUp from "../CharacterLookUp";
 
@@ -11,6 +11,14 @@ export default function CharacterList({
   campaignId: string;
 }) {
   const [modal, setModal] = useState<boolean>(false);
+  const fetcher = useFetcher<any>();
+
+  const refreshFormData = () => {
+    fetcher.load(`/campaigns/${campaignId}`);
+
+    setModal(false);
+  };
+
   return (
     <div>
       {" "}
@@ -42,7 +50,13 @@ export default function CharacterList({
       >
         Add
       </button>
-      {modal && <CharacterLookUp campaignId={campaignId} />}
+      {modal && (
+        <CharacterLookUp
+          campaignId={campaignId}
+          addedCharacters={characters}
+          submit={refreshFormData}
+        />
+      )}
     </div>
   );
 }

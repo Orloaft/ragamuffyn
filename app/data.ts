@@ -31,6 +31,8 @@ const modelAccessors = {
   item: prisma.item,
   npc: prisma.npc,
   campaign: prisma.campaign,
+  encounter: prisma.encounter,
+  location: prisma.location,
 };
 
 // A generic function to get data from any model with optional query and sorting
@@ -62,9 +64,14 @@ export async function getCampaigns(query?: string | null): Promise<Campaign[]> {
 export async function getItems(query?: string | null): Promise<Item[]> {
   return getData<Item>("item", query, "name");
 }
-
+export async function getLocations(query?: string | null): Promise<any[]> {
+  return getData<any>("location", query, "name");
+}
 export async function getNpcs(query?: string | null): Promise<NPC[]> {
   return getData<NPC>("npc", query, "name");
+}
+export async function getEncounters(query?: string | null): Promise<any[]> {
+  return getData<any>("encounter", query, "name");
 }
 export async function createNpc(data: NPC): Promise<NPC> {
   let id = uuidv4();
@@ -172,7 +179,7 @@ export async function deleteLocation(id: string): Promise<Location> {
 }
 
 // Create a new Location
-export async function createLocation(data: Location): Promise<Location> {
+export async function createLocation(data: any): Promise<any> {
   let id = uuidv4();
   return await prisma.location.create({
     data: { ...data, id: `L${id}` },
@@ -180,14 +187,14 @@ export async function createLocation(data: Location): Promise<Location> {
 }
 
 // Get a Location by ID
-export async function getLocation(id: string): Promise<Location | null> {
+export async function getLocation(id: string): Promise<any | null> {
   return await prisma.location.findUnique({
     where: { id },
   });
 }
 
 // Update an existing Location
-export async function updateLocation(id: string, data: any): Promise<Location> {
+export async function updateLocation(id: string, data: any): Promise<any> {
   return await prisma.location.update({
     where: { id },
     data,
