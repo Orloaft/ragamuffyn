@@ -98,6 +98,11 @@ export default function Index() {
 export const action = async ({ request }: ActionFunctionArgs) => {
   let data;
 
-  data = await createLocation({ name: "no name" });
+  data = await createLocation({
+    name: "no name",
+    characters: [],
+    items: [],
+    npcs: [],
+  });
   return redirect(`/locations/${data.id}/edit`);
 };

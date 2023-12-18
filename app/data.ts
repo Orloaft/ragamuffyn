@@ -182,7 +182,7 @@ export async function deleteLocation(id: string): Promise<Location> {
 export async function createLocation(data: any): Promise<any> {
   let id = uuidv4();
   return await prisma.location.create({
-    data: { ...data, id: `L${id}` },
+    data: { data: JSON.stringify({ ...data }), id: `L${id}` },
   });
 }
 
@@ -197,15 +197,15 @@ export async function getLocation(id: string): Promise<any | null> {
 export async function updateLocation(id: string, data: any): Promise<any> {
   return await prisma.location.update({
     where: { id },
-    data,
+    data: { name: data.name, data: JSON.stringify(data) },
   });
 }
 
 // Create a new Encounter
-export async function createEncounter(data: Encounter): Promise<Encounter> {
+export async function createEncounter(data: any): Promise<any> {
   let id = uuidv4();
   return await prisma.encounter.create({
-    data: { ...data, id: `E${id}` },
+    data: { data: JSON.stringify({ ...data }), id: `E${id}` },
   });
 }
 
@@ -234,7 +234,6 @@ export async function deleteEncounter(id: string): Promise<Encounter> {
   });
 }
 async function updateModel(modelId: string, newData: string): Promise<void> {
-  console.log(newData.characters);
   const modelType = modelId.charAt(0);
 
   switch (modelType) {

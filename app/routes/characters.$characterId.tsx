@@ -91,7 +91,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
     // Parse the string as JSON
     const data = JSON.parse(body);
     if (params.characterId) {
-      addToDataModel(params.characterId, data.campaignId);
+      addToDataModel(params.characterId, data.modelId);
     }
 
     // Handle your business logic here

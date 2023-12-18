@@ -4,6 +4,7 @@ import { Form, useLoaderData, useNavigate } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
 import { getCharacter, updateCharacter } from "../data";
+import UpdateForm from "~/components/Form";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.characterId, "Missing characterId param");
@@ -33,28 +34,9 @@ export default function EditContact() {
           type="text"
           placeholder="name"
         />
-        <input
-          aria-label="level"
-          defaultValue={characterData ? characterData.level : ""}
-          name="level"
-          placeholder="level"
-          type="number"
-        />
-        <input
-          aria-label="class"
-          defaultValue={characterData ? characterData.class : ""}
-          name="class"
-          placeholder="class"
-          type="text"
-        />
-        <input
-          aria-label="race"
-          defaultValue={characterData ? characterData.race : ""}
-          name="race"
-          placeholder="race"
-          type="text"
-        />
+
         <p>
+          <UpdateForm data={characterData} />
           <button type="submit">Save</button>
           <button
             onClick={() => {

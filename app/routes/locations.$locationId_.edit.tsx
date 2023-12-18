@@ -4,6 +4,7 @@ import { Form, useLoaderData, useNavigate } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
 import { getLocation, updateEncounter, updateLocation } from "../data";
+import LocationView from "~/components/LocationView";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.locationId, "Missing locationId param");
@@ -18,6 +19,7 @@ export default function EditContact() {
   const { location } = useLoaderData<typeof loader>();
   let locationData = JSON.parse(location.data as string);
   const navigate = useNavigate();
+  console.log(location);
   return (
     <Form
       id="contact-form"
@@ -33,7 +35,7 @@ export default function EditContact() {
           type="text"
           placeholder="name"
         />
-
+        <LocationView data={locationData} id={location.id} />
         <p>
           <button type="submit">Save</button>
           <button

@@ -4,11 +4,11 @@ import { useFetcher } from "@remix-run/react";
 import axios from "axios";
 
 const CharacterLookUp = ({
-  campaignId,
+  modelId,
   addedCharacters,
   submit,
 }: {
-  campaignId: string;
+  modelId: string;
   addedCharacters: any[];
   submit: any;
 }) => {
@@ -38,7 +38,7 @@ const CharacterLookUp = ({
                     onClick={async (e) => {
                       e.preventDefault();
                       await axios.post(`/characters/${character.id}`, {
-                        campaignId,
+                        modelId,
                       });
                       submit();
                     }}
