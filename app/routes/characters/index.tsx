@@ -96,7 +96,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   data = await createCharacter({
     id: "",
     name: "no name",
-    data: JSON.stringify({ name: "no name", level: 0, class: "", race: "" }),
+    data: JSON.stringify({
+      name: "no name",
+      level: 0,
+      class: "",
+      race: "",
+      items: [],
+    }),
   });
   return redirect(`/characters/${data.id}/edit`);
 };

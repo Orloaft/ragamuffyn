@@ -157,6 +157,7 @@ export async function updateCharacter(
   id: string,
   data: any
 ): Promise<Character> {
+  console.log("updating character:", data);
   return await prisma.character.update({
     where: { id },
     data: {
@@ -235,7 +236,7 @@ export async function deleteEncounter(id: string): Promise<Encounter> {
 }
 async function updateModel(modelId: string, newData: string): Promise<void> {
   const modelType = modelId.charAt(0);
-
+  console.log("new data:", newData);
   switch (modelType) {
     case "C":
       await updateCampaign(modelId, newData);
@@ -245,6 +246,9 @@ async function updateModel(modelId: string, newData: string): Promise<void> {
       break;
     case "E":
       await updateEncounter(modelId, newData);
+      break;
+    case "H":
+      await updateCharacter(modelId, newData);
       break;
     default:
       throw new Error("Invalid model type");
@@ -266,6 +270,9 @@ export const addToDataModel = async (dataId: string, modelId: string) => {
       break;
     case "E":
       oldData = await getEncounter(modelId);
+      break;
+    case "H":
+      oldData = await getCharacter(modelId);
       break;
     default:
       throw new Error("Invalid model type");
@@ -296,7 +303,7 @@ export const addToDataModel = async (dataId: string, modelId: string) => {
     case "I":
       newData = JSON.stringify({
         ...data,
-        items: [...data.items, await getItem(dataId)],
+        items: [...data.items, data],
       });
       break;
     case "L":

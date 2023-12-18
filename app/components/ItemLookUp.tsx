@@ -5,11 +5,11 @@ import axios from "axios";
 const ItemLookUp = ({
   modelId,
   addedItems,
-  submit,
+  addToForm,
 }: {
   modelId: string;
   addedItems: any[];
-  submit: any;
+  addToForm: any;
 }) => {
   const fetcher = useFetcher<any>();
   useEffect(() => {
@@ -25,7 +25,7 @@ const ItemLookUp = ({
       <div>
         <ul>
           {items.map((item: any) => {
-            if (addedItems && addedItems.find((i: any) => i.id === item.id)) {
+            if (addedItems && addedItems.find((i: any) => i === item.id)) {
               return null;
             } else {
               return (
@@ -33,10 +33,13 @@ const ItemLookUp = ({
                   <button
                     onClick={async (e) => {
                       e.preventDefault();
-                      await axios.post(`/items/${item.id}`, {
-                        modelId,
+
+                      addToForm({
+                        target: {
+                          name: "items",
+                          value: [...addedItems, item.id],
+                        },
                       });
-                      submit();
                     }}
                   >
                     {item.name}
