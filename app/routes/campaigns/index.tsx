@@ -94,17 +94,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   let data;
 
   data = await createCampaign({
-    data: {
+    id: "",
+    name: "no name",
+    data: JSON.stringify({
       name: "no name",
       characters: [],
-      hooks: [],
-      maps: [],
-      npcs: [],
       encounters: [],
       players: [],
       plot: "",
       locations: [],
-    },
+    }),
   });
   return redirect(`/campaigns/${data.id}/edit`);
 };

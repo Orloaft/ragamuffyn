@@ -19,7 +19,6 @@ export default function EditContact() {
   const { location } = useLoaderData<typeof loader>();
   let locationData = JSON.parse(location.data as string);
   const navigate = useNavigate();
-  console.log(location);
   return (
     <Form
       id="contact-form"

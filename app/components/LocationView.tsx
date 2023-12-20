@@ -36,7 +36,6 @@ const LocationView: React.FC<{ data: any; id: string }> = ({ data, id }) => {
     const { name, value } = e.target;
     setLocation({ ...location, [name]: value });
   };
-  console.log("location:", location);
   // Handle form submission
 
   return (

@@ -16,7 +16,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 export default function EditContact() {
   const { item } = useLoaderData<typeof loader>();
-  console.log(item);
+
   let itemData = JSON.parse(item.data as string);
   const navigate = useNavigate();
   return (

@@ -16,7 +16,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 export default function Index() {
   const { npc } = useLoaderData<typeof loader>();
   const npcData = JSON.parse(npc.data as string);
-  console.log(npcData);
+
   return (
     <div
       style={{

@@ -1,11 +1,10 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
-import { Form, useLoaderData, useNavigate } from "@remix-run/react";
+import { json } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
-
+import type { CharData } from "../data";
 import { getCharacter, updateCharacter } from "../data";
 import UpdateForm from "~/components/Form";
-import { useState } from "react";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.characterId, "Missing characterId param");
@@ -19,99 +18,19 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 export default function EditContact() {
   const { character } = useLoaderData<typeof loader>();
   let characterData = JSON.parse(character.data as string);
-  const [formFields, setFormFields] = useState<any>(characterData);
-  const handleChange = (event: any) => {
-    const { name, value } = event.target;
-    console.log(name, value);
-    setFormFields((prevFields: any) => ({
-      ...prevFields,
-      [name]: value,
-    }));
-  };
-  const handleSubmit = async (event: HTMLFormElement) => {
-    event.preventDefault();
 
-    const formData = new FormData(event.currentTarget);
-    console.log("formData:", formData, "fields:", formFields);
-    for (const field in formFields) {
-      if (formFields.hasOwnProperty(field)) {
-        if (Array.isArray(formFields[field])) {
-          formFields[field].forEach((item: any) =>
-            formData.append("items", item)
-          );
-        } else {
-          formData.append(field, formFields[field]);
-        }
-        // This check is to ensure you don't include inherited properties
-      }
-    }
-    try {
-      const response = await fetch(event.currentTarget.action, {
-        method: "POST",
-        body: formData,
-        // Note: When submitting FormData, the 'Content-Type' should not be set manually
-        // as the browser will set it along with the correct boundary
-      });
-
-      if (response.ok) {
-        console.log("Form submitted successfully");
-        // Handle successful submission here, like redirecting to a thank you page
-      } else {
-        console.error("Form submission failed");
-        // Handle errors here
-      }
-    } catch (error) {
-      console.error("Error submitting the form", error);
-      // Handle network errors here
-    }
-  };
-  const navigate = useNavigate();
   return (
-    <Form
-      id="contact-form"
-      onSubmit={(e) => {
-        handleSubmit(e);
-      }}
-      method="post"
-      style={{ display: "flex", justifyContent: "center" }}
-    >
-      <div style={{ display: "flex", flexDirection: "column" }}>
-        <span>Name</span>
-        <input
-          defaultValue={character.name}
-          aria-label="name"
-          name="name"
-          type="text"
-          placeholder="name"
-          onChange={(e) => {
-            handleChange(e);
-          }}
-        />
-
-        <UpdateForm
-          data={formFields}
-          modelId={character.id}
-          handleChange={handleChange}
-        />
-        <button type="submit">Save</button>
-        <button
-          onClick={() => {
-            navigate(-1);
-          }}
-          type="button"
-        >
-          Cancel
-        </button>
-      </div>
-    </Form>
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <UpdateForm<CharData> data={characterData} />
+    </div>
   );
 }
 export const action = async ({ params, request }: ActionFunctionArgs) => {
   invariant(params.characterId, "Missing characterId param");
   const formData = await request.formData();
 
-  const formDataToObj = (formData) => {
-    const obj = {};
+  const formDataToObj = (formData: FormData) => {
+    const obj: any = {};
 
     // Iterate over all keys in the FormData
     for (const key of formData.keys()) {
@@ -119,8 +38,10 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 
       // Check if there are multiple non-duplicate values for this key
       const uniqueValues = [...new Set(values)];
-      if (uniqueValues.length > 1) {
+      console.log(key);
+      if (uniqueValues.length > 1 || key === "items") {
         // Store as an array if there are multiple unique values
+        console.log("key of form:", key);
         obj[key] = uniqueValues;
       } else {
         // Store as a single value if there's only one unique value
@@ -132,7 +53,7 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   };
 
   const updates = formDataToObj(formData);
-  console.log("updates:", updates);
+
   await updateCharacter(params.characterId, updates);
-  return redirect(`/characters/${params.characterId}`);
+  return null;
 };

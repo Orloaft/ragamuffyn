@@ -7,7 +7,18 @@ export interface Character {
   name?: string;
   data?: string;
 }
-
+interface Player {
+  firstName: string;
+  lastName: string;
+}
+export interface CharData {
+  [key: string]: any;
+  name: string;
+  level: number;
+  race: string;
+  class: string;
+  items: string[];
+}
 export interface Item {
   id: string;
   name?: string;
@@ -17,6 +28,15 @@ export interface NPC {
   id?: string;
   name?: string;
   data?: string;
+}
+export interface CampaignData {
+  [key: string]: any;
+  name: string;
+  characters: string[];
+  players: Player[];
+  encounters: string[];
+  locations: string[];
+  plot: string;
 }
 export interface Campaign {
   id?: string;
@@ -112,7 +132,7 @@ export async function createItem(data: any): Promise<Item> {
 export async function createCampaign(data: any): Promise<Campaign> {
   let id = uuidv4();
   return await prisma.campaign.create({
-    data: { id: `C${id}`, name: data.name, data: JSON.stringify(data) },
+    data: { ...data, id: `C${id}` },
   });
 }
 export async function updateItem(id: string, data: any): Promise<Item> {
@@ -155,14 +175,19 @@ export async function createCharacter(data: Character): Promise<Character> {
 
 export async function updateCharacter(
   id: string,
-  data: any
+  data: CharData
 ): Promise<Character> {
-  console.log("updating character:", data);
+  let updates = { ...data };
+  ["items"].forEach((a) => {
+    if (!updates.hasOwnProperty(a)) {
+      updates[a] = [];
+    }
+  });
   return await prisma.character.update({
     where: { id },
     data: {
       name: data.name,
-      data: JSON.stringify(data),
+      data: JSON.stringify(updates),
     },
   });
 }
@@ -236,7 +261,7 @@ export async function deleteEncounter(id: string): Promise<Encounter> {
 }
 async function updateModel(modelId: string, newData: string): Promise<void> {
   const modelType = modelId.charAt(0);
-  console.log("new data:", newData);
+
   switch (modelType) {
     case "C":
       await updateCampaign(modelId, newData);
@@ -279,7 +304,7 @@ export const addToDataModel = async (dataId: string, modelId: string) => {
   }
 
   if (!oldData) return;
-  console.log("getting old data: ", oldData);
+
   let newData;
   let { data } = oldData as any; // Assuming 'data' is a common property
 

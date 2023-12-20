@@ -71,7 +71,7 @@ const CampaignView: React.FC<{ data: any; id: string }> = ({ data, id }) => {
       </div>
       <div>
         <label htmlFor="characters">characters:</label>
-        <CharacterList characters={campaign.characters} campaignId={id} />
+        <CharacterList characters={campaign.characters} modelId={id} />
         <select name="characters"></select>
       </div>
 

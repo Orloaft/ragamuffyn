@@ -1,22 +1,17 @@
 import React, { useEffect } from "react";
-
 import { useFetcher } from "@remix-run/react";
-import axios from "axios";
 
 const CharacterLookUp = ({
-  modelId,
   addedCharacters,
-  submit,
+  addToForm,
 }: {
-  modelId: string;
   addedCharacters: any[];
-  submit: any;
+  addToForm: any;
 }) => {
   const fetcher = useFetcher<any>();
   useEffect(() => {
     fetcher.load("/characters");
   }, []);
-
   if (fetcher.state === "loading") {
     return <div>Loading characters...</div>; // Show loading state
   } else if (fetcher.data) {
@@ -25,25 +20,28 @@ const CharacterLookUp = ({
     return (
       <div>
         <ul>
-          {characters.map((character: any) => {
+          {characters.map((char: any) => {
             if (
               addedCharacters &&
-              addedCharacters.find((c) => c.id === character.id)
+              addedCharacters.find((i: any) => i === char.id)
             ) {
               return null;
             } else {
               return (
-                <li key={character.id}>
+                <li key={char.id}>
                   <button
                     onClick={async (e) => {
                       e.preventDefault();
-                      await axios.post(`/characters/${character.id}`, {
-                        modelId,
+
+                      addToForm({
+                        target: {
+                          name: "characters",
+                          value: [...addedCharacters, char.id],
+                        },
                       });
-                      submit();
                     }}
                   >
-                    {character.name}
+                    {char.name}
                   </button>
                 </li>
               );

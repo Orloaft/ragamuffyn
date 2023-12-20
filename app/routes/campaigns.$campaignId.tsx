@@ -28,12 +28,7 @@ export default function Index() {
       <div className="rpgui-container">
         <span>{data.name}</span>
         <p>{data.plot}</p>
-        <ul>
-          {data.characters &&
-            data.characters.map((c: c) => {
-              return <li key={c.id}>{c.name}</li>;
-            })}
-        </ul>
+
         <Form
           action="destroy"
           method="post"

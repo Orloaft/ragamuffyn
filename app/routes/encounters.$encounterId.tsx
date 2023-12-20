@@ -15,7 +15,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 export default function Index() {
   const { encounter } = useLoaderData<typeof loader>();
-  console.log(encounter);
+
   const data = JSON.parse(encounter.data as string);
 
   return (

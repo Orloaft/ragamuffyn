@@ -6,7 +6,7 @@ import { addToDataModel, getCharacter } from "~/data";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   invariant(params.characterId, "Missing characterId param");
-  console.log(params.characterId);
+
   const character = await getCharacter(params.characterId);
   if (!character) {
     throw new Response("Not Found", { status: 404 });

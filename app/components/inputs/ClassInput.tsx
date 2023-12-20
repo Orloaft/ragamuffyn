@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 const ClassInput: React.FC<any> = (props) => {
   // State for storing the input value
@@ -15,7 +15,7 @@ const ClassInput: React.FC<any> = (props) => {
         <input
           name="class"
           type="string"
-          value={props.value}
+          defaultValue={props.value}
           onChange={handleChange}
         />
       </label>

@@ -1,13 +1,10 @@
 import React, { useEffect } from "react";
 import { useFetcher } from "@remix-run/react";
-import axios from "axios";
 
 const ItemLookUp = ({
-  modelId,
   addedItems,
   addToForm,
 }: {
-  modelId: string;
   addedItems: any[];
   addToForm: any;
 }) => {
@@ -15,7 +12,6 @@ const ItemLookUp = ({
   useEffect(() => {
     fetcher.load("/items");
   }, []);
-
   if (fetcher.state === "loading") {
     return <div>Loading items...</div>; // Show loading state
   } else if (fetcher.data) {

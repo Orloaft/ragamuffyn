@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import ItemLookUp from "../ItemLookUp";
 
 const ItemsInput: React.FC<any> = (props) => {
@@ -10,14 +10,26 @@ const ItemsInput: React.FC<any> = (props) => {
         Items:
         <ul>
           {props.value.map((item: any) => {
-            return <li key={item}>{item}</li>;
+            return (
+              <li key={item}>
+                {item}
+                <button
+                  onClick={() => {
+                    props.onChange({
+                      target: {
+                        name: "items",
+                        value: [...props.value].filter((i) => i !== item),
+                      },
+                    });
+                  }}
+                >
+                  remove
+                </button>
+              </li>
+            );
           })}
         </ul>
-        <ItemLookUp
-          addToForm={props.onChange}
-          addedItems={props.value}
-          modelId={props.modelId}
-        />
+        <ItemLookUp addToForm={props.onChange} addedItems={props.value} />
       </label>
     </div>
   );

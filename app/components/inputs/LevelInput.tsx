@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 const LevelInput: React.FC<any> = (props) => {
   // State for storing the input value
@@ -20,7 +20,7 @@ const LevelInput: React.FC<any> = (props) => {
         <input
           name="level"
           type="number"
-          value={props.value}
+          defaultValue={props.value}
           onChange={handleChange}
           min="0"
           max="99"
