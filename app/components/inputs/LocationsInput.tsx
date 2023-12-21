@@ -1,4 +1,5 @@
 import React from "react";
+import ModelDataLookUp from "../ModelDataLookUp";
 
 const LocationsInput: React.FC<any> = (props) => {
   // State for storing the input value
@@ -28,6 +29,11 @@ const LocationsInput: React.FC<any> = (props) => {
             );
           })}
         </ul>
+        <ModelDataLookUp
+          model="locations"
+          addToForm={props.addToForm}
+          addedData={props.value}
+        />
       </label>
     </div>
   );

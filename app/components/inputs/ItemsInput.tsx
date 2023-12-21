@@ -1,5 +1,5 @@
 import React from "react";
-import ItemLookUp from "../ItemLookUp";
+import ModelDataLookUp from "../ModelDataLookUp";
 
 const ItemsInput: React.FC<any> = (props) => {
   // State for storing the input value
@@ -29,7 +29,11 @@ const ItemsInput: React.FC<any> = (props) => {
             );
           })}
         </ul>
-        <ItemLookUp addToForm={props.onChange} addedItems={props.value} />
+        <ModelDataLookUp
+          addToForm={props.onChange}
+          addedData={props.value}
+          model="items"
+        />
       </label>
     </div>
   );

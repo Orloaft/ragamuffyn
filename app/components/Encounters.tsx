@@ -1,11 +1,9 @@
-import type { encounter } from "~/components/CampaignView";
-
-export function Encounters(props: { encounters: encounter[] }) {
+export function Encounters(props: { encounters: any[] }) {
   return (
     <div>
       <ul>
         {(props.encounters &&
-          props.encounters.map((e: encounter) => {
+          props.encounters.map((e: any) => {
             return <li key={e.id}>e.name</li>;
           })) || <span>no encounters</span>}
       </ul>

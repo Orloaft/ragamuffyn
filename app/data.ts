@@ -2,6 +2,7 @@ import { matchSorter } from "match-sorter";
 import type { character, item, npc } from "@prisma/client";
 import { PrismaClient } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
+import { debugLog } from "./utils/logger";
 export interface Character {
   id: string;
   name?: string;
@@ -28,6 +29,15 @@ export interface NPC {
   id?: string;
   name?: string;
   data?: string;
+}
+export interface encounterData {
+  name: string;
+  description: string;
+  location: string;
+  initiativeOrder: number[]; // Array of IDs to represent the order of turns
+  currentTurn: number; // ID of the character/monster whose turn it is
+  round: number; // Current round of the encounter
+  notes: string; // Additional notes or observations
 }
 export interface CampaignData {
   [key: string]: any;
@@ -69,7 +79,30 @@ export async function getData<T extends character | item | npc>(
 
   return data.sort((a, b) => ("" + a[sortKey]).localeCompare("" + b[sortKey]));
 }
-
+export async function getDataByModel(model: string, q?: string | null) {
+  switch (model) {
+    case "characters":
+      return getCharacters(q);
+  }
+}
+export async function createDataEntry(model: string) {
+  switch (model) {
+    case "characters":
+      return createCharacter({
+        id: "",
+        name: "no name",
+        data: JSON.stringify({
+          name: "no name",
+          level: 0,
+          class: "",
+          race: "",
+          items: [],
+        }),
+      });
+      break;
+  }
+  return { id: "" };
+}
 // Specific functions using the generic one
 export async function getCharacters(
   query?: string | null
@@ -95,6 +128,7 @@ export async function getEncounters(query?: string | null): Promise<any[]> {
 }
 export async function createNpc(data: NPC): Promise<NPC> {
   let id = uuidv4();
+  debugLog("creating npc in db:", { ...data, id: `N${id}` });
   return await prisma.npc.create({
     data: { ...data, id: `N${id}` },
   });
@@ -108,6 +142,14 @@ export async function updateNpc(id: string, data: any): Promise<NPC> {
 }
 
 export async function updateCampaign(id: string, updates: any): Promise<any> {
+  debugLog("updating campaign in db:", id, updates);
+  let update = { ...updates };
+  ["items", "players", "encounters", "locations", "characters"].forEach((a) => {
+    if (!update.hasOwnProperty(a)) {
+      update[a] = [];
+    }
+  });
+
   return await prisma.campaign.update({
     where: { id },
     data: { name: updates.name, data: JSON.stringify(updates) },
@@ -125,17 +167,20 @@ export async function deleteCampaign(id: string): Promise<Campaign> {
 }
 export async function createItem(data: any): Promise<Item> {
   let id = uuidv4();
+  debugLog("creating item in db:", { ...data, id: `I${id}` });
   return await prisma.item.create({
     data: { ...data, id: `I${id}` },
   });
 }
 export async function createCampaign(data: any): Promise<Campaign> {
   let id = uuidv4();
+  debugLog("creating campaign in db:", { ...data, id: `C${id}` });
   return await prisma.campaign.create({
     data: { ...data, id: `C${id}` },
   });
 }
 export async function updateItem(id: string, data: any): Promise<Item> {
+  debugLog("creating item in db:", { ...data, id: `I${id}` });
   return await prisma.item.update({
     where: { id },
     data: { name: data.name, data: JSON.stringify(data) },
@@ -168,15 +213,61 @@ export async function deleteItem(id: string): Promise<Item> {
 }
 export async function createCharacter(data: Character): Promise<Character> {
   let id = uuidv4();
+  debugLog("creating char in db:", { ...data, id: `H${id}` });
   return await prisma.character.create({
     data: { ...data, id: `H${id}` },
   });
 }
-
+export async function updateDataEntry(id: string, updates: any) {
+  switch (id.charAt(0)) {
+    case "H":
+      return updateCharacter(id, updates);
+      break;
+    case "L":
+      return updateLocation(id, updates);
+      break;
+    case "C":
+      return updateCampaign(id, updates);
+      break;
+    case "E":
+      return updateEncounter(id, updates);
+      break;
+    case "N":
+      return updateNpc(id, updates);
+      break;
+    case "I":
+      return updateItem(id, updates);
+      break;
+  }
+}
+export async function getDataById(id: string) {
+  let model = id.charAt(0);
+  switch (model) {
+    case "H":
+      return getCharacter(id);
+      break;
+    case "L":
+      return getLocation(id);
+      break;
+    case "C":
+      return getCampaign(id);
+      break;
+    case "E":
+      return getEncounter(id);
+      break;
+    case "N":
+      return getNpc(id);
+      break;
+    case "I":
+      return getItem(id);
+      break;
+  }
+}
 export async function updateCharacter(
   id: string,
   data: CharData
 ): Promise<Character> {
+  debugLog("updating item in db:", id, data);
   let updates = { ...data };
   ["items"].forEach((a) => {
     if (!updates.hasOwnProperty(a)) {
@@ -207,6 +298,7 @@ export async function deleteLocation(id: string): Promise<Location> {
 // Create a new Location
 export async function createLocation(data: any): Promise<any> {
   let id = uuidv4();
+  debugLog("creating location in db:", { ...data, id: `L${id}` });
   return await prisma.location.create({
     data: { data: JSON.stringify({ ...data }), id: `L${id}` },
   });
@@ -221,6 +313,7 @@ export async function getLocation(id: string): Promise<any | null> {
 
 // Update an existing Location
 export async function updateLocation(id: string, data: any): Promise<any> {
+  debugLog("updating location in db:", id, data);
   return await prisma.location.update({
     where: { id },
     data: { name: data.name, data: JSON.stringify(data) },
@@ -230,6 +323,7 @@ export async function updateLocation(id: string, data: any): Promise<any> {
 // Create a new Encounter
 export async function createEncounter(data: any): Promise<any> {
   let id = uuidv4();
+  debugLog("creating encounter in db:", { ...data, id: `E${id}` });
   return await prisma.encounter.create({
     data: { data: JSON.stringify({ ...data }), id: `E${id}` },
   });
@@ -247,6 +341,7 @@ export async function updateEncounter(
   id: string,
   data: Encounter
 ): Promise<Encounter> {
+  debugLog("updating encounter in db:", id, data);
   return await prisma.encounter.update({
     where: { id },
     data,

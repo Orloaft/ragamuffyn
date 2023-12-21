@@ -7,7 +7,8 @@ type PlayersInputProps = {
 const PlayersInput: React.FC<PlayersInputProps> = ({ value, onChange }) => {
   const [newPlayer, setNewPlayer] = useState("");
 
-  const handleAddClick = () => {
+  const handleAddClick = (e: any) => {
+    e.preventDefault();
     onChange({ target: { name: "players", value: [...value, newPlayer] } });
     setNewPlayer(""); // Reset input field after adding
   };

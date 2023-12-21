@@ -1,4 +1,5 @@
 import React from "react";
+import ModelDataLookUp from "../ModelDataLookUp";
 
 const EncountersInput: React.FC<any> = (props) => {
   // State for storing the input value
@@ -28,6 +29,11 @@ const EncountersInput: React.FC<any> = (props) => {
             );
           })}
         </ul>
+        <ModelDataLookUp
+          addToForm={props.onChange}
+          addedData={props.value}
+          model="encounters"
+        />
       </label>
     </div>
   );

@@ -1,5 +1,6 @@
 import React from "react";
-import CharacterLookUp from "../CharacterLookUp";
+
+import ModelDataLookUp from "../ModelDataLookUp";
 
 const CharactersInput: React.FC<any> = (props) => {
   // State for storing the input value
@@ -29,9 +30,10 @@ const CharactersInput: React.FC<any> = (props) => {
             );
           })}
         </ul>
-        <CharacterLookUp
+        <ModelDataLookUp
           addToForm={props.onChange}
-          addedCharacters={props.value}
+          addedData={props.value}
+          model="characters"
         />
       </label>
     </div>
