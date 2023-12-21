@@ -4,10 +4,8 @@ import RaceInput from "../inputs/RaceInput";
 import ClassInput from "../inputs/ClassInput";
 import ItemsInput from "../inputs/ItemsInput";
 import { Form, useNavigate } from "@remix-run/react";
-import PlayersInput from "../inputs/PlayersInput";
-import CharactersInput from "../inputs/CharactersInput";
-import EncountersInput from "../inputs/EncountersInput";
-import LocationsInput from "../inputs/LocationsInput";
+
+import DataEntryInput from "../inputs/DataEntryInput";
 
 interface FormDataByModel<T> {
   data: T;
@@ -86,17 +84,60 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
         );
         break;
       case "level":
-        return <LevelInput onChange={handleChange} value={value} />;
-        break;
+        return <LevelInput handleChange={handleChange} value={value} />;
       case "race":
-        return <RaceInput onChange={handleChange} value={value} />;
+        return (
+          <div>
+            <label>
+              race:
+              <input
+                defaultValue={value}
+                aria-label="race"
+                name="race"
+                type="text"
+                placeholder="race"
+                onChange={handleChange}
+              />
+            </label>
+          </div>
+        );
         break;
+      case "description":
+        return (
+          <div>
+            <label>
+              description:
+              <input
+                defaultValue={value}
+                aria-label="description"
+                name="description"
+                type="text"
+                placeholder="description"
+                onChange={handleChange}
+              />
+            </label>
+          </div>
+        );
+        break;
+
       case "class":
         return <ClassInput onChange={handleChange} value={value} />;
+      case "round":
+        return;
         break;
-      case "items":
-        return <ItemsInput onChange={handleChange} value={value} />;
+      case "bio":
+        return;
         break;
+      case "type":
+        return;
+        break;
+      case "characterSheet":
+        return;
+        break;
+      case "currentTurn":
+        return;
+        break;
+
       case "plot":
         return (
           <div>
@@ -113,20 +154,8 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
             </label>
           </div>
         );
-        break;
-      case "players":
-        return <PlayersInput onChange={handleChange} value={value} />;
-        break;
-      case "characters":
-        return <CharactersInput onChange={handleChange} value={value} />;
-        break;
-      case "encounters":
-        return <EncountersInput onChange={handleChange} value={value} />;
-        break;
-      case "locations":
-        return <LocationsInput onChange={handleChange} value={value} />;
-        break;
     }
+    return <DataEntryInput onChange={handleChange} value={value} model={key} />;
   };
   const getFields = (dataObj: T) => {
     let keyArray = Object.keys(dataObj);

@@ -12,6 +12,7 @@ import { Provider } from "react-redux";
 import { store } from "./redux/store";
 
 export const links: LinksFunction = () => [
+  { href: "/styles/globals.css", rel: "stylesheet" },
   { href: "/RPGUI/dist/rpgui.css", rel: "stylesheet" },
   { rel: "script", href: "/RPGUI/dist/rpgui.js" },
 ];

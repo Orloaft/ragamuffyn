@@ -38,7 +38,7 @@ export interface EncounterData {
   [key: string]: any;
   name: string;
   description: string;
-  location: string;
+  locations: string[];
   initiativeOrder: string[]; // Array of IDs to represent the order of turns
   currentTurn: number; // ID of the character/monster whose turn it is
   round: number; // Current round of the encounter
@@ -178,7 +178,7 @@ export async function createDataEntry(model: string) {
         data: JSON.stringify({
           name: "no name",
           description: "",
-          location: "",
+          locations: [],
           initiativeOrder: [],
           currentTurn: 0,
           round: 0,
@@ -388,7 +388,7 @@ export async function getDataById(id: string) {
 export async function updateCharacter(
   id: string,
   data: CharData
-): Promise<Character> {
+): Promise<DataEntry> {
   debugLog("updating item in db:", id, data);
   let updates = { ...data };
   ["items"].forEach((a) => {
