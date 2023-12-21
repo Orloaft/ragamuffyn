@@ -3,7 +3,7 @@ import type { character, item, npc } from "@prisma/client";
 import { PrismaClient } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
 import { debugLog } from "./utils/logger";
-export interface Character {
+export interface DataEntry {
   id: string;
   name?: string;
   data?: string;
@@ -20,24 +20,30 @@ export interface CharData {
   class: string;
   items: string[];
 }
-export interface Item {
-  id: string;
+
+export interface ItemData {
+  [key: string]: any;
   name?: string;
-  data?: string;
+  description?: string;
+  type?: string;
 }
-export interface NPC {
-  id?: string;
-  name?: string;
-  data?: string;
+export interface LocationData {
+  [key: string]: any;
+  name: string;
+  description: string;
+  npcs: string[];
+  encounters: string[];
 }
-export interface encounterData {
+export interface EncounterData {
+  [key: string]: any;
   name: string;
   description: string;
   location: string;
-  initiativeOrder: number[]; // Array of IDs to represent the order of turns
+  initiativeOrder: string[]; // Array of IDs to represent the order of turns
   currentTurn: number; // ID of the character/monster whose turn it is
   round: number; // Current round of the encounter
-  notes: string; // Additional notes or observations
+  notes: string[]; // Additional notes or observations
+  npcs: string[];
 }
 export interface CampaignData {
   [key: string]: any;
@@ -47,6 +53,13 @@ export interface CampaignData {
   encounters: string[];
   locations: string[];
   plot: string;
+}
+export interface NPCdata {
+  [key: string]: any;
+  name: string;
+  bio: string;
+  characterSheet?: string;
+  items: string[];
 }
 export interface Campaign {
   id?: string;
@@ -83,6 +96,39 @@ export async function getDataByModel(model: string, q?: string | null) {
   switch (model) {
     case "characters":
       return getCharacters(q);
+    case "items":
+      return getItems(q);
+    case "npcs":
+      return getNpcs(q);
+    case "locations":
+      return getLocations(q);
+    case "campaigns":
+      return getCampaigns(q);
+    case "encounters":
+      return getEncounters(q);
+  }
+}
+
+export async function deleteDataEntry(id: string) {
+  switch (id.charAt(0)) {
+    case "H":
+      return deleteCharacter(id);
+      break;
+    case "L":
+      return deleteLocation(id);
+      break;
+    case "C":
+      return deleteCampaign(id);
+      break;
+    case "E":
+      return deleteEncounter(id);
+      break;
+    case "N":
+      return deleteNpc(id);
+      break;
+    case "I":
+      return deleteItem(id);
+      break;
   }
 }
 export async function createDataEntry(model: string) {
@@ -100,6 +146,70 @@ export async function createDataEntry(model: string) {
         }),
       });
       break;
+    case "campaigns":
+      return createCampaign({
+        id: "",
+        name: "no name",
+        data: JSON.stringify({
+          name: "no name",
+          plot: "",
+          encounters: [],
+          locations: [],
+          players: [],
+          characters: [],
+        }),
+      });
+      break;
+    case "items":
+      return createItem({
+        id: "",
+        name: "no name",
+        data: JSON.stringify({
+          name: "no name",
+          description: "",
+          type: "",
+        }),
+      });
+      break;
+    case "encounters":
+      return createEncounter({
+        id: "",
+        name: "no name",
+        data: JSON.stringify({
+          name: "no name",
+          description: "",
+          location: "",
+          initiativeOrder: [],
+          currentTurn: 0,
+          round: 0,
+          notes: [],
+          npcs: [],
+        }),
+      });
+      break;
+    case "locations":
+      return createLocation({
+        id: "",
+        name: "no name",
+        data: JSON.stringify({
+          name: "no name",
+          description: "",
+          npcs: [],
+          encounters: [],
+        }),
+      });
+      break;
+    case "npcs":
+      return createNpc({
+        id: "",
+        name: "no name",
+        data: JSON.stringify({
+          name: "no name",
+          bio: "",
+          characterSheet: "",
+          items: [],
+        }),
+      });
   }
   return { id: "" };
 }
@@ -135,13 +245,22 @@ export async function createNpc(data: NPC): Promise<NPC> {
 }
 
 export async function updateNpc(id: string, data: any): Promise<NPC> {
+  let updates = { ...data };
+  ["items"].forEach((a) => {
+    if (!updates.hasOwnProperty(a)) {
+      updates[a] = [];
+    }
+  });
   return await prisma.npc.update({
     where: { id },
     data: { name: data.name, data: JSON.stringify(data) },
   });
 }
 
-export async function updateCampaign(id: string, updates: any): Promise<any> {
+export async function updateCampaign(
+  id: string,
+  updates: CampaignData
+): Promise<DataEntry> {
   debugLog("updating campaign in db:", id, updates);
   let update = { ...updates };
   ["items", "players", "encounters", "locations", "characters"].forEach((a) => {
@@ -152,7 +271,7 @@ export async function updateCampaign(id: string, updates: any): Promise<any> {
 
   return await prisma.campaign.update({
     where: { id },
-    data: { name: updates.name, data: JSON.stringify(updates) },
+    data: { name: updates.name, data: JSON.stringify(update) },
   });
 }
 export async function deleteNpc(id: string): Promise<NPC> {
@@ -179,7 +298,10 @@ export async function createCampaign(data: any): Promise<Campaign> {
     data: { ...data, id: `C${id}` },
   });
 }
-export async function updateItem(id: string, data: any): Promise<Item> {
+export async function updateItem(
+  id: string,
+  data: DataEntry
+): Promise<DataEntry> {
   debugLog("creating item in db:", { ...data, id: `I${id}` });
   return await prisma.item.update({
     where: { id },
@@ -283,54 +405,63 @@ export async function updateCharacter(
   });
 }
 
-export async function deleteCharacter(id: string): Promise<Character> {
+export async function deleteCharacter(id: string): Promise<any> {
   return await prisma.character.delete({
     where: { id },
   });
 }
 
-export async function deleteLocation(id: string): Promise<Location> {
+export async function deleteLocation(id: string): Promise<any> {
   return await prisma.location.delete({
     where: { id },
   });
 }
 
 // Create a new Location
-export async function createLocation(data: any): Promise<any> {
+export async function createLocation(data: any): Promise<DataEntry> {
   let id = uuidv4();
   debugLog("creating location in db:", { ...data, id: `L${id}` });
   return await prisma.location.create({
-    data: { data: JSON.stringify({ ...data }), id: `L${id}` },
+    data: { ...data, id: `L${id}` },
   });
 }
 
 // Get a Location by ID
-export async function getLocation(id: string): Promise<any | null> {
+export async function getLocation(id: string): Promise<DataEntry> {
   return await prisma.location.findUnique({
     where: { id },
   });
 }
 
 // Update an existing Location
-export async function updateLocation(id: string, data: any): Promise<any> {
-  debugLog("updating location in db:", id, data);
+export async function updateLocation(
+  id: string,
+  data: LocationData
+): Promise<DataEntry> {
+  let updates = { ...data };
+  ["npcs", "encounters"].forEach((a) => {
+    if (!updates.hasOwnProperty(a)) {
+      updates[a] = [];
+    }
+  });
+  debugLog("updating location in db:", id, updates);
   return await prisma.location.update({
     where: { id },
-    data: { name: data.name, data: JSON.stringify(data) },
+    data: { name: data.name, data: JSON.stringify(updates) },
   });
 }
 
 // Create a new Encounter
-export async function createEncounter(data: any): Promise<any> {
+export async function createEncounter(data: DataEntry): Promise<DataEntry> {
   let id = uuidv4();
   debugLog("creating encounter in db:", { ...data, id: `E${id}` });
   return await prisma.encounter.create({
-    data: { data: JSON.stringify({ ...data }), id: `E${id}` },
+    data: { ...data, id: `E${id}` },
   });
 }
 
 // Get an Encounter by ID
-export async function getEncounter(id: string): Promise<Encounter | null> {
+export async function getEncounter(id: string): Promise<DataEntry> {
   return await prisma.encounter.findUnique({
     where: { id },
   });
@@ -339,103 +470,24 @@ export async function getEncounter(id: string): Promise<Encounter | null> {
 // Update an existing Encounter
 export async function updateEncounter(
   id: string,
-  data: Encounter
-): Promise<Encounter> {
+  data: EncounterData
+): Promise<DataEntry> {
   debugLog("updating encounter in db:", id, data);
+  let updates = { ...data };
+  ["npcs", "initiativeOrder", "notes"].forEach((a) => {
+    if (!updates.hasOwnProperty(a)) {
+      updates[a] = [];
+    }
+  });
   return await prisma.encounter.update({
     where: { id },
-    data,
+    data: { name: data.name, data: JSON.stringify(updates) },
   });
 }
 
 // Delete an Encounter
-export async function deleteEncounter(id: string): Promise<Encounter> {
+export async function deleteEncounter(id: string): Promise<DataEntry> {
   return await prisma.encounter.delete({
     where: { id },
   });
 }
-async function updateModel(modelId: string, newData: string): Promise<void> {
-  const modelType = modelId.charAt(0);
-
-  switch (modelType) {
-    case "C":
-      await updateCampaign(modelId, newData);
-      break;
-    case "L":
-      await updateLocation(modelId, newData);
-      break;
-    case "E":
-      await updateEncounter(modelId, newData);
-      break;
-    case "H":
-      await updateCharacter(modelId, newData);
-      break;
-    default:
-      throw new Error("Invalid model type");
-  }
-}
-
-export const addToDataModel = async (dataId: string, modelId: string) => {
-  let oldData;
-  const modelType = modelId.charAt(0);
-  const dataType = dataId.charAt(0);
-
-  // Determine model type
-  switch (modelType) {
-    case "C":
-      oldData = await getCampaign(modelId);
-      break;
-    case "L":
-      oldData = await getLocation(modelId);
-      break;
-    case "E":
-      oldData = await getEncounter(modelId);
-      break;
-    case "H":
-      oldData = await getCharacter(modelId);
-      break;
-    default:
-      throw new Error("Invalid model type");
-  }
-
-  if (!oldData) return;
-
-  let newData;
-  let { data } = oldData as any; // Assuming 'data' is a common property
-
-  // Determine data type and update accordingly
-  data = JSON.parse(data);
-  switch (dataType) {
-    case "H":
-      newData = {
-        ...data,
-        characters: data.characters
-          ? [...data.characters, await getCharacter(dataId)]
-          : [await getCharacter(dataId)],
-      };
-      break;
-    case "N":
-      newData = JSON.stringify({
-        ...data,
-        npcs: [...data.npcs, await getNpc(dataId)],
-      });
-      break;
-    case "I":
-      newData = JSON.stringify({
-        ...data,
-        items: [...data.items, data],
-      });
-      break;
-    case "L":
-      newData = JSON.stringify({
-        ...data,
-        locations: [...data.locations, await getLocation(dataId)],
-      });
-      break;
-    default:
-      throw new Error("Invalid data type");
-  }
-
-  // Update the model with new data
-  await updateModel(modelId, newData);
-};

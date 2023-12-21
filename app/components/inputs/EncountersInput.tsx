@@ -14,10 +14,11 @@ const EncountersInput: React.FC<any> = (props) => {
               <li key={item}>
                 {item}
                 <button
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.preventDefault();
                     props.onChange({
                       target: {
-                        name: "items",
+                        name: "encounters",
                         value: [...props.value].filter((i) => i !== item),
                       },
                     });

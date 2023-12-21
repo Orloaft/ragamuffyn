@@ -17,7 +17,7 @@ const ModelDataLookUp = ({
   if (fetcher.state === "loading") {
     return <div>Loading {model}...</div>; // Show loading state
   } else if (fetcher.data) {
-    let modelData = fetcher.data[model];
+    let modelData = fetcher.data.data;
 
     return (
       <div>

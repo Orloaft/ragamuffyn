@@ -14,13 +14,14 @@ import { createDataEntry, getDataByModel } from "~/data";
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const q = url.searchParams.get("q");
-  const data = await getDataByModel(url.pathname, q);
+  const data = await getDataByModel(url.pathname.slice(1), q);
   return json({ data, q, model: url.pathname.slice(1) });
 };
 export default function Index() {
   const navigation = useNavigation();
 
   const { data, q, model } = useLoaderData<typeof loader>();
+  console.log(data);
   const submit = useSubmit();
   useEffect(() => {
     const searchField = document.getElementById("q");

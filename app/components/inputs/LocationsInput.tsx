@@ -31,7 +31,7 @@ const LocationsInput: React.FC<any> = (props) => {
         </ul>
         <ModelDataLookUp
           model="locations"
-          addToForm={props.addToForm}
+          addToForm={props.onChange}
           addedData={props.value}
         />
       </label>

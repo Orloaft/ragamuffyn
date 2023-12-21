@@ -52,7 +52,16 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
       // Check if there are multiple non-duplicate values for this key
       const uniqueValues = [...new Set(values)];
       console.log(key);
-      if (uniqueValues.length > 1 || key === "items") {
+      if (
+        uniqueValues.length > 1 ||
+        key === "items" ||
+        key === "encounters" ||
+        key === "players" ||
+        key === "npcs" ||
+        key === "characters" ||
+        key === "locations" ||
+        key === "npcs"
+      ) {
         // Store as an array if there are multiple unique values
         console.log("key of form:", key);
         obj[key] = uniqueValues;
