@@ -16,7 +16,7 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
 }: FormDataByModel<T>) => {
   const navigate = useNavigate();
   const [formFields, setFormFields] = useState<T>(data);
-  console.log(formFields);
+
   const handleChange = (event: any) => {
     const { name, value } = event.target;
 
@@ -38,7 +38,6 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
           );
         } else {
           formData.append(field, formFields[field]);
-          console.log("appending:", field);
         }
         // This check is to ensure you don't include inherited properties
       }

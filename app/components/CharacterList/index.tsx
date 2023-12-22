@@ -9,17 +9,17 @@ function determinePath(modelId: string) {
   // Map the first character to the corresponding path
   switch (firstChar) {
     case "C":
-      return `/campaigns/${modelId}`;
+      return `/collections/campaigns/${modelId}`;
     case "N":
-      return `/npcs/${modelId}`;
+      return `/collections/npcs/${modelId}`;
     case "H":
-      return `/characters/${modelId}`;
+      return `/collections/characters/${modelId}`;
     case "I":
-      return `/items/${modelId}`;
+      return `/collections/items/${modelId}`;
     case "L":
-      return `/locations/${modelId}`;
+      return `/collections/locations/${modelId}`;
     case "E":
-      return `/encounters/${modelId}`;
+      return `/collections/encounters/${modelId}`;
     default:
       return `/`;
   }
@@ -60,7 +60,7 @@ export default function CharacterList({
           </p>
         )}
       </nav>
-      <Form method="post" action="/characters">
+      <Form method="post" action="/collections/characters">
         <button type="submit">New</button>
       </Form>
       <button

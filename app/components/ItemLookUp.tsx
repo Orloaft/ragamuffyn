@@ -10,7 +10,7 @@ const ItemLookUp = ({
 }) => {
   const fetcher = useFetcher<any>();
   useEffect(() => {
-    fetcher.load("/items");
+    fetcher.load("/collections/items");
   }, []);
   if (fetcher.state === "loading") {
     return <div>Loading items...</div>; // Show loading state

@@ -3,13 +3,13 @@ import {
   Links,
   LiveReload,
   Meta,
-  NavLink,
   Outlet,
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
+import CollectionsNav from "./components/CollectionsNav";
 
 export const links: LinksFunction = () => [
   { href: "/styles/globals.css", rel: "stylesheet" },
@@ -29,17 +29,9 @@ export default function App() {
       <Provider store={store}>
         <body className="rpgui-content rpgui-container framed-golden">
           <div id="sidebar">
-            <div style={{ display: "flex", flexDirection: "row", gap: "1rem" }}>
-              <NavLink to="/characters">Characters</NavLink>
-              <NavLink to="/npcs">Npcs</NavLink>
-              <NavLink to="/items">Items</NavLink>
-              <NavLink to="/campaigns">Campaigns</NavLink>
-              <NavLink to="/encounters">Ecounters</NavLink>
-              <NavLink to="/locations">Locations</NavLink>
-            </div>
+            <CollectionsNav />
             <Outlet />
           </div>
-
           <ScrollRestoration />
           <Scripts />
           <LiveReload />

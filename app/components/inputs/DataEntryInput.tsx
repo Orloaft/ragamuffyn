@@ -3,7 +3,7 @@ import ModelDataLookUp from "../ModelDataLookUp";
 
 const DataEntryInput: React.FC<any> = (props) => {
   // State for storing the input value
-  console.log("proppiesL", props);
+
   return (
     <div>
       <label>

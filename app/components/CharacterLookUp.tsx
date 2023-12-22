@@ -10,7 +10,7 @@ const CharacterLookUp = ({
 }) => {
   const fetcher = useFetcher<any>();
   useEffect(() => {
-    fetcher.load("/characters");
+    fetcher.load("/collections/characters");
   }, []);
   if (fetcher.state === "loading") {
     return <div>Loading characters...</div>; // Show loading state
