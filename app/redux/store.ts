@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import battleDataSlice from "./battleDataSlice";
+import dataEntrySlice from "./dataEntrySlice";
+import dataObjSlice from "./dataObjSlice";
 
 export const store = configureStore({
   reducer: {
-    battleData: battleDataSlice,
+    dataEntries: dataEntrySlice,
+    dataObj: dataObjSlice,
   },
 });
 

@@ -3,22 +3,29 @@ import { json } from "@remix-run/node";
 import { Form, NavLink, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import { getDataById } from "../data";
-import React from "react";
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
+import DataEntryView from "~/components/DataEntryView";
+import { useDispatch } from "react-redux";
+import { setDataObj, setLoading } from "~/redux/dataObjSlice";
+import { useEffect } from "react";
+
+export const loader = async ({ params, context }: LoaderFunctionArgs) => {
   invariant(params.dataId, "Missing characterId param");
 
   const data = await getDataById(params.dataId);
   if (!data) {
-    throw new Response("Not Found", { status: 404 });
+    // throw new Response("Not Found", { status: 404 });
   }
   return json({ data, model: params.modelType, id: params.dataId });
 };
 
 export default function Index() {
   const { data, model, id } = useLoaderData<typeof loader>();
-  let dataObj = JSON.parse(data.data as string);
-
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setLoading(true));
+    dispatch(setDataObj(JSON.parse(data.data as string)));
+  }, [data.data, dispatch]);
   return (
     <div
       style={{
@@ -35,8 +42,7 @@ export default function Index() {
           justifyContent: "center",
         }}
       >
-        <span> {dataObj.name}</span>
-
+        {data && <DataEntryView data={data} type={model} />}
         <Form
           style={{
             display: "flex",

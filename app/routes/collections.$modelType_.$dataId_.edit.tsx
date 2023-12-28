@@ -1,5 +1,5 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import {
@@ -10,6 +10,10 @@ import {
 } from "../data";
 
 import UpdateForm from "~/components/Form";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setDataObj } from "~/redux/dataObjSlice";
+
 function modelToDataType(model: string) {
   switch (model) {
     case "characters":
@@ -30,11 +34,17 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 export default function EditContact() {
   const { data, model } = useLoaderData<typeof loader>();
-  let dataObj = JSON.parse(data.data as string);
+  const dataObj = useSelector((state: any) => state.dataObj.dataObj);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setDataObj(JSON.parse(data.data as string)));
+  }, [dispatch, data.data]);
   const modelType = modelToDataType(model as string);
+
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
-      <UpdateForm<typeof modelType> data={dataObj} />
+      {dataObj && <UpdateForm<typeof modelType> data={dataObj} />}
     </div>
   );
 }
@@ -60,7 +70,8 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
         key === "npcs" ||
         key === "characters" ||
         key === "locations" ||
-        key === "npcs"
+        key === "npcs" ||
+        key === "notes"
       ) {
         // Store as an array if there are multiple unique values
 
@@ -77,5 +88,5 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
   const updates = formDataToObj(formData);
 
   await updateDataEntry(params.dataId as string, updates);
-  return null;
+  return redirect(`/collections/${params.modelType}/${params.dataId}`);
 };

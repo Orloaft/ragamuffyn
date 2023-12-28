@@ -7,9 +7,10 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+
+import CollectionsNav from "./components/CollectionsNav";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
-import CollectionsNav from "./components/CollectionsNav";
 
 export const links: LinksFunction = () => [
   { href: "/styles/globals.css", rel: "stylesheet" },

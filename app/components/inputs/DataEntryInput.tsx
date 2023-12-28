@@ -1,4 +1,4 @@
-import React from "react";
+import IdToEntry from "../IdToEntry";
 import ModelDataLookUp from "../ModelDataLookUp";
 
 const DataEntryInput: React.FC<any> = (props) => {
@@ -12,7 +12,7 @@ const DataEntryInput: React.FC<any> = (props) => {
           {props.value.map((char: any) => {
             return (
               <li key={char}>
-                {char}
+                <IdToEntry model={props.model} id={char} />
                 <button
                   onClick={() => {
                     props.onChange({
@@ -38,5 +38,4 @@ const DataEntryInput: React.FC<any> = (props) => {
     </div>
   );
 };
-
 export default DataEntryInput;

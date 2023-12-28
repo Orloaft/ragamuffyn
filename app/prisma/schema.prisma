@@ -31,6 +31,12 @@ model campaign {
 }
 
 
+model note {
+   id      String     @id 
+  name    String? 
+  data    String?
+  createdAt DateTime @default(now())
+}
 model encounter {
    id      String     @id 
     name    String?

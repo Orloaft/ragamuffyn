@@ -7,5 +7,5 @@ export const action = async ({ params }: ActionFunctionArgs) => {
   invariant(params.dataId, "Missing dataId param");
 
   await deleteDataEntry(params.dataId);
-  return redirect(`/${params.modelType}`);
+  return redirect(`/collections/${params.modelType}`);
 };

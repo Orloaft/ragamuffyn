@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import LevelInput from "../inputs/LevelInput";
-import RaceInput from "../inputs/RaceInput";
 import ClassInput from "../inputs/ClassInput";
-import ItemsInput from "../inputs/ItemsInput";
 import { Form, useNavigate } from "@remix-run/react";
-
 import DataEntryInput from "../inputs/DataEntryInput";
+import PlayersInput from "../inputs/PlayersInput";
 
 interface FormDataByModel<T> {
   data: T;
@@ -83,7 +81,7 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
         );
         break;
       case "level":
-        return <LevelInput handleChange={handleChange} value={value} />;
+        return <LevelInput onChange={handleChange} value={value} />;
       case "race":
         return (
           <div>
@@ -121,11 +119,28 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
 
       case "class":
         return <ClassInput onChange={handleChange} value={value} />;
+      case "players":
+        return <PlayersInput onChange={handleChange} value={value} />;
       case "round":
         return;
         break;
       case "bio":
-        return;
+        return (
+          <div>
+            <label>
+              description:
+              <input
+                defaultValue={value}
+                aria-label="bio"
+                name="bio"
+                type="text"
+                placeholder="bio"
+                onChange={handleChange}
+              />
+            </label>
+          </div>
+        );
+
         break;
       case "type":
         return;
@@ -174,7 +189,7 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
         padding: "0 15% 0 15%",
       }}
     >
-      <ul>{getFields(formFields)}</ul>
+      <ul>{formFields && getFields(formFields)}</ul>
       <button type="submit">Save</button>
       <button
         onClick={() => {

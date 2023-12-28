@@ -1,5 +1,12 @@
 import { matchSorter } from "match-sorter";
-import type { character, item, npc } from "@prisma/client";
+import type {
+  campaign,
+  character,
+  encounter,
+  item,
+  location,
+  npc,
+} from "@prisma/client";
 import { PrismaClient } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
 import { debugLog } from "./utils/logger";
@@ -8,11 +15,10 @@ export interface DataEntry {
   name?: string;
   data?: string;
 }
-interface Player {
-  firstName: string;
-  lastName: string;
+interface HasNotes {
+  notes: string[];
 }
-export interface CharData {
+export interface CharData extends HasNotes {
   [key: string]: any;
   name: string;
   level: number;
@@ -21,20 +27,26 @@ export interface CharData {
   items: string[];
 }
 
-export interface ItemData {
+export interface NoteData {
+  [key: string]: any;
+  name: string;
+  images: string[];
+  text: string;
+}
+export interface ItemData extends HasNotes {
   [key: string]: any;
   name?: string;
   description?: string;
   type?: string;
 }
-export interface LocationData {
+export interface LocationData extends HasNotes {
   [key: string]: any;
   name: string;
   description: string;
   npcs: string[];
   encounters: string[];
 }
-export interface EncounterData {
+export interface EncounterData extends HasNotes {
   [key: string]: any;
   name: string;
   description: string;
@@ -42,30 +54,25 @@ export interface EncounterData {
   initiativeOrder: string[]; // Array of IDs to represent the order of turns
   currentTurn: number; // ID of the character/monster whose turn it is
   round: number; // Current round of the encounter
-  notes: string[]; // Additional notes or observations
   npcs: string[];
 }
-export interface CampaignData {
+export interface CampaignData extends HasNotes {
   [key: string]: any;
   name: string;
   characters: string[];
-  players: Player[];
+  players: string[];
   encounters: string[];
   locations: string[];
   plot: string;
 }
-export interface NPCdata {
+export interface NPCdata extends HasNotes {
   [key: string]: any;
   name: string;
   bio: string;
   characterSheet?: string;
   items: string[];
 }
-export interface Campaign {
-  id?: string;
-  name?: string | null;
-  data?: string | null;
-}
+
 const prisma = new PrismaClient();
 
 // Define a mapping from model names to Prisma client methods
@@ -76,10 +83,13 @@ const modelAccessors = {
   campaign: prisma.campaign,
   encounter: prisma.encounter,
   location: prisma.location,
+  note: prisma.note,
 };
 
 // A generic function to get data from any model with optional query and sorting
-export async function getData<T extends character | item | npc>(
+export async function getData<
+  T extends character | item | npc | campaign | encounter | location | note
+>(
   model: keyof typeof modelAccessors,
   query: string | null = null,
   sortKey: keyof T
@@ -129,6 +139,9 @@ export async function deleteDataEntry(id: string) {
     case "I":
       return deleteItem(id);
       break;
+    case "O":
+      return deleteNote(id);
+      break;
   }
 }
 export async function createDataEntry(model: string) {
@@ -143,6 +156,17 @@ export async function createDataEntry(model: string) {
           class: "",
           race: "",
           items: [],
+        }),
+      });
+      break;
+    case "notes":
+      return createNote({
+        id: "",
+        name: "no name",
+        data: JSON.stringify({
+          name: "no name",
+          images: [],
+          text: "",
         }),
       });
       break;
@@ -236,7 +260,10 @@ export async function getNpcs(query?: string | null): Promise<NPC[]> {
 export async function getEncounters(query?: string | null): Promise<any[]> {
   return getData<any>("encounter", query, "name");
 }
-export async function createNpc(data: NPC): Promise<NPC> {
+export async function getNotes(query?: string | null): Promise<any[]> {
+  return getData<any>("note", query, "name");
+}
+export async function createNpc(data: DataEntry): Promise<DataEntry> {
   let id = uuidv4();
   debugLog("creating npc in db:", { ...data, id: `N${id}` });
   return await prisma.npc.create({
@@ -253,7 +280,7 @@ export async function updateNpc(id: string, data: any): Promise<NPC> {
   });
   return await prisma.npc.update({
     where: { id },
-    data: { name: data.name, data: JSON.stringify(data) },
+    data: { name: data.name, data: JSON.stringify(updates) },
   });
 }
 
@@ -333,7 +360,7 @@ export async function deleteItem(id: string): Promise<Item> {
     where: { id },
   });
 }
-export async function createCharacter(data: Character): Promise<Character> {
+export async function createCharacter(data: DataEntry): Promise<DataEntry> {
   let id = uuidv4();
   debugLog("creating char in db:", { ...data, id: `H${id}` });
   return await prisma.character.create({
@@ -474,7 +501,7 @@ export async function updateEncounter(
 ): Promise<DataEntry> {
   debugLog("updating encounter in db:", id, data);
   let updates = { ...data };
-  ["npcs", "initiativeOrder", "notes"].forEach((a) => {
+  ["npcs", "initiativeOrder", "notes", "locations"].forEach((a) => {
     if (!updates.hasOwnProperty(a)) {
       updates[a] = [];
     }
