@@ -36,11 +36,14 @@ export const ModalPopUp = ({ model, data, button, addedData, addToForm }) => {
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent backgroundImage={"url('/marble.avif')"} color="#dddddd">
           <ModalHeader>{model}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <UnorderedList style={{ listStyle: "none" }}>
+            <UnorderedList
+              style={{ listStyle: "none", padding: "10px" }}
+              color="#dddddd"
+            >
               {(data.length &&
                 data.map((char: any) => {
                   if (addedData.find((e: any) => e === char.id)) {

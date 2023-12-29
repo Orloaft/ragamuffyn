@@ -18,7 +18,11 @@ const DataEntryInput: React.FC<any> = (props) => {
       <label>
         {props.model}
         <Divider />
-        <UnorderedList style={{ listStyle: "none" }}>
+        <UnorderedList
+          backgroundImage={"url('/marble.avif')"}
+          style={{ listStyle: "none", padding: "10px" }}
+          color="#dddddd"
+        >
           {(props.value.length &&
             props.value.map((char: any) => {
               return (

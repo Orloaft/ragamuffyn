@@ -13,6 +13,7 @@ import UpdateForm from "~/components/Form";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setDataObj } from "~/redux/dataObjSlice";
+import { AbsoluteCenter, Box } from "@chakra-ui/react";
 
 function modelToDataType(model: string) {
   switch (model) {
@@ -43,9 +44,11 @@ export default function EditContact() {
   const modelType = modelToDataType(model as string);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
-      {dataObj && <UpdateForm<typeof modelType> data={dataObj} />}
-    </div>
+    <AbsoluteCenter width="100%">
+      <Box style={{ display: "flex", flexDirection: "column" }}>
+        {dataObj && <UpdateForm<typeof modelType> data={dataObj} />}
+      </Box>
+    </AbsoluteCenter>
   );
 }
 export const action = async ({ params, request }: ActionFunctionArgs) => {

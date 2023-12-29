@@ -14,6 +14,9 @@ const ClassInput: React.FC<any> = (props) => {
       <label>
         Class:
         <Input
+          color="black"
+          borderRadius=".25rem"
+          backgroundColor="#dddddd"
           name="class"
           type="string"
           defaultValue={props.value}

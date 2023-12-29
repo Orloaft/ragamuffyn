@@ -35,6 +35,8 @@ export default function Index() {
             <option value="npcs">npcs</option>
           </Select>
           <Textarea
+            color="black"
+            backgroundColor="#dddddd"
             placeholder="Paste JSON here"
             value={jsonInput}
             onChange={handleInputChange}

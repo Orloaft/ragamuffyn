@@ -8,7 +8,7 @@ import DataEntryView from "~/components/DataEntryView";
 import { useDispatch } from "react-redux";
 import { setDataObj, setLoading } from "~/redux/dataObjSlice";
 import { useEffect } from "react";
-import { Button, Flex } from "@chakra-ui/react";
+import { Box, Button, Flex } from "@chakra-ui/react";
 
 export const loader = async ({ params, context }: LoaderFunctionArgs) => {
   invariant(params.dataId, "Missing characterId param");
@@ -28,7 +28,11 @@ export default function Index() {
     dispatch(setDataObj(JSON.parse(data.data as string)));
   }, [data.data, dispatch]);
   return (
-    <div
+    <Box
+      backgroundImage={"url('/marble.avif')"}
+      color="#dddddd"
+      padding="1rem"
+      borderRadius=".25rem"
       style={{
         display: "flex",
 
@@ -69,6 +73,6 @@ export default function Index() {
           </Flex>
         </Form>
       </div>
-    </div>
+    </Box>
   );
 }

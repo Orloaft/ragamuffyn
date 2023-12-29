@@ -1,4 +1,4 @@
-import { Button, Center, Input, UnorderedList } from "@chakra-ui/react";
+import { Box, Button, Center, Input, UnorderedList } from "@chakra-ui/react";
 import {
   useNavigation,
   useSubmit,
@@ -29,7 +29,7 @@ export default function CollectionsView({ data, q, model }: any) {
     navigation.location &&
     new URLSearchParams(navigation.location.search).has("q");
   return (
-    <div>
+    <Box backgroundImage={"url('/marble.avif')"} color="#dddddd" padding="1rem">
       <div id="sidebar">
         <h1>{model}</h1>
         <div style={{ display: "flex", flexDirection: "column" }}>
@@ -44,6 +44,10 @@ export default function CollectionsView({ data, q, model }: any) {
             }}
           >
             <Input
+              color="black"
+              border="1px grey solid"
+              borderRadius=".25rem"
+              backgroundColor="#dddddd"
               size="sm"
               width="auto"
               id="q"
@@ -57,12 +61,18 @@ export default function CollectionsView({ data, q, model }: any) {
             <div id="search-spinner" hidden={!searching} aria-hidden />
           </Form>
           <Form method="post">
-            <Button type="submit">New</Button>
+            <Button backgroundColor="#dddddd" type="submit">
+              New
+            </Button>
           </Form>
         </div>
         <nav>
           {data && data.length ? (
-            <UnorderedList style={{ listStyle: "none" }}>
+            <UnorderedList
+              backgroundImage={"url('/marble.avif')"}
+              style={{ listStyle: "none", padding: "10px" }}
+              color="#dddddd"
+            >
               {items.map((dataEntry: any) => (
                 <li key={dataEntry.id}>
                   <NavLink to={`/collections/${model}/${dataEntry.id}`}>
@@ -84,6 +94,6 @@ export default function CollectionsView({ data, q, model }: any) {
         }
         id="detail"
       ></div>
-    </div>
+    </Box>
   );
 }

@@ -10,7 +10,11 @@ const CharactersInput: React.FC<any> = (props) => {
     <div>
       <label>
         Characters:
-        <UnorderedList style={{ listStyle: "none" }}>
+        <UnorderedList
+          backgroundImage={"url('/marble.avif')"}
+          style={{ listStyle: "none", padding: "10px" }}
+          color="#dddddd"
+        >
           {props.value.map((char: any) => {
             return (
               <ListItem key={char}>

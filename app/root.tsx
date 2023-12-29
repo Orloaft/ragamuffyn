@@ -97,7 +97,15 @@ export default function App() {
       <ChakraProvider>
         <CollectionsNav />
         <Provider store={store}>
-          <Outlet />
+          <Box
+            bgImage="url('/parchment.webp')"
+            bgPosition="center"
+            bgRepeat="no-repeat"
+            bgSize="cover"
+            minHeight="100vh" // Full viewport height
+          >
+            <Outlet />
+          </Box>
         </Provider>
       </ChakraProvider>
     </Document>

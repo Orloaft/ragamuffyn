@@ -78,6 +78,10 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
             <label>
               Name
               <Input
+                color="black"
+                borderRadius=".25rem"
+                border="1px grey solid"
+                backgroundColor="#dddddd"
                 defaultValue={value}
                 aria-label="name"
                 name="name"
@@ -97,6 +101,8 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
             <label>
               Text
               <Textarea
+                color="black"
+                backgroundColor="#dddddd"
                 defaultValue={value}
                 aria-label="text"
                 name="text"
@@ -112,6 +118,10 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
             <label>
               Race
               <Input
+                color="black"
+                borderRadius=".25rem"
+                border="1px grey solid"
+                backgroundColor="#dddddd"
                 defaultValue={value}
                 aria-label="race"
                 name="race"
@@ -131,6 +141,8 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
             <label>
               description
               <Textarea
+                color="black"
+                backgroundColor="#dddddd"
                 defaultValue={value}
                 aria-label="description"
                 name="description"
@@ -155,6 +167,8 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
             <label>
               Bio
               <Textarea
+                color="black"
+                backgroundColor="#dddddd"
                 defaultValue={value}
                 aria-label="bio"
                 name="bio"
@@ -167,6 +181,9 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
 
         break;
       case "type":
+        return;
+        break;
+      case "initiativeOrder":
         return;
         break;
       case "characterSheet":
@@ -182,6 +199,8 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
             <label>
               Plot
               <Textarea
+                color="black"
+                backgroundColor="#dddddd"
                 defaultValue={value}
                 aria-label="plot"
                 name="plot"
@@ -212,7 +231,12 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
         padding: "0 15% 0 15%",
       }}
     >
-      <UnorderedList style={{ listStyle: "none" }}>
+      <UnorderedList
+        width="100%"
+        backgroundImage={"url('/marble.avif')"}
+        style={{ listStyle: "none", padding: "10px" }}
+        color="#dddddd"
+      >
         {formFields && getFields(formFields)}
       </UnorderedList>
       <Center>

@@ -23,7 +23,11 @@ const PlayersInput: React.FC<PlayersInputProps> = ({ value, onChange }) => {
   };
   return (
     <div>
-      <UnorderedList style={{ listStyle: "none" }}>
+      <UnorderedList
+        backgroundImage={"url('/marble.avif')"}
+        style={{ listStyle: "none", padding: "10px" }}
+        color="#dddddd"
+      >
         {value.map((player, index) => (
           <li key={index}>
             {player}{" "}
@@ -38,6 +42,9 @@ const PlayersInput: React.FC<PlayersInputProps> = ({ value, onChange }) => {
         ))}
       </UnorderedList>
       <Input
+        borderRadius=".25rem"
+        color="black"
+        backgroundColor="#dddddd"
         type="text"
         value={newPlayer}
         onChange={(e) => setNewPlayer(e.target.value)}

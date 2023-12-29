@@ -14,6 +14,9 @@ const RaceInput: React.FC<any> = (props) => {
       <label>
         Race:
         <Input
+          color="black"
+          borderRadius=".25rem"
+          backgroundColor="#dddddd"
           name="race"
           type="string"
           defaultValue={props.value}

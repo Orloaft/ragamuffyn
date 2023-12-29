@@ -9,7 +9,11 @@ const LocationsInput: React.FC<any> = (props) => {
     <div>
       <label>
         Locations:
-        <UnorderedList style={{ listStyle: "none" }}>
+        <UnorderedList
+          backgroundImage={"url('/marble.avif')"}
+          style={{ listStyle: "none", padding: "10px" }}
+          color="#dddddd"
+        >
           {props.value.map((item: any) => {
             return (
               <li key={item}>
