@@ -8,6 +8,7 @@ import {
   ListItem,
   UnorderedList,
 } from "@chakra-ui/react";
+import { DataModalPopUp } from "../DataModalPopUp";
 
 const DataEntryInput: React.FC<any> = (props) => {
   // State for storing the input value
@@ -23,9 +24,13 @@ const DataEntryInput: React.FC<any> = (props) => {
               return (
                 <ListItem key={char}>
                   <Flex justify={"space-between"}>
-                    <IdToEntry model={props.model} id={char} />
+                    <IdToEntry isList={true} model={props.model} id={char} />
                     <Flex>
-                      <IconButton aria-label="details" icon={<SearchIcon />} />
+                      <DataModalPopUp
+                        data={{ id: char }}
+                        button={<SearchIcon />}
+                        model={props.model}
+                      />
 
                       <IconButton
                         onClick={() => {

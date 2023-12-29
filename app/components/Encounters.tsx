@@ -6,7 +6,7 @@ export function Encounters(props: { encounters: any[] }) {
       <UnorderedList style={{ listStyle: "none" }}>
         {(props.encounters &&
           props.encounters.map((e: any) => {
-            return <ListItem key={e.id}>e.name</ListItem>;
+            return <ListItem key={e.id}>{e.name || "no name"}</ListItem>;
           })) || <span>no encounters</span>}
       </UnorderedList>
     </div>

@@ -1,17 +1,30 @@
 import { useFetcher } from "@remix-run/react";
 import { useEffect } from "react";
 
-export default function IdToEntry(props: any) {
+import DataEntryView from "./DataEntryView";
+
+export default function IdToEntry({ model, id, isList }) {
   const fetcher = useFetcher<any>();
   useEffect(() => {
-    fetcher.load(`/collections/${props.model}/${props.id}`);
+    fetcher.load(`/collections/${model}/${id}`);
   }, []);
   if (fetcher.state === "loading") {
-    return <div>Loading {props.model}...</div>; // Show loading state
+    return <div>Loading {model}...</div>; // Show loading state
   } else if (fetcher.data) {
     let modelData = fetcher.data.data;
+
     if (modelData) {
-      return <span>{modelData.name}</span>;
+      if (isList) {
+        return <span>{modelData.name || "no name"}</span>;
+      } else {
+        return (
+          <DataEntryView
+            data={JSON.parse(modelData.data)}
+            type={model}
+            useStore={false}
+          />
+        );
+      }
     } else {
       return <p>record deleted</p>;
     }

@@ -1,7 +1,7 @@
 // root.tsx
 import React, { useContext, useEffect } from "react";
 import { withEmotionCache } from "@emotion/react";
-import { ChakraProvider } from "@chakra-ui/react";
+import { Box, ChakraProvider } from "@chakra-ui/react";
 import {
   Links,
   LiveReload,
@@ -80,10 +80,12 @@ const Document = withEmotionCache(
           ))}
         </head>
         <body>
-          {children}
-          <ScrollRestoration />
-          <Scripts />
-          <LiveReload />
+          <Box>
+            {children}
+            <ScrollRestoration />
+            <Scripts />
+            <LiveReload />
+          </Box>
         </body>
       </html>
     );

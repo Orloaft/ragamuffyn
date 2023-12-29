@@ -58,22 +58,23 @@ export default function DataEntryView({ data, type, useStore }: any) {
       </p>
       <div>
         Items
-        {charData.items.map((i) => {
-          return <IdToEntry key={i} id={i} model="items" />;
-        })}
+        {charData.items &&
+          charData.items.map((i) => {
+            return <IdToEntry key={i} isList={true} id={i} model="items" />;
+          })}
       </div>
     </div>
   );
 
   const renderNoteData = (noteData: NoteData) => (
     <div>
-      <h3>{noteData.name}</h3>
+      <h3>{noteData.name || "no name"}</h3>
       <p>{noteData.text}</p>
     </div>
   );
   const renderItemData = (itemData: ItemData) => (
     <div>
-      <h3>{itemData.name}</h3>
+      <h3>{itemData.name || "no name"}</h3>
       <p>{itemData.description}</p>
       <p> {itemData.type && `Type` && itemData.type}</p>
     </div>
@@ -81,13 +82,13 @@ export default function DataEntryView({ data, type, useStore }: any) {
 
   const renderLocationData = (locationData: LocationData) => (
     <div>
-      <h3>{locationData.name}</h3>
+      <h3>{locationData.name || "no name"}</h3>
       <p>{locationData.description}</p>
       <div>
         NPCs
         {locationData.npcs.map((n) => (
           <div key={n}>
-            <IdToEntry id={n} model="npcs" />
+            <IdToEntry id={n} model="npcs" isList={true} />
           </div>
         ))}
       </div>
@@ -95,7 +96,7 @@ export default function DataEntryView({ data, type, useStore }: any) {
         Encounters
         {locationData.encounters.map((n) => (
           <div key={n}>
-            <IdToEntry id={n} model="encounters" />
+            <IdToEntry id={n} model="encounters" isList={true} />
           </div>
         ))}
       </div>
@@ -104,12 +105,12 @@ export default function DataEntryView({ data, type, useStore }: any) {
 
   const renderEncounterData = (encounterData: EncounterData) => (
     <div>
-      <h3>{encounterData.name}</h3>
+      <h3>{encounterData.name || "no name"}</h3>
       <p>{encounterData.description}</p>
       <div>
         Locations
         {encounterData.locations.map((i) => {
-          return <IdToEntry key={i} id={i} model="locations" />;
+          return <IdToEntry key={i} id={i} model="locations" isList={true} />;
         })}
       </div>
       <p>Initiative Order {encounterData.initiativeOrder.join(", ")}</p>
@@ -118,13 +119,13 @@ export default function DataEntryView({ data, type, useStore }: any) {
       <div>
         Notes
         {encounterData.notes.map((i) => {
-          return <IdToEntry key={i} id={i} model="notes" />;
+          return <IdToEntry key={i} id={i} model="notes" isList={true} />;
         })}
       </div>
       <div>
         NPCs
         {encounterData.npcs.map((i) => {
-          return <IdToEntry key={i} id={i} model="npcs" />;
+          return <IdToEntry key={i} id={i} model="npcs" isList={true} />;
         })}
       </div>
     </div>
@@ -132,29 +133,29 @@ export default function DataEntryView({ data, type, useStore }: any) {
 
   const renderCampaignData = (campaignData: CampaignData) => (
     <div>
-      <h3>{campaignData.name}</h3>
+      <h3>{campaignData.name || "no name"}</h3>
       <div>
         Characters
         {campaignData.characters.map((i) => {
-          return <IdToEntry key={i} id={i} model="characters" />;
+          return <IdToEntry key={i} id={i} model="characters" isList={true} />;
         })}
       </div>
       <div>
         Players
         {campaignData.players.map((i) => {
-          return <IdToEntry key={i} id={i} model="players" />;
+          return <IdToEntry key={i} id={i} model="players" isList={true} />;
         })}
       </div>
       <div>
         Encounters
         {campaignData.encounters.map((i) => {
-          return <IdToEntry key={i} id={i} model="encounters" />;
+          return <IdToEntry key={i} id={i} model="encounters" isList={true} />;
         })}
       </div>
       <div>
         Locations
         {campaignData.locations.map((i) => {
-          return <IdToEntry key={i} id={i} model="locations" />;
+          return <IdToEntry key={i} id={i} model="locations" isList={true} />;
         })}
       </div>
       <p>Plot {campaignData.plot}</p>
@@ -165,7 +166,9 @@ export default function DataEntryView({ data, type, useStore }: any) {
     <dl className="-my-3 divide-y divide-gray-100 text-sm">
       <div className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
         <dt className="font-medium text-gray-900">Name</dt>
-        <dd className="text-gray-700 sm:col-span-2">{npcData.name}</dd>{" "}
+        <dd className="text-gray-700 sm:col-span-2">
+          {npcData.name || "no name"}
+        </dd>{" "}
       </div>
       <div className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
         <dt className="font-medium text-gray-900">bio</dt>
@@ -175,7 +178,7 @@ export default function DataEntryView({ data, type, useStore }: any) {
         <dt className="font-medium text-gray-900">Items</dt>
         <dd className="text-gray-700 sm:col-span-2">
           {npcData.items.map((i) => {
-            return <IdToEntry key={i} id={i} model="items" />;
+            return <IdToEntry key={i} id={i} model="items" isList={true} />;
           })}
         </dd>
       </div>

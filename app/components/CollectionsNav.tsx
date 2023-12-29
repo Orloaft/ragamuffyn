@@ -4,7 +4,7 @@ import { NavLink } from "@remix-run/react";
 export default function CollectionsNav() {
   return (
     <Tabs>
-      <TabList>
+      <TabList background="grey">
         <Tab>
           <NavLink to="/collections/characters">Characters</NavLink>
         </Tab>
@@ -25,6 +25,9 @@ export default function CollectionsNav() {
         </Tab>{" "}
         <Tab>
           <NavLink to="/collections/notes">Notes</NavLink>
+        </Tab>
+        <Tab>
+          <NavLink to="/upload">upload</NavLink>
         </Tab>
       </TabList>
     </Tabs>

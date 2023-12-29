@@ -14,6 +14,7 @@ export interface DataEntry {
   id: string;
   name?: string;
   data?: string;
+  createdAt?: string;
 }
 interface HasNotes {
   notes: string[];
@@ -101,6 +102,74 @@ export async function getData<
   }
 
   return data.sort((a, b) => ("" + a[sortKey]).localeCompare("" + b[sortKey]));
+}
+export async function uploadBulkData(data: any) {
+  const objArray = JSON.parse(data.get("data"));
+  switch (data.get("model")) {
+    case "characters":
+      objArray.forEach((obj: CharData) => {
+        createCharacter({
+          id: "",
+          name: obj.name,
+          data: JSON.stringify(obj),
+        });
+      });
+      break;
+    case "items":
+      objArray.forEach((obj: ItemData) => {
+        createItem({
+          id: "",
+          name: obj.name,
+          data: JSON.stringify(obj),
+        });
+      });
+      break;
+    case "npcs":
+      objArray.forEach((obj: NPCdata) => {
+        createNpc({
+          id: "",
+          name: obj.name,
+          data: JSON.stringify(obj),
+        });
+      });
+      break;
+    case "locations":
+      objArray.forEach((obj: LocationData) => {
+        createLocation({
+          id: "",
+          name: obj.name,
+          data: JSON.stringify(obj),
+        });
+      });
+      break;
+    case "campaigns":
+      objArray.forEach((obj: CampaignData) => {
+        createCampaign({
+          id: "",
+          name: obj.name,
+          data: JSON.stringify(obj),
+        });
+      });
+      break;
+    case "encounters":
+      objArray.forEach((obj: EncounterData) => {
+        createEncounter({
+          id: "",
+          name: obj.name,
+          data: JSON.stringify(obj),
+        });
+      });
+      break;
+    case "notes":
+      objArray.forEach((obj: NoteData) => {
+        createNote({
+          id: "",
+          name: obj.name,
+          data: JSON.stringify(obj),
+        });
+      });
+      break;
+  }
 }
 export async function getDataByModel(model: string, q?: string | null) {
   switch (model) {
@@ -317,7 +386,7 @@ export async function deleteCampaign(id: string): Promise<Campaign> {
     where: { id },
   });
 }
-export async function createItem(data: any): Promise<Item> {
+export async function createItem(data: any): Promise<DataEntry> {
   let id = uuidv4();
   debugLog("creating item in db:", { ...data, id: `I${id}` });
   return await prisma.item.create({

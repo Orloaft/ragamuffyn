@@ -13,22 +13,26 @@ import {
   ListItem,
   UnorderedList,
   Flex,
+  Tooltip,
 } from "@chakra-ui/react";
 import IdToEntry from "./IdToEntry";
 import { DataModalPopUp } from "./DataModalPopUp";
 
 export const ModalPopUp = ({ model, data, button, addedData, addToForm }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <>
-      <IconButton
-        onClick={(e) => {
-          e.preventDefault();
-          onOpen();
-        }}
-        aria-label="add"
-        icon={button}
-      />
+      <Tooltip label="Add" openDelay={500}>
+        <IconButton
+          onClick={(e) => {
+            e.preventDefault();
+            onOpen();
+          }}
+          aria-label="add"
+          icon={button}
+        />
+      </Tooltip>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -45,12 +49,11 @@ export const ModalPopUp = ({ model, data, button, addedData, addToForm }) => {
                     return (
                       <ListItem key={char.id}>
                         <Flex justify={"space-between"} gap={"1rem"}>
-                          <IdToEntry model={model} id={char.id} />
+                          <IdToEntry model={model} id={char.id} isList={true} />
                           <Flex>
-                            {" "}
                             <DataModalPopUp
                               model={model}
-                              data={JSON.parse(char.data)}
+                              data={{ id: char.id }}
                               button={<SearchIcon />}
                             />
                             <IconButton
@@ -79,7 +82,6 @@ export const ModalPopUp = ({ model, data, button, addedData, addToForm }) => {
             <Button colorScheme="blue" mr={3} onClick={onClose}>
               Close
             </Button>
-            <Button variant="ghost">Secondary Action</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

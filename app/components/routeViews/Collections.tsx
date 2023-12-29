@@ -1,4 +1,4 @@
-import { Button, Input, UnorderedList } from "@chakra-ui/react";
+import { Button, Center, Input, UnorderedList } from "@chakra-ui/react";
 import {
   useNavigation,
   useSubmit,
@@ -77,7 +77,6 @@ export default function CollectionsView({ data, q, model }: any) {
             </p>
           )}
         </nav>
-        <Outlet />
       </div>
       <div
         className={

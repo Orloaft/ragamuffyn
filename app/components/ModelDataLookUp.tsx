@@ -22,13 +22,15 @@ const ModelDataLookUp = ({
   } else if (fetcher.data) {
     return (
       <div>
-        <ModalPopUp
-          button={<AddIcon />}
-          addToForm={addToForm}
-          data={fetcher.data.data}
-          model={model}
-          addedData={addedData}
-        />
+        {fetcher.data.data && (
+          <ModalPopUp
+            button={<AddIcon />}
+            addToForm={addToForm}
+            data={fetcher.data.data}
+            model={model}
+            addedData={addedData}
+          />
+        )}
       </div>
     );
   }
