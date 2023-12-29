@@ -8,6 +8,7 @@ import DataEntryView from "~/components/DataEntryView";
 import { useDispatch } from "react-redux";
 import { setDataObj, setLoading } from "~/redux/dataObjSlice";
 import { useEffect } from "react";
+import { Button, Flex } from "@chakra-ui/react";
 
 export const loader = async ({ params, context }: LoaderFunctionArgs) => {
   invariant(params.dataId, "Missing characterId param");
@@ -35,14 +36,14 @@ export default function Index() {
       }}
     >
       <div
-        className="rpgui-container"
+        className=""
         style={{
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
         }}
       >
-        {data && <DataEntryView data={data} type={model} />}
+        {data && <DataEntryView data={data} type={model} useStore={true} />}
         <Form
           style={{
             display: "flex",
@@ -60,15 +61,12 @@ export default function Index() {
             }
           }}
         >
-          <button type="submit" className="rpgui-button">
-            Delete
-          </button>
-          <NavLink
-            to={`/collections/${model}/${id}/edit`}
-            style={{ marginLeft: "5rem" }}
-          >
-            edit
-          </NavLink>
+          <Flex>
+            <Button type="submit">Delete</Button>
+            <Button>
+              <NavLink to={`/collections/${model}/${id}/edit`}>Edit</NavLink>
+            </Button>
+          </Flex>
         </Form>
       </div>
     </div>

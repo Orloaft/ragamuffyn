@@ -4,6 +4,15 @@ import ClassInput from "../inputs/ClassInput";
 import { Form, useNavigate } from "@remix-run/react";
 import DataEntryInput from "../inputs/DataEntryInput";
 import PlayersInput from "../inputs/PlayersInput";
+import {
+  Button,
+  Center,
+  Flex,
+  Input,
+  ListItem,
+  Textarea,
+  UnorderedList,
+} from "@chakra-ui/react";
 
 interface FormDataByModel<T> {
   data: T;
@@ -67,8 +76,8 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
         return (
           <div>
             <label>
-              Name:
-              <input
+              Name
+              <Input
                 defaultValue={value}
                 aria-label="name"
                 name="name"
@@ -82,12 +91,27 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
         break;
       case "level":
         return <LevelInput onChange={handleChange} value={value} />;
+      case "text":
+        return (
+          <div>
+            <label>
+              Text
+              <Textarea
+                defaultValue={value}
+                aria-label="text"
+                name="text"
+                placeholder="text"
+                onChange={handleChange}
+              />
+            </label>
+          </div>
+        );
       case "race":
         return (
           <div>
             <label>
-              race:
-              <input
+              Race
+              <Input
                 defaultValue={value}
                 aria-label="race"
                 name="race"
@@ -99,16 +123,17 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
           </div>
         );
         break;
+      case "images":
+        return;
       case "description":
         return (
           <div>
             <label>
-              description:
-              <input
+              description
+              <Textarea
                 defaultValue={value}
                 aria-label="description"
                 name="description"
-                type="text"
                 placeholder="description"
                 onChange={handleChange}
               />
@@ -128,12 +153,11 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
         return (
           <div>
             <label>
-              description:
-              <input
+              Bio
+              <Textarea
                 defaultValue={value}
                 aria-label="bio"
                 name="bio"
-                type="text"
                 placeholder="bio"
                 onChange={handleChange}
               />
@@ -156,12 +180,11 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
         return (
           <div>
             <label>
-              Plot:
-              <input
+              Plot
+              <Textarea
                 defaultValue={value}
                 aria-label="plot"
                 name="plot"
-                type="text"
                 placeholder="plot"
                 onChange={handleChange}
               />
@@ -174,7 +197,7 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
   const getFields = (dataObj: T) => {
     let keyArray = Object.keys(dataObj);
     return keyArray.map((k: string) => {
-      return <li key={k}>{keyToInput(k, dataObj[k])}</li>;
+      return <ListItem key={k}>{keyToInput(k, dataObj[k])}</ListItem>;
     });
   };
   return (
@@ -189,16 +212,24 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
         padding: "0 15% 0 15%",
       }}
     >
-      <ul>{formFields && getFields(formFields)}</ul>
-      <button type="submit">Save</button>
-      <button
-        onClick={() => {
-          navigate(-1);
-        }}
-        type="button"
-      >
-        Cancel
-      </button>
+      <UnorderedList style={{ listStyle: "none" }}>
+        {formFields && getFields(formFields)}
+      </UnorderedList>
+      <Center>
+        {" "}
+        <Flex>
+          <Button type="submit">Save</Button>
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              navigate(-1);
+            }}
+            type="button"
+          >
+            Cancel
+          </Button>
+        </Flex>
+      </Center>
     </Form>
   );
 };

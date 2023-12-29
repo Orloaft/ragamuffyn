@@ -1,3 +1,4 @@
+import { Input } from "@chakra-ui/react";
 import React from "react";
 
 const RaceInput: React.FC<any> = (props) => {
@@ -12,7 +13,7 @@ const RaceInput: React.FC<any> = (props) => {
     <div>
       <label>
         Race:
-        <input
+        <Input
           name="race"
           type="string"
           defaultValue={props.value}

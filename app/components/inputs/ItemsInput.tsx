@@ -1,5 +1,6 @@
 import React from "react";
 import ModelDataLookUp from "../ModelDataLookUp";
+import { UnorderedList } from "@chakra-ui/react";
 
 const ItemsInput: React.FC<any> = (props) => {
   // State for storing the input value
@@ -8,7 +9,7 @@ const ItemsInput: React.FC<any> = (props) => {
     <div>
       <label>
         Items:
-        <ul>
+        <UnorderedList style={{ listStyle: "none" }}>
           {props.value.map((item: any) => {
             return (
               <li key={item}>
@@ -28,7 +29,7 @@ const ItemsInput: React.FC<any> = (props) => {
               </li>
             );
           })}
-        </ul>
+        </UnorderedList>
         <ModelDataLookUp
           addToForm={props.onChange}
           addedData={props.value}

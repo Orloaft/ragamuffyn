@@ -1,14 +1,32 @@
+import { Tab, TabList, Tabs } from "@chakra-ui/react";
 import { NavLink } from "@remix-run/react";
 
 export default function CollectionsNav() {
   return (
-    <div style={{ display: "flex", flexDirection: "row", gap: "1rem" }}>
-      <NavLink to="/collections/characters">Characters</NavLink>
-      <NavLink to="/collections/npcs">Npcs</NavLink>
-      <NavLink to="/collections/items">Items</NavLink>
-      <NavLink to="/collections/campaigns">Campaigns</NavLink>
-      <NavLink to="/collections/encounters">Ecounters</NavLink>
-      <NavLink to="/collections/locations">Locations</NavLink>
-    </div>
+    <Tabs>
+      <TabList>
+        <Tab>
+          <NavLink to="/collections/characters">Characters</NavLink>
+        </Tab>
+        <Tab>
+          <NavLink to="/collections/npcs">Npcs</NavLink>
+        </Tab>
+        <Tab>
+          <NavLink to="/collections/items">Items</NavLink>
+        </Tab>
+        <Tab>
+          <NavLink to="/collections/campaigns">Campaigns</NavLink>
+        </Tab>
+        <Tab>
+          <NavLink to="/collections/encounters">Ecounters</NavLink>
+        </Tab>
+        <Tab>
+          <NavLink to="/collections/locations">Locations</NavLink>
+        </Tab>{" "}
+        <Tab>
+          <NavLink to="/collections/notes">Notes</NavLink>
+        </Tab>
+      </TabList>
+    </Tabs>
   );
 }

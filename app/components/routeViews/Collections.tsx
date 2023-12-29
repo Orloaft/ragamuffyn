@@ -1,3 +1,4 @@
+import { Button, Input, UnorderedList } from "@chakra-ui/react";
 import {
   useNavigation,
   useSubmit,
@@ -30,7 +31,7 @@ export default function CollectionsView({ data, q, model }: any) {
   return (
     <div>
       <div id="sidebar">
-        <h1>{model}:</h1>
+        <h1>{model}</h1>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <Form
             id="search-form"
@@ -42,7 +43,9 @@ export default function CollectionsView({ data, q, model }: any) {
               });
             }}
           >
-            <input
+            <Input
+              size="sm"
+              width="auto"
               id="q"
               aria-label="Search contacts"
               className={searching ? "loading" : ""}
@@ -54,20 +57,20 @@ export default function CollectionsView({ data, q, model }: any) {
             <div id="search-spinner" hidden={!searching} aria-hidden />
           </Form>
           <Form method="post">
-            <button type="submit">New</button>
+            <Button type="submit">New</Button>
           </Form>
         </div>
         <nav>
           {data && data.length ? (
-            <ul>
+            <UnorderedList style={{ listStyle: "none" }}>
               {items.map((dataEntry: any) => (
                 <li key={dataEntry.id}>
                   <NavLink to={`/collections/${model}/${dataEntry.id}`}>
-                    {dataEntry.name}
+                    {dataEntry.name || `no name`}
                   </NavLink>
                 </li>
               ))}
-            </ul>
+            </UnorderedList>
           ) : (
             <p>
               <i>No {model}</i>

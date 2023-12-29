@@ -1,12 +1,14 @@
+import { ListItem, UnorderedList } from "@chakra-ui/react";
+
 export function Encounters(props: { encounters: any[] }) {
   return (
     <div>
-      <ul>
+      <UnorderedList style={{ listStyle: "none" }}>
         {(props.encounters &&
           props.encounters.map((e: any) => {
-            return <li key={e.id}>e.name</li>;
+            return <ListItem key={e.id}>e.name</ListItem>;
           })) || <span>no encounters</span>}
-      </ul>
+      </UnorderedList>
     </div>
   );
 }

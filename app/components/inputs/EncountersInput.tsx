@@ -1,5 +1,6 @@
 import React from "react";
 import ModelDataLookUp from "../ModelDataLookUp";
+import { ListItem, UnorderedList } from "@chakra-ui/react";
 
 const EncountersInput: React.FC<any> = (props) => {
   // State for storing the input value
@@ -8,10 +9,10 @@ const EncountersInput: React.FC<any> = (props) => {
     <div>
       <label>
         Encounters:
-        <ul>
+        <UnorderedList style={{ listStyle: "none" }}>
           {props.value.map((item: any) => {
             return (
-              <li key={item}>
+              <ListItem key={item}>
                 {item}
                 <button
                   onClick={(e) => {
@@ -26,10 +27,10 @@ const EncountersInput: React.FC<any> = (props) => {
                 >
                   remove
                 </button>
-              </li>
+              </ListItem>
             );
           })}
-        </ul>
+        </UnorderedList>
         <ModelDataLookUp
           addToForm={props.onChange}
           addedData={props.value}

@@ -116,6 +116,8 @@ export async function getDataByModel(model: string, q?: string | null) {
       return getCampaigns(q);
     case "encounters":
       return getEncounters(q);
+    case "notes":
+      return getNotes(q);
   }
 }
 
@@ -149,9 +151,9 @@ export async function createDataEntry(model: string) {
     case "characters":
       return createCharacter({
         id: "",
-        name: "no name",
+        name: "",
         data: JSON.stringify({
-          name: "no name",
+          name: "",
           level: 0,
           class: "",
           race: "",
@@ -162,9 +164,9 @@ export async function createDataEntry(model: string) {
     case "notes":
       return createNote({
         id: "",
-        name: "no name",
+        name: "",
         data: JSON.stringify({
-          name: "no name",
+          name: "",
           images: [],
           text: "",
         }),
@@ -173,9 +175,9 @@ export async function createDataEntry(model: string) {
     case "campaigns":
       return createCampaign({
         id: "",
-        name: "no name",
+        name: "",
         data: JSON.stringify({
-          name: "no name",
+          name: "",
           plot: "",
           encounters: [],
           locations: [],
@@ -187,9 +189,9 @@ export async function createDataEntry(model: string) {
     case "items":
       return createItem({
         id: "",
-        name: "no name",
+        name: "",
         data: JSON.stringify({
-          name: "no name",
+          name: "",
           description: "",
           type: "",
         }),
@@ -198,9 +200,9 @@ export async function createDataEntry(model: string) {
     case "encounters":
       return createEncounter({
         id: "",
-        name: "no name",
+        name: "",
         data: JSON.stringify({
-          name: "no name",
+          name: "",
           description: "",
           locations: [],
           initiativeOrder: [],
@@ -214,9 +216,9 @@ export async function createDataEntry(model: string) {
     case "locations":
       return createLocation({
         id: "",
-        name: "no name",
+        name: "",
         data: JSON.stringify({
-          name: "no name",
+          name: "",
           description: "",
           npcs: [],
           encounters: [],
@@ -226,9 +228,9 @@ export async function createDataEntry(model: string) {
     case "npcs":
       return createNpc({
         id: "",
-        name: "no name",
+        name: "",
         data: JSON.stringify({
-          name: "no name",
+          name: "",
           bio: "",
           characterSheet: "",
           items: [],
@@ -240,22 +242,26 @@ export async function createDataEntry(model: string) {
 // Specific functions using the generic one
 export async function getCharacters(
   query?: string | null
-): Promise<Character[]> {
-  return getData<Character>("character", query, "name");
+): Promise<DataEntry[]> {
+  return getData<DataEntry>("character", query, "name");
 }
 
-export async function getCampaigns(query?: string | null): Promise<Campaign[]> {
-  return getData<Campaign>("campaign", query, "name");
+export async function getCampaigns(
+  query?: string | null
+): Promise<DataEntry[]> {
+  return getData<DataEntry>("campaign", query, "name");
 }
 
-export async function getItems(query?: string | null): Promise<Item[]> {
-  return getData<Item>("item", query, "name");
+export async function getItems(query?: string | null): Promise<DataEntry[]> {
+  return getData<DataEntry>("item", query, "name");
 }
-export async function getLocations(query?: string | null): Promise<any[]> {
-  return getData<any>("location", query, "name");
+export async function getLocations(
+  query?: string | null
+): Promise<DataEntry[]> {
+  return getData<DataEntry>("location", query, "name");
 }
-export async function getNpcs(query?: string | null): Promise<NPC[]> {
-  return getData<NPC>("npc", query, "name");
+export async function getNpcs(query?: string | null): Promise<DataEntry[]> {
+  return getData<DataEntry>("npc", query, "name");
 }
 export async function getEncounters(query?: string | null): Promise<any[]> {
   return getData<any>("encounter", query, "name");
@@ -329,7 +335,7 @@ export async function updateItem(
   id: string,
   data: DataEntry
 ): Promise<DataEntry> {
-  debugLog("creating item in db:", { ...data, id: `I${id}` });
+  debugLog("updating item in db:", { ...data, id: `I${id}` });
   return await prisma.item.update({
     where: { id },
     data: { name: data.name, data: JSON.stringify(data) },
@@ -387,6 +393,9 @@ export async function updateDataEntry(id: string, updates: any) {
     case "I":
       return updateItem(id, updates);
       break;
+    case "O":
+      return updateNote(id, updates);
+      break;
   }
 }
 export async function getDataById(id: string) {
@@ -409,6 +418,9 @@ export async function getDataById(id: string) {
       break;
     case "I":
       return getItem(id);
+      break;
+    case "O":
+      return getNote(id);
       break;
   }
 }
@@ -478,6 +490,13 @@ export async function updateLocation(
   });
 }
 
+export async function createNote(data: DataEntry): Promise<DataEntry> {
+  let id = uuidv4();
+  debugLog("creating note in db:", { ...data, id: `O${id}` });
+  return await prisma.note.create({
+    data: { ...data, id: `O${id}` },
+  });
+}
 // Create a new Encounter
 export async function createEncounter(data: DataEntry): Promise<DataEntry> {
   let id = uuidv4();
@@ -487,6 +506,11 @@ export async function createEncounter(data: DataEntry): Promise<DataEntry> {
   });
 }
 
+export async function getNote(id: string): Promise<DataEntry> {
+  return await prisma.note.findUnique({
+    where: { id },
+  });
+}
 // Get an Encounter by ID
 export async function getEncounter(id: string): Promise<DataEntry> {
   return await prisma.encounter.findUnique({
@@ -511,10 +535,30 @@ export async function updateEncounter(
     data: { name: data.name, data: JSON.stringify(updates) },
   });
 }
-
+export async function updateNote(
+  id: string,
+  data: NoteData
+): Promise<DataEntry> {
+  debugLog("updating note in db:", id, data);
+  let updates = { ...data };
+  ["images"].forEach((a) => {
+    if (!updates.hasOwnProperty(a)) {
+      updates[a] = [];
+    }
+  });
+  return await prisma.note.update({
+    where: { id },
+    data: { name: data.name, data: JSON.stringify(updates) },
+  });
+}
 // Delete an Encounter
 export async function deleteEncounter(id: string): Promise<DataEntry> {
   return await prisma.encounter.delete({
+    where: { id },
+  });
+}
+export async function deleteNote(id: string): Promise<DataEntry> {
+  return await prisma.note.delete({
     where: { id },
   });
 }

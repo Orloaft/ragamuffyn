@@ -1,3 +1,4 @@
+import { ListItem, UnorderedList } from "@chakra-ui/react";
 import type { character, npc } from "@prisma/client";
 
 export interface battleData {
@@ -11,18 +12,20 @@ export default function BattleView({ data }: { data: battleData }) {
   return (
     <div>
       <h2>Characters</h2>
-      <ul>
+      <UnorderedList style={{ listStyle: "none" }}>
         {data.characters.map((character) => (
-          <li key={character.id}>{character.name}</li>
+          <ListItem key={character.id}>{character.name}</ListItem>
         ))}
-      </ul>
+      </UnorderedList>
 
       <h2>NPCs</h2>
-      <ul>
+      <UnorderedList style={{ listStyle: "none" }}>
         {data.npcs.map((npc) => (
-          <li key={npc.id}>{npc.name}</li>
+          <ListItem key={npc.id} as={undefined}>
+            {npc.name}
+          </ListItem>
         ))}
-      </ul>
+      </UnorderedList>
     </div>
   );
 }

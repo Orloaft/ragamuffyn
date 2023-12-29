@@ -1,4 +1,4 @@
-import { NavLink, useFetcher } from "@remix-run/react";
+import { useFetcher } from "@remix-run/react";
 import { useEffect } from "react";
 
 export default function IdToEntry(props: any) {
@@ -11,11 +11,7 @@ export default function IdToEntry(props: any) {
   } else if (fetcher.data) {
     let modelData = fetcher.data.data;
     if (modelData) {
-      return (
-        <NavLink to={`/collections/${props.model}/${props.id}`}>
-          <span>{modelData.name}</span>
-        </NavLink>
-      );
+      return <span>{modelData.name}</span>;
     } else {
       return <p>record deleted</p>;
     }

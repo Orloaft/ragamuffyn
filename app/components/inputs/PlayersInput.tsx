@@ -1,3 +1,4 @@
+import { Button, Input, UnorderedList } from "@chakra-ui/react";
 import React, { useState } from "react";
 
 type PlayersInputProps = {
@@ -22,7 +23,7 @@ const PlayersInput: React.FC<PlayersInputProps> = ({ value, onChange }) => {
   };
   return (
     <div>
-      <ul>
+      <UnorderedList style={{ listStyle: "none" }}>
         {value.map((player, index) => (
           <li key={index}>
             {player}{" "}
@@ -35,14 +36,14 @@ const PlayersInput: React.FC<PlayersInputProps> = ({ value, onChange }) => {
             </button>
           </li>
         ))}
-      </ul>
-      <input
+      </UnorderedList>
+      <Input
         type="text"
         value={newPlayer}
         onChange={(e) => setNewPlayer(e.target.value)}
         placeholder="Enter player's name"
       />
-      <button onClick={handleAddClick}>Add Player</button>
+      <Button onClick={handleAddClick}>Add Player</Button>
     </div>
   );
 };
