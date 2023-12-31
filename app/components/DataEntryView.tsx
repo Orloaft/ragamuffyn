@@ -10,8 +10,11 @@ import type {
 import IdToEntry from "./IdToEntry";
 import { useSelector } from "react-redux";
 import { Box, Button } from "@chakra-ui/react";
+import { NavLink, useLocation } from "@remix-run/react";
 
 export default function DataEntryView({ data, type, useStore }: any) {
+  const location = useLocation();
+  const currentPath = location.pathname;
   let dataObj:
     | CharData
     | ItemData
@@ -99,11 +102,12 @@ export default function DataEntryView({ data, type, useStore }: any) {
         </div>
         <div>
           Encounters
-          {locationData.encounters.map((n) => (
-            <div key={n}>
-              <IdToEntry id={n} model="encounters" isList={true} />
-            </div>
-          ))}
+          {locationData.encounters &&
+            locationData.encounters.map((n) => (
+              <div key={n}>
+                <IdToEntry id={n} model="encounters" isList={true} />
+              </div>
+            ))}
         </div>
       </div>
     );
@@ -132,11 +136,15 @@ export default function DataEntryView({ data, type, useStore }: any) {
         </div>
         <div>
           NPCs
-          {encounterData.npcs.map((i) => {
-            return <IdToEntry key={i} id={i} model="npcs" isList={true} />;
-          })}
+          {encounterData.npcs &&
+            encounterData.npcs.map((i) => {
+              return <IdToEntry key={i} id={i} model="npcs" isList={true} />;
+            })}
         </div>
-        <Button>Battle</Button>
+        <Button>
+          {" "}
+          <NavLink to={currentPath + `/battle`}>Battle</NavLink>
+        </Button>
       </div>
     );
 
@@ -146,31 +154,37 @@ export default function DataEntryView({ data, type, useStore }: any) {
         <h3>{campaignData.name || "no name"}</h3>
         <div>
           Characters
-          {campaignData.characters.map((i) => {
-            return (
-              <IdToEntry key={i} id={i} model="characters" isList={true} />
-            );
-          })}
+          {campaignData.characters &&
+            campaignData.characters.map((i) => {
+              return (
+                <IdToEntry key={i} id={i} model="characters" isList={true} />
+              );
+            })}
         </div>
         <div>
           Players
-          {campaignData.players.map((i) => {
-            return <IdToEntry key={i} id={i} model="players" isList={true} />;
-          })}
+          {campaignData.players &&
+            campaignData.players.map((i) => {
+              return <IdToEntry key={i} id={i} model="players" isList={true} />;
+            })}
         </div>
         <div>
           Encounters
-          {campaignData.encounters.map((i) => {
-            return (
-              <IdToEntry key={i} id={i} model="encounters" isList={true} />
-            );
-          })}
+          {campaignData.encounters &&
+            campaignData.encounters.map((i) => {
+              return (
+                <IdToEntry key={i} id={i} model="encounters" isList={true} />
+              );
+            })}
         </div>
         <div>
           Locations
-          {campaignData.locations.map((i) => {
-            return <IdToEntry key={i} id={i} model="locations" isList={true} />;
-          })}
+          {campaignData.locations &&
+            campaignData.locations.map((i) => {
+              return (
+                <IdToEntry key={i} id={i} model="locations" isList={true} />
+              );
+            })}
         </div>
         <p>Plot {campaignData.plot}</p>
       </div>

@@ -10,7 +10,6 @@ const LocationsInput: React.FC<any> = (props) => {
       <label>
         Locations:
         <UnorderedList
-          backgroundImage={"url('/marble.avif')"}
           style={{ listStyle: "none", padding: "10px" }}
           color="#dddddd"
         >

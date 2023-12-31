@@ -8,7 +8,7 @@ import DataEntryView from "~/components/DataEntryView";
 import { useDispatch } from "react-redux";
 import { setDataObj, setLoading } from "~/redux/dataObjSlice";
 import { useEffect } from "react";
-import { Box, Button, Flex } from "@chakra-ui/react";
+import { AbsoluteCenter, Box, Button, Flex } from "@chakra-ui/react";
 
 export const loader = async ({ params, context }: LoaderFunctionArgs) => {
   invariant(params.dataId, "Missing characterId param");
@@ -29,7 +29,6 @@ export default function Index() {
   }, [data.data, dispatch]);
   return (
     <Box
-      backgroundImage={"url('/marble.avif')"}
       color="#dddddd"
       padding="1rem"
       borderRadius=".25rem"
@@ -39,40 +38,42 @@ export default function Index() {
         justifyContent: "center",
       }}
     >
-      <div
-        className=""
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-        }}
-      >
-        {data && <DataEntryView data={data} type={model} useStore={true} />}
-        <Form
+      <AbsoluteCenter>
+        <div
+          className=""
           style={{
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
           }}
-          action="destroy"
-          method="post"
-          onSubmit={(event) => {
-            const response = confirm(
-              "Please confirm you want to delete this record."
-            );
-            if (!response) {
-              event.preventDefault();
-            }
-          }}
         >
-          <Flex>
-            <Button type="submit">Delete</Button>
-            <Button>
-              <NavLink to={`/collections/${model}/${id}/edit`}>Edit</NavLink>
-            </Button>
-          </Flex>
-        </Form>
-      </div>
+          {data && <DataEntryView data={data} type={model} useStore={true} />}
+          <Form
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+            }}
+            action="destroy"
+            method="post"
+            onSubmit={(event) => {
+              const response = confirm(
+                "Please confirm you want to delete this record."
+              );
+              if (!response) {
+                event.preventDefault();
+              }
+            }}
+          >
+            <Flex>
+              <Button type="submit">Delete</Button>
+              <Button>
+                <NavLink to={`/collections/${model}/${id}/edit`}>Edit</NavLink>
+              </Button>
+            </Flex>
+          </Form>
+        </div>
+      </AbsoluteCenter>
     </Box>
   );
 }

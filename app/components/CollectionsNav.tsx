@@ -1,6 +1,7 @@
-import { Tab, TabList, Tabs } from "@chakra-ui/react";
+import { Box, Tab, TabList, Tabs, Image } from "@chakra-ui/react";
 import { NavLink, useLocation } from "@remix-run/react";
-
+import { motion, useAnimation } from "framer-motion";
+const MotionBox = motion(Box);
 export default function CollectionsNav() {
   const location = useLocation();
   const currentPath = location.pathname;
@@ -30,9 +31,34 @@ export default function CollectionsNav() {
     "/upload": 7,
   }; // Default to first tab if path not found
   let tabIndex = tabIndexMapping[extractPath()] ?? 0;
+  const controls = useAnimation();
+
+  const handleMouseEnter = () => {
+    controls.start({ x: -20, transition: { duration: 0.25 } }); // Slide up by 10px
+  };
+
+  const handleMouseLeave = () => {
+    controls.start({ x: 0, transition: { duration: 0.25 } }); // Return to original position
+  };
   return (
     <Tabs index={tabIndex}>
-      <TabList backgroundImage={"url('/marble.avif')"} color="#dddddd">
+      {" "}
+      <MotionBox
+        width="fit-content"
+        height="fit-content"
+        position="absolute"
+        right="10"
+        animate={controls}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <Image src="/logo.png" alt="logo" borderRadius="50%" height="3rem" />
+      </MotionBox>
+      <TabList
+        backgroundImage={"url('/marble.avif')"}
+        color="#dddddd"
+        height="3rem"
+      >
         <Tab>
           <NavLink to="/collections/characters">Characters</NavLink>
         </Tab>

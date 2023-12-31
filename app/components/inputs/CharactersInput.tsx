@@ -11,7 +11,6 @@ const CharactersInput: React.FC<any> = (props) => {
       <label>
         Characters:
         <UnorderedList
-          backgroundImage={"url('/marble.avif')"}
           style={{ listStyle: "none", padding: "10px" }}
           color="#dddddd"
         >

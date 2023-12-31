@@ -4,7 +4,6 @@ export function Encounters(props: { encounters: any[] }) {
   return (
     <div>
       <UnorderedList
-        backgroundImage={"url('/marble.avif')"}
         style={{ listStyle: "none", padding: "10px" }}
         color="#dddddd"
       >

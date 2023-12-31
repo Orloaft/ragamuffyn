@@ -10,7 +10,6 @@ const EncountersInput: React.FC<any> = (props) => {
       <label>
         Encounters:
         <UnorderedList
-          backgroundImage={"url('/marble.avif')"}
           style={{ listStyle: "none", padding: "10px" }}
           color="#dddddd"
         >

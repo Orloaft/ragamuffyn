@@ -1,4 +1,4 @@
-import { MinusIcon, SearchIcon } from "@chakra-ui/icons";
+import { DeleteIcon, SearchIcon } from "@chakra-ui/icons";
 import IdToEntry from "../IdToEntry";
 import ModelDataLookUp from "../ModelDataLookUp";
 import {
@@ -19,7 +19,6 @@ const DataEntryInput: React.FC<any> = (props) => {
         {props.model}
         <Divider />
         <UnorderedList
-          backgroundImage={"url('/marble.avif')"}
           style={{ listStyle: "none", padding: "10px" }}
           color="#dddddd"
         >
@@ -38,6 +37,13 @@ const DataEntryInput: React.FC<any> = (props) => {
 
                       <IconButton
                         onClick={() => {
+                          const response = confirm(
+                            "Please confirm you want to remove this entry."
+                          );
+                          if (!response) {
+                            return;
+                          }
+
                           props.onChange({
                             target: {
                               name: props.model,
@@ -46,7 +52,7 @@ const DataEntryInput: React.FC<any> = (props) => {
                           });
                         }}
                         aria-label="remove"
-                        icon={<MinusIcon />}
+                        icon={<DeleteIcon />}
                       />
                     </Flex>
                   </Flex>

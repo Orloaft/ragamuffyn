@@ -13,7 +13,6 @@ export default function BattleView({ data }: { data: battleData }) {
     <div>
       <h2>Characters</h2>
       <UnorderedList
-        backgroundImage={"url('/marble.avif')"}
         style={{ listStyle: "none", padding: "10px" }}
         color="#dddddd"
       >
@@ -24,7 +23,6 @@ export default function BattleView({ data }: { data: battleData }) {
 
       <h2>NPCs</h2>
       <UnorderedList
-        backgroundImage={"url('/marble.avif')"}
         style={{ listStyle: "none", padding: "10px" }}
         color="#dddddd"
       >

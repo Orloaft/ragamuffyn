@@ -233,7 +233,6 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
     >
       <UnorderedList
         width="100%"
-        backgroundImage={"url('/marble.avif')"}
         style={{ listStyle: "none", padding: "10px" }}
         color="#dddddd"
       >

@@ -29,7 +29,13 @@ export default function CollectionsView({ data, q, model }: any) {
     navigation.location &&
     new URLSearchParams(navigation.location.search).has("q");
   return (
-    <Box backgroundImage={"url('/marble.avif')"} color="#dddddd" padding="1rem">
+    <Box
+      backgroundImage={"url('/marble.avif')"}
+      color="#dddddd"
+      padding="1rem"
+      height="100vh"
+      zIndex="5"
+    >
       <div id="sidebar">
         <h1>{model}</h1>
         <div style={{ display: "flex", flexDirection: "column" }}>
@@ -69,7 +75,6 @@ export default function CollectionsView({ data, q, model }: any) {
         <nav>
           {data && data.length ? (
             <UnorderedList
-              backgroundImage={"url('/marble.avif')"}
               style={{ listStyle: "none", padding: "10px" }}
               color="#dddddd"
             >

@@ -1,8 +1,52 @@
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import session from "express-session";
+import passport from "passport";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import { Strategy as GitHubStrategy } from "passport-github2";
 
 const app = express();
+
+app.use(
+  session({ secret: "your_secret", resave: true, saveUninitialized: true })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Configure Passport strategies for Google and GitHub
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: "/auth/google/callback",
+    },
+    (accessToken, refreshToken, profile, cb) => {
+      // Handle user profile
+    }
+  )
+);
+
+passport.use(
+  new GitHubStrategy(
+    {
+      clientID: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      callbackURL: "/auth/github/callback",
+    },
+    (accessToken, refreshToken, profile, cb) => {
+      // Handle user profile
+    }
+  )
+);
+
+// Serialize and deserialize user instances to and from the session.
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((user, done) => done(null, user));
+
+// ... other Express/Remix server setup
+
 const server = createServer(app);
 const io = new Server(server, {
   cors: {

@@ -32,7 +32,7 @@ export const DataModalPopUp = ({ data, button, model }) => {
       </Tooltip>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent backgroundImage={"url('/marble.avif')"} color="#dddddd">
           <ModalHeader>{data.name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
