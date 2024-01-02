@@ -1,7 +1,6 @@
 import type { ChangeEvent } from "react";
 import React, { useEffect, useState } from "react";
 import {
-  AspectRatio,
   Box,
   Button,
   Drawer,
@@ -15,9 +14,9 @@ import {
   SliderTrack,
   Text,
   useDisclosure,
-  Image,
 } from "@chakra-ui/react";
-interface CellProperty {
+import Cell from "./Cell";
+export interface CellProperty {
   size: number;
   posX: number;
   posY: number;
@@ -67,17 +66,16 @@ const BattleGrid: React.FC<any> = ({ background }: any) => {
         },
       }));
     } else {
-      setSelectedCell(cellKey);
-
       setCellProperties((prev) => ({
         ...prev,
         [cellKey]: {
           size: prev[cellKey]?.size || 100, // default size
           posX: prev[cellKey]?.posX || 50, // default X position
           posY: prev[cellKey]?.posY || 50, // default Y position
-          image: prev[cellKey]?.image || null,
+          image: prev[selectedCell ? selectedCell : cellKey]?.image || null,
         },
       }));
+      setSelectedCell(cellKey);
     }
     const newHighlighted = highlighted.map((row, rIdx) =>
       rIdx === rowIndex
@@ -279,28 +277,15 @@ const BattleGrid: React.FC<any> = ({ background }: any) => {
               const cellProps = cellProperties[cellKey];
 
               return (
-                <Box key={cellKey} w="100%">
-                  <AspectRatio ratio={1}>
-                    <Box
-                      onClick={() => handleSquareClick(rowIndex, colIndex)}
-                      border="1px"
-                      borderColor="gray.200"
-                      opacity={selectedCell === cellKey ? "1" : ".45"}
-                      position="relative"
-                    >
-                      {cellProps && cellProps.image && (
-                        <Image
-                          src={cellProps.image}
-                          alt="Cell Image"
-                          position="absolute"
-                          zIndex="10"
-                          borderRadius="50%"
-                          opacity="1"
-                        />
-                      )}
-                    </Box>
-                  </AspectRatio>
-                </Box>
+                <Cell
+                  key={cellKey}
+                  cellKey={cellKey}
+                  cellProps={cellProps}
+                  isSelected={selectedCell === cellKey}
+                  onClick={() => {
+                    handleSquareClick(rowIndex, colIndex);
+                  }}
+                />
               );
             })
           )}
