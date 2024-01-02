@@ -10,6 +10,7 @@ import { Link, useLoaderData } from "@remix-run/react";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import invariant from "tiny-invariant";
+import ImageUpload from "~/components/images/ImageUpload";
 import { getDataById } from "~/data";
 import { setDataObj } from "~/redux/dataObjSlice";
 

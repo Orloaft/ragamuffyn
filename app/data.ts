@@ -10,6 +10,7 @@ import type {
 import { PrismaClient } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
 import { debugLog } from "./utils/logger";
+import type { ImageData } from "./components/images/ImageUpload";
 export interface DataEntry {
   id: string;
   name?: string;
@@ -31,7 +32,7 @@ export interface CharData extends HasNotes {
 export interface NoteData {
   [key: string]: any;
   name: string;
-  images: string[];
+  images: ImageData[];
   text: string;
 }
 export interface ItemData extends HasNotes {

@@ -81,7 +81,8 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
         key === "characters" ||
         key === "locations" ||
         key === "npcs" ||
-        key === "notes"
+        key === "notes" ||
+        key === "images"
       ) {
         // Store as an array if there are multiple unique values
 

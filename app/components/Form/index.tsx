@@ -13,6 +13,7 @@ import {
   Textarea,
   UnorderedList,
 } from "@chakra-ui/react";
+import ImageUpload from "../images/ImageUpload";
 
 interface FormDataByModel<T> {
   data: T;
@@ -23,7 +24,7 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
 }: FormDataByModel<T>) => {
   const navigate = useNavigate();
   const [formFields, setFormFields] = useState<T>(data);
-
+  console.log(formFields);
   const handleChange = (event: any) => {
     const { name, value } = event.target;
 
@@ -32,6 +33,7 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
       [name]: value,
     }));
   };
+
   const handleSubmit = async (event: any) => {
     event.preventDefault();
 
@@ -40,9 +42,10 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
     for (const field in formFields) {
       if (formFields.hasOwnProperty(field)) {
         if (Array.isArray(formFields[field])) {
-          formFields[field].forEach((item: any) =>
-            formData.append(field, item)
-          );
+          formFields[field].forEach((item: any) => {
+            console.log("appending:", field, item);
+            formData.append(field, item);
+          });
         } else {
           formData.append(field, formFields[field]);
         }
@@ -51,6 +54,7 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
     }
 
     try {
+      console.log("formdata", formData);
       const response = await fetch(event.currentTarget.action, {
         method: "POST",
         body: formData,
@@ -134,7 +138,7 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
         );
         break;
       case "images":
-        return;
+        return <ImageUpload handleChange={handleChange} images={value} />;
       case "description":
         return (
           <div>

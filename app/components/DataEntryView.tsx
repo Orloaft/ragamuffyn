@@ -9,8 +9,10 @@ import type {
 } from "~/data";
 import IdToEntry from "./IdToEntry";
 import { useSelector } from "react-redux";
-import { Box, Button } from "@chakra-ui/react";
+import { Box, Button, Image, UnorderedList } from "@chakra-ui/react";
 import { NavLink, useLocation } from "@remix-run/react";
+import { v4 as uuidv4 } from "uuid";
+import { ImageListComponent } from "./images/ImageList";
 
 export default function DataEntryView({ data, type, useStore }: any) {
   const location = useLocation();
@@ -76,6 +78,7 @@ export default function DataEntryView({ data, type, useStore }: any) {
       <div>
         <h3>{noteData.name || "no name"}</h3>
         <p>{noteData.text}</p>
+        <ImageListComponent noteData={noteData} />
       </div>
     );
   const renderItemData = (itemData: ItemData) => (
