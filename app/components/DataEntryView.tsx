@@ -78,7 +78,7 @@ export default function DataEntryView({ data, type, useStore }: any) {
       <div>
         <h3>{noteData.name || "no name"}</h3>
         <p>{noteData.text}</p>
-        <ImageListComponent noteData={noteData} />
+        <ImageListComponent images={noteData.images} onChange={false} />
       </div>
     );
   const renderItemData = (itemData: ItemData) => (

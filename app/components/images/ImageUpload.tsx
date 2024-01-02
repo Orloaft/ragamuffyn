@@ -1,6 +1,7 @@
 import { Button } from "@chakra-ui/react";
 import type { ChangeEvent } from "react";
 import React, { useState } from "react";
+import { ImageListComponent } from "./ImageList";
 
 export interface ImageData {
   url: string;
@@ -45,6 +46,8 @@ export default function ImageUpload({ handleChange, images }: any) {
 
   return (
     <div>
+      {" "}
+      <ImageListComponent images={images} onChange={handleChange} />
       <input
         type="text"
         placeholder="Enter image URL"
