@@ -216,6 +216,15 @@ export async function deleteDataEntry(id: string) {
       break;
   }
 }
+export async function fetchDataEntriesById(ids: string[]) {
+  let dataArray = [];
+  for await (const id of ids) {
+    let data = await getDataById(id);
+    console.log("getting data from db", data);
+    dataArray.push(data);
+  }
+  return dataArray;
+}
 export async function createDataEntry(model: string) {
   switch (model) {
     case "characters":
@@ -366,7 +375,14 @@ export async function updateCampaign(
 ): Promise<DataEntry> {
   debugLog("updating campaign in db:", id, updates);
   let update = { ...updates };
-  ["items", "players", "encounters", "locations", "characters"].forEach((a) => {
+  [
+    "items",
+    "players",
+    "encounters",
+    "locations",
+    "characters",
+    "notes",
+  ].forEach((a) => {
     if (!update.hasOwnProperty(a)) {
       update[a] = [];
     }
@@ -500,7 +516,7 @@ export async function updateCharacter(
 ): Promise<DataEntry> {
   debugLog("updating item in db:", id, data);
   let updates = { ...data };
-  ["items"].forEach((a) => {
+  ["items", "notes"].forEach((a) => {
     if (!updates.hasOwnProperty(a)) {
       updates[a] = [];
     }
@@ -548,7 +564,7 @@ export async function updateLocation(
   data: LocationData
 ): Promise<DataEntry> {
   let updates = { ...data };
-  ["npcs", "encounters"].forEach((a) => {
+  ["npcs", "encounters", "notes"].forEach((a) => {
     if (!updates.hasOwnProperty(a)) {
       updates[a] = [];
     }

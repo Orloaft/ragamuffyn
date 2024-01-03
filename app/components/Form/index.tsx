@@ -139,6 +139,7 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
         break;
       case "images":
         return <ImageUpload handleChange={handleChange} images={value} />;
+
       case "description":
         return (
           <div>

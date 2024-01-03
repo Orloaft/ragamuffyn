@@ -16,9 +16,14 @@ import {
   Text,
   useDisclosure,
   Image,
+  UnorderedList,
+  ListItem,
 } from "@chakra-ui/react";
 import Cell from "./Cell";
 import { ArrowUpDownIcon, SettingsIcon } from "@chakra-ui/icons";
+
+import EncounterElementsLookUp from "../EncounterElementsLookUp";
+import NotesImageLookUp from "../NotesImageLookUp";
 export interface CellProperty {
   size: number;
   posX: number;
@@ -34,11 +39,13 @@ const BattleGrid: React.FC<any> = () => {
   const [highlighted, setHighlighted] = useState<boolean[][]>(
     Array(28).fill(Array(28).fill(false))
   );
+  const [data, setData] = useState<any[]>([]);
   const [gridSize, setGridSize] = useState(10); // Initial grid size
   const [bg, setBg] = useState<any>();
   const [selectedCell, setSelectedCell] = useState<string | null>(null);
   const [cellProperties, setCellProperties] = useState<CellProperties>({});
   const [zoomLevel, setZoomLevel] = useState(1);
+  const [imageNoteIds, setImageNoteIds] = useState<string[]>([]);
   const handleZoomChange = (value: number) => {
     setZoomLevel(value);
   };
@@ -62,11 +69,13 @@ const BattleGrid: React.FC<any> = () => {
   const handleSquareClick = (rowIndex: number, colIndex: number) => {
     const cellKey = `${rowIndex}-${colIndex}`;
     const isNewCellSelected = cellKey !== selectedCell;
-    let movingData = { image: null, size: 1 };
+    let movingData = { image: null, size: 1, posX: 0, posY: 0 };
 
     if (selectedCell && cellProperties[selectedCell]?.moving) {
       movingData.image = cellProperties[selectedCell].image;
       movingData.size = cellProperties[selectedCell].size;
+      movingData.posX = cellProperties[selectedCell].posX;
+      movingData.posY = cellProperties[selectedCell].posY;
       setCellProperties((prev) => ({
         ...prev,
         [selectedCell]: {
@@ -82,8 +91,8 @@ const BattleGrid: React.FC<any> = () => {
         ...prev,
         [cellKey]: {
           size: movingData.size || prev[cellKey]?.size || 1,
-          posX: prev[cellKey]?.posX || 0,
-          posY: prev[cellKey]?.posY || 50,
+          posX: movingData.posX || 0,
+          posY: movingData.posY || 50,
           image: movingData.image || prev[cellKey]?.image || null,
           moving: false,
         },
@@ -106,6 +115,7 @@ const BattleGrid: React.FC<any> = () => {
   const [bgPosX, setBgPosX] = useState(50); // Initial X position (in percentage)
   const [bgPosY, setBgPosY] = useState(50); // Initial Y position (in percentage)
   const [bgRotate, setBgRotate] = useState(0);
+
   const handleCellImageChange = (e, cellKey) => {
     const file = e.target.files ? e.target.files[0] : null;
 
@@ -303,6 +313,7 @@ const BattleGrid: React.FC<any> = () => {
                   </SliderTrack>
                   <SliderThumb />
                 </Slider>
+                {/* <NotesImageLookUp data={data} /> */}
                 <Text>Image</Text>
                 <input
                   type="file"
@@ -319,6 +330,33 @@ const BattleGrid: React.FC<any> = () => {
               </Box>
             )}
           </Box>
+          <EncounterElementsLookUp
+            addedData={data}
+            addToForm={(c: any) => {
+              setData([...data, c]);
+            }}
+          />
+          <UnorderedList listStyleType={"none"} color="#dddddd">
+            {data &&
+              data.map((e) => {
+                return (
+                  <ListItem
+                    key={e.id}
+                    onClick={() => {
+                      console.log("notes", JSON.parse(e.data).notes);
+                      setImageNoteIds(JSON.parse(e.data).notes);
+                    }}
+                  >
+                    {e.name}
+                  </ListItem>
+                );
+              })}
+          </UnorderedList>
+          {imageNoteIds.length ? (
+            <NotesImageLookUp noteIds={imageNoteIds} />
+          ) : (
+            ""
+          )}
         </DrawerContent>
       </Drawer>
       <Box

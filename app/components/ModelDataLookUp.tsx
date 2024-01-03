@@ -16,7 +16,7 @@ const ModelDataLookUp = ({
 
   useEffect(() => {
     fetcher.load(`/collections/${model}`);
-  }, []);
+  }, [model]);
   if (fetcher.state === "loading") {
     return <div>Loading {model}...</div>; // Show loading state
   } else if (fetcher.data) {

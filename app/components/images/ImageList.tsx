@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 export const ImageListComponent = ({ images, onChange }) => {
   // State to store the image sources
   const [imageSources, setImageSources] = useState<any>([]);
-
+  console.log("imagess", images);
   useEffect(() => {
     // Process each image in noteData.images
     const processImages = async () => {
@@ -32,7 +32,7 @@ export const ImageListComponent = ({ images, onChange }) => {
 
   return (
     <UnorderedList maxHeight="20rem" overflowY="scroll" padding="2rem 1rem">
-      {imageSources.map((src) => (
+      {imageSources.map((src: any) => (
         <Flex key={uuidv4()}>
           {" "}
           <Image src={src} />{" "}
