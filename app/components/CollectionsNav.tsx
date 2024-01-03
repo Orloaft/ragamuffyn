@@ -81,7 +81,10 @@ export default function CollectionsNav() {
           <NavLink to="/collections/notes">Notes</NavLink>
         </Tab>
         <Tab>
-          <NavLink to="/upload">upload</NavLink>
+          <NavLink to="/upload">Upload</NavLink>
+        </Tab>
+        <Tab>
+          <NavLink to="/battle">Grid</NavLink>
         </Tab>
       </TabList>
     </Tabs>

@@ -98,7 +98,7 @@ export default function App() {
         <CollectionsNav />
         <Provider store={store}>
           <Box
-            bgImage="url('/parchment.webp')"
+            bgImage="url('/parchment.jpg')"
             bgPosition="center"
             bgRepeat="no-repeat"
             bgSize="cover"
