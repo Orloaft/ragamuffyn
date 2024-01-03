@@ -47,7 +47,9 @@ export default function Index() {
             justifyContent: "center",
           }}
         >
-          {data && <DataEntryView data={data} type={model} useStore={true} />}
+          {data && (
+            <DataEntryView data={data} type={model} useStore={true} id={id} />
+          )}
           <Form
             style={{
               display: "flex",

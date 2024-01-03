@@ -16,6 +16,8 @@ export default function Cell({ cellProps, isSelected, onClick, isMoving }) {
           src={cellProps.image}
           alt="Cell Image"
           position="absolute"
+          bottom={cellProps.posY}
+          right={cellProps.posX}
           zIndex="10"
           borderRadius="50%"
           opacity="1"

@@ -9,14 +9,12 @@ import type {
 } from "~/data";
 import IdToEntry from "./IdToEntry";
 import { useSelector } from "react-redux";
-import { Box, Button, Image, UnorderedList } from "@chakra-ui/react";
-import { NavLink, useLocation } from "@remix-run/react";
-import { v4 as uuidv4 } from "uuid";
+import { Box, Button } from "@chakra-ui/react";
+import { NavLink } from "@remix-run/react";
+
 import { ImageListComponent } from "./images/ImageList";
 
-export default function DataEntryView({ data, type, useStore }: any) {
-  const location = useLocation();
-  const currentPath = location.pathname;
+export default function DataEntryView({ data, type, useStore, id }: any) {
   let dataObj:
     | CharData
     | ItemData
@@ -146,7 +144,7 @@ export default function DataEntryView({ data, type, useStore }: any) {
         </div>
         <Button>
           {" "}
-          <NavLink to={currentPath + `/battle`}>Battle</NavLink>
+          <NavLink to={`/battle/${id}`}>Battle</NavLink>
         </Button>
       </div>
     );

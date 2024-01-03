@@ -2,7 +2,6 @@ import type { ChangeEvent } from "react";
 import React, { useEffect, useState } from "react";
 import {
   Box,
-  Button,
   Drawer,
   DrawerCloseButton,
   DrawerContent,
@@ -16,6 +15,7 @@ import {
   SliderTrack,
   Text,
   useDisclosure,
+  Image,
 } from "@chakra-ui/react";
 import Cell from "./Cell";
 import { ArrowUpDownIcon, SettingsIcon } from "@chakra-ui/icons";
@@ -30,7 +30,7 @@ export interface CellProperty {
 interface CellProperties {
   [key: string]: CellProperty;
 }
-const BattleGrid: React.FC<any> = ({ background }: any) => {
+const BattleGrid: React.FC<any> = () => {
   const [highlighted, setHighlighted] = useState<boolean[][]>(
     Array(28).fill(Array(28).fill(false))
   );
@@ -82,7 +82,7 @@ const BattleGrid: React.FC<any> = ({ background }: any) => {
         ...prev,
         [cellKey]: {
           size: movingData.size || prev[cellKey]?.size || 1,
-          posX: prev[cellKey]?.posX || 50,
+          posX: prev[cellKey]?.posX || 0,
           posY: prev[cellKey]?.posY || 50,
           image: movingData.image || prev[cellKey]?.image || null,
           moving: false,
@@ -105,6 +105,7 @@ const BattleGrid: React.FC<any> = ({ background }: any) => {
   const [bgSize, setBgSize] = useState(100); // Initial background size (in percentage)
   const [bgPosX, setBgPosX] = useState(50); // Initial X position (in percentage)
   const [bgPosY, setBgPosY] = useState(50); // Initial Y position (in percentage)
+  const [bgRotate, setBgRotate] = useState(0);
   const handleCellImageChange = (e, cellKey) => {
     const file = e.target.files ? e.target.files[0] : null;
 
@@ -132,11 +133,16 @@ const BattleGrid: React.FC<any> = ({ background }: any) => {
     }
   };
   return (
-    <Box h="100vh" position="relative">
+    <Box
+      h="100vh"
+      position="relative"
+      overflow="hidden"
+      transform={`scale(${zoomLevel}) `}
+    >
       <IconButton
         position="absolute"
         ref={btnRef}
-        zIndex="10"
+        zIndex="20"
         colorScheme="grey"
         onClick={onOpen}
         icon={<SettingsIcon />}
@@ -168,6 +174,8 @@ const BattleGrid: React.FC<any> = ({ background }: any) => {
                   accept="image/*"
                   onChange={handleFileChange}
                 />
+                <Image zIndex="10" alt="Cell Image" src={bg} />
+                <Text>Zoom</Text>
                 <Slider
                   aria-label="zoom-level"
                   min={0.5} // Minimum zoom level
@@ -175,6 +183,21 @@ const BattleGrid: React.FC<any> = ({ background }: any) => {
                   step={0.1} // Step of each zoom change
                   value={zoomLevel}
                   onChange={handleZoomChange}
+                >
+                  <SliderTrack />
+                  <SliderFilledTrack />
+                  <SliderThumb />
+                </Slider>
+                <Text>Rotate</Text>
+                <Slider
+                  aria-label="rotate"
+                  min={0} // Minimum zoom level
+                  max={25} // Maximum zoom level
+                  step={1} // Step of each zoom change
+                  value={bgRotate}
+                  onChange={(e) => {
+                    setBgRotate(e);
+                  }}
                 >
                   <SliderTrack />
                   <SliderFilledTrack />
@@ -242,8 +265,9 @@ const BattleGrid: React.FC<any> = ({ background }: any) => {
                 <Text>Cell Size</Text>
                 <Slider
                   value={cellProperties[selectedCell]?.size}
-                  min={0.5}
-                  max={20}
+                  min={0.15}
+                  step={0.1}
+                  max={10}
                   onChange={(val) => updateCellProperty("size", val)}
                 >
                   <SliderTrack>
@@ -254,9 +278,9 @@ const BattleGrid: React.FC<any> = ({ background }: any) => {
                 {/* Slider for adjusting X coordinate */}
                 <Text>X Position</Text>
                 <Slider
-                  defaultValue={50}
-                  min={0}
-                  max={100}
+                  defaultValue={0}
+                  min={-50}
+                  max={50}
                   orientation="horizontal"
                   onChange={(val) => updateCellProperty("posX", val)}
                 >
@@ -268,9 +292,9 @@ const BattleGrid: React.FC<any> = ({ background }: any) => {
                 {/* Slider for adjusting Y coordinate */}
                 <Text>Y Position</Text>
                 <Slider
-                  defaultValue={50}
-                  min={0}
-                  max={100}
+                  defaultValue={0}
+                  min={-50}
+                  max={50}
                   orientation="horizontal"
                   onChange={(val) => updateCellProperty("posY", val)}
                 >
@@ -279,28 +303,46 @@ const BattleGrid: React.FC<any> = ({ background }: any) => {
                   </SliderTrack>
                   <SliderThumb />
                 </Slider>
-                {/* File input for cell image */}
+                <Text>Image</Text>
                 <input
                   type="file"
                   accept="image/*"
                   onChange={(e) => handleCellImageChange(e, selectedCell)}
                 />
+                {cellProperties[selectedCell].image && (
+                  <Image
+                    zIndex="10"
+                    alt="Cell Image"
+                    src={cellProperties[selectedCell].image as string}
+                  />
+                )}
               </Box>
             )}
           </Box>
         </DrawerContent>
       </Drawer>
-
       <Box
-        bgPosition={`${bgPosX}% ${bgPosY}%`}
+        position="absolute"
+        top="0"
+        left="0"
+        right="0"
+        bottom="0"
+        maxHeight="100%"
         bgImage={bg}
+        bgPosition={`${bgPosX}% ${bgPosY}%`}
         bgSize={`${bgSize}%`}
         backgroundRepeat="no-repeat"
+        transform={`rotate(${bgRotate * 10}deg)`}
+        transformOrigin="center center"
+        zIndex="1"
+      />
+
+      <Box
         height="100vh"
         position="relative"
         overflowY="hidden"
-        transform={`scale(${zoomLevel})`}
         transformOrigin="center center"
+        zIndex="15"
       >
         <Grid
           templateRows={`repeat(${gridSize}, 1fr)`}
@@ -319,7 +361,7 @@ const BattleGrid: React.FC<any> = ({ background }: any) => {
                 <Box key={cellKey} position="relative">
                   {selectedCell === cellKey && (
                     <Box
-                      zIndex="10"
+                      zIndex="15"
                       position="absolute"
                       top="0"
                       left={`-${cellProps.size * 50 + 40}%`}
@@ -336,7 +378,7 @@ const BattleGrid: React.FC<any> = ({ background }: any) => {
                         <IconButton
                           height="50%"
                           left="10%"
-                          zIndex="10"
+                          zIndex="15"
                           aria-label="move"
                           colorScheme="grey"
                           icon={<ArrowUpDownIcon />}
