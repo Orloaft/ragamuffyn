@@ -7,7 +7,9 @@ import {
   DrawerCloseButton,
   DrawerContent,
   DrawerOverlay,
+  Flex,
   Grid,
+  IconButton,
   Slider,
   SliderFilledTrack,
   SliderThumb,
@@ -16,11 +18,13 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import Cell from "./Cell";
+import { ArrowUpDownIcon, SettingsIcon } from "@chakra-ui/icons";
 export interface CellProperty {
   size: number;
   posX: number;
   posY: number;
   image: string | null;
+  moving: boolean;
 }
 
 interface CellProperties {
@@ -59,20 +63,22 @@ const BattleGrid: React.FC<any> = ({ background }: any) => {
       setCellProperties((prev) => ({
         ...prev,
         [cellKey]: {
-          size: prev[cellKey]?.size || 100, // default size
+          size: prev[cellKey]?.size || 1, // default size
           posX: prev[cellKey]?.posX || 50, // default X position
           posY: prev[cellKey]?.posY || 50, // default Y position
           image: null,
+          moving: false,
         },
       }));
     } else {
       setCellProperties((prev) => ({
         ...prev,
         [cellKey]: {
-          size: prev[cellKey]?.size || 100, // default size
+          size: prev[cellKey]?.size || 1, // default size
           posX: prev[cellKey]?.posX || 50, // default X position
           posY: prev[cellKey]?.posY || 50, // default Y position
           image: prev[selectedCell ? selectedCell : cellKey]?.image || null,
+          moving: false,
         },
       }));
       setSelectedCell(cellKey);
@@ -103,7 +109,7 @@ const BattleGrid: React.FC<any> = ({ background }: any) => {
 
   const updateCellProperty = (
     property: keyof CellProperty,
-    value: number | string
+    value: number | string | boolean
   ) => {
     if (selectedCell) {
       setCellProperties((prev) => ({
@@ -117,15 +123,16 @@ const BattleGrid: React.FC<any> = ({ background }: any) => {
   };
   return (
     <Box h="100vh" position="relative">
-      <Button
+      <IconButton
         position="absolute"
         ref={btnRef}
         zIndex="10"
-        colorScheme="teal"
+        colorScheme="grey"
         onClick={onOpen}
+        icon={<SettingsIcon />}
       >
         Setting
-      </Button>
+      </IconButton>
       <Drawer
         isOpen={isOpen}
         placement="right"
@@ -205,8 +212,8 @@ const BattleGrid: React.FC<any> = ({ background }: any) => {
                 <Text>Cell Size</Text>
                 <Slider
                   value={cellProperties[selectedCell]?.size}
-                  min={10}
-                  max={200}
+                  min={0.5}
+                  max={20}
                   onChange={(val) => updateCellProperty("size", val)}
                 >
                   <SliderTrack>
@@ -275,17 +282,44 @@ const BattleGrid: React.FC<any> = ({ background }: any) => {
             row.map((isHighlighted, colIndex) => {
               const cellKey = `${rowIndex}-${colIndex}`;
               const cellProps = cellProperties[cellKey];
-
+              console.log("cell props", cellProps);
               return (
-                <Cell
-                  key={cellKey}
-                  cellKey={cellKey}
-                  cellProps={cellProps}
-                  isSelected={selectedCell === cellKey}
-                  onClick={() => {
-                    handleSquareClick(rowIndex, colIndex);
-                  }}
-                />
+                <Box key={cellKey} position="relative">
+                  {selectedCell === cellKey && (
+                    <Box position="absolute" top="0" left="-40%">
+                      <Flex flexDirection="column" gap="2">
+                        <IconButton
+                          left="10%"
+                          zIndex="10"
+                          height="50%"
+                          aria-label="settings"
+                          colorScheme="grey"
+                          icon={<SettingsIcon />}
+                          onClick={onOpen}
+                        />{" "}
+                        <IconButton
+                          height="50%"
+                          left="10%"
+                          zIndex="10"
+                          aria-label="move"
+                          colorScheme="grey"
+                          icon={<ArrowUpDownIcon />}
+                          onClick={() => {
+                            updateCellProperty("moving", true);
+                          }}
+                        />
+                      </Flex>
+                    </Box>
+                  )}{" "}
+                  <Cell
+                    isMoving={cellProps ? cellProps.moving : false}
+                    cellProps={cellProps}
+                    isSelected={selectedCell === cellKey}
+                    onClick={() => {
+                      handleSquareClick(rowIndex, colIndex);
+                    }}
+                  />
+                </Box>
               );
             })
           )}

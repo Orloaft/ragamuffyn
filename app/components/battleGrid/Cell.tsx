@@ -1,4 +1,4 @@
-import { AspectRatio, Image, Box } from "@chakra-ui/react";
+import { AspectRatio, Image, Box, IconButton, Flex } from "@chakra-ui/react";
 import type { CellProperty } from ".";
 
 export interface CellProps {
@@ -8,27 +8,28 @@ export interface CellProps {
   onClick: () => void;
 }
 
-export default function Cell({ cellKey, cellProps, isSelected, onClick }) {
+export default function Cell({ cellProps, isSelected, onClick, isMoving }) {
   return (
-    <Box key={cellKey} w="100%" onClick={onClick}>
+    <Box position="relative" w="100%" onClick={onClick}>
+      {cellProps && cellProps.image && (
+        <Image
+          src={cellProps.image}
+          alt="Cell Image"
+          position="absolute"
+          zIndex="10"
+          borderRadius="50%"
+          opacity="1"
+          transform={`scale(${cellProps.size})`}
+        />
+      )}
+
       <AspectRatio ratio={1}>
         <Box
           border="1px"
-          borderColor="gray.200"
-          opacity={isSelected ? "1" : ".45"}
+          borderColor={isMoving ? "red.200" : "gray.200"}
+          opacity={isSelected ? "1" : ".25"}
           position="relative"
-        >
-          {cellProps && cellProps.image && (
-            <Image
-              src={cellProps.image}
-              alt="Cell Image"
-              position="absolute"
-              zIndex="10"
-              borderRadius="50%"
-              opacity="1"
-            />
-          )}
-        </Box>
+        ></Box>
       </AspectRatio>
     </Box>
   );
