@@ -6,7 +6,7 @@ import { useFetcher } from "@remix-run/react";
 // Define TypeScript interfaces for clarity
 
 // Assuming the data prop is an array of DataElement
-const NotesImageLookUp: React.FC<any> = ({ noteIds }) => {
+const NotesImageLookUp: React.FC<any> = ({ noteIds, onChange }) => {
   const fetcher = useFetcher<any>({ key: "noteById" });
 
   useEffect(() => {
@@ -23,6 +23,7 @@ const NotesImageLookUp: React.FC<any> = ({ noteIds }) => {
   return fetcher.data ? (
     <ImageListComponent
       images={fetcher.data.map((d) => JSON.parse(d.data).images)}
+      setCellImage={onChange}
       onChange={() => {}}
     />
   ) : (

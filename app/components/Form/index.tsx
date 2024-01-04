@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import LevelInput from "../inputs/LevelInput";
 import ClassInput from "../inputs/ClassInput";
 import { Form, useNavigate } from "@remix-run/react";
@@ -24,7 +24,9 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
 }: FormDataByModel<T>) => {
   const navigate = useNavigate();
   const [formFields, setFormFields] = useState<T>(data);
-  console.log(formFields);
+  useEffect(() => {
+    setFormFields(data);
+  }, [data]);
   const handleChange = (event: any) => {
     const { name, value } = event.target;
 
@@ -86,7 +88,7 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
                 borderRadius=".25rem"
                 border="1px grey solid"
                 backgroundColor="#dddddd"
-                defaultValue={value}
+                value={value}
                 aria-label="name"
                 name="name"
                 type="text"

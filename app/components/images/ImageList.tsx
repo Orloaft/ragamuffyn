@@ -1,12 +1,12 @@
-import { DeleteIcon } from "@chakra-ui/icons";
+import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 import { UnorderedList, Image, Flex, IconButton } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-export const ImageListComponent = ({ images, onChange }) => {
+export const ImageListComponent = ({ images, onChange, setCellImage }) => {
   // State to store the image sources
   const [imageSources, setImageSources] = useState<any>([]);
-  console.log("imagess", images);
+
   useEffect(() => {
     // Process each image in noteData.images
     const processImages = async () => {
@@ -35,34 +35,29 @@ export const ImageListComponent = ({ images, onChange }) => {
       {imageSources.map((src: any) => (
         <Flex key={uuidv4()}>
           {" "}
-          <Image src={src} />{" "}
+          <Image maxWidth="80%" src={src} />{" "}
           {onChange && (
             <IconButton
               onClick={() => {
-                const response = confirm(
-                  "Please confirm you want to remove this entry."
-                );
-                if (!response) {
-                  return;
-                }
-
-                onChange({
-                  target: {
-                    name: "images",
-                    value: [...images].filter((img) => {
-                      let file = JSON.parse(img).file;
-                      if (file) {
-                        return src !== file;
-                      } else {
-                        let url = JSON.parse(img).url;
-                        return src !== url;
-                      }
-                    }),
-                  },
-                });
+                setCellImage
+                  ? setCellImage("image", src)
+                  : onChange({
+                      target: {
+                        name: "images",
+                        value: [...images].filter((img) => {
+                          let file = JSON.parse(img).file;
+                          if (file) {
+                            return src !== file;
+                          } else {
+                            let url = JSON.parse(img).url;
+                            return src !== url;
+                          }
+                        }),
+                      },
+                    });
               }}
               aria-label="remove"
-              icon={<DeleteIcon />}
+              icon={setCellImage ? <AddIcon /> : <DeleteIcon />}
             />
           )}
         </Flex>

@@ -358,7 +358,7 @@ export async function createNpc(data: DataEntry): Promise<DataEntry> {
 
 export async function updateNpc(id: string, data: any): Promise<NPC> {
   let updates = { ...data };
-  ["items"].forEach((a) => {
+  ["items", "notes"].forEach((a) => {
     if (!updates.hasOwnProperty(a)) {
       updates[a] = [];
     }

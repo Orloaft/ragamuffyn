@@ -10,10 +10,9 @@ import {
 } from "../data";
 
 import UpdateForm from "~/components/Form";
-import { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { setDataObj } from "~/redux/dataObjSlice";
+
 import { AbsoluteCenter, Box, Center } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 
 function modelToDataType(model: string) {
   switch (model) {
@@ -30,17 +29,18 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   if (!data) {
     throw new Response("Not Found", { status: 404 });
   }
+
   return json({ data, model: params.modelType });
 };
 
 export default function EditContact() {
   const { data, model } = useLoaderData<typeof loader>();
-  const dataObj = useSelector((state: any) => state.dataObj.dataObj);
-  const dispatch = useDispatch();
+  const [dataObj, setDataObj] = useState<any>(JSON.parse(data.data));
 
   useEffect(() => {
-    dispatch(setDataObj(JSON.parse(data.data as string)));
-  }, [dispatch, data.data]);
+    setDataObj(JSON.parse(data.data));
+    console.log(dataObj);
+  }, [data]);
   const modelType = modelToDataType(model as string);
 
   return (

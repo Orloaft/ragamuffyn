@@ -1,4 +1,4 @@
-import { Box, Select } from "@chakra-ui/react";
+import { Box, Flex, Select } from "@chakra-ui/react";
 
 import { useEffect, useState } from "react";
 
@@ -19,29 +19,31 @@ export default function EncounterElementsLookUp({ addedData, addToForm }) {
   } else if (fetcher.data) {
     return (
       <>
-        <div>
-          {fetcher.data.data && (
-            <EncounterElementsModal
-              model={model}
-              data={fetcher.data.data}
-              button={<AddIcon />}
-              addedData={addedData}
-              addToForm={addToForm}
-            />
-          )}
-        </div>
         <Box color="#dddddd">
-          <Select
-            onChange={(e) => {
-              setModel(e.target.value);
-            }}
-            value={model}
-          >
-            <option value="encounters">Encounters</option>
-            <option value="npcs">NPCs</option>
-            <option value="characters">Characters</option>
-            <option value="notes">Notes</option>
-          </Select>
+          <Flex>
+            <Select
+              onChange={(e) => {
+                setModel(e.target.value);
+              }}
+              value={model}
+            >
+              <option value="encounters">Encounters</option>
+              <option value="npcs">NPCs</option>
+              <option value="characters">Characters</option>
+              <option value="notes">Notes</option>
+            </Select>{" "}
+            <div>
+              {fetcher.data.data && (
+                <EncounterElementsModal
+                  model={model}
+                  data={fetcher.data.data}
+                  button={<AddIcon />}
+                  addedData={addedData}
+                  addToForm={addToForm}
+                />
+              )}
+            </div>
+          </Flex>
         </Box>
       </>
     );

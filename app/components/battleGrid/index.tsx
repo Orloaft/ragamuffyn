@@ -24,6 +24,7 @@ import { ArrowUpDownIcon, SettingsIcon } from "@chakra-ui/icons";
 
 import EncounterElementsLookUp from "../EncounterElementsLookUp";
 import NotesImageLookUp from "../NotesImageLookUp";
+import CustomModal from "../customModal";
 export interface CellProperty {
   size: number;
   posX: number;
@@ -352,11 +353,16 @@ const BattleGrid: React.FC<any> = () => {
                 );
               })}
           </UnorderedList>
-          {imageNoteIds.length ? (
-            <NotesImageLookUp noteIds={imageNoteIds} />
-          ) : (
-            ""
-          )}
+          <CustomModal
+            title="images"
+            content={
+              <NotesImageLookUp
+                noteIds={imageNoteIds}
+                onChange={updateCellProperty}
+              />
+            }
+            buttonLabel="images"
+          />
         </DrawerContent>
       </Drawer>
       <Box

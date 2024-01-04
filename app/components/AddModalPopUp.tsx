@@ -17,10 +17,22 @@ import {
 } from "@chakra-ui/react";
 import IdToEntry from "./IdToEntry";
 import { DataModalPopUp } from "./DataModalPopUp";
+import { useFetcher } from "@remix-run/react";
 
 export const ModalPopUp = ({ model, data, button, addedData, addToForm }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
+  const fetcher = useFetcher();
+  const handleInnerFormSubmit = async (e) => {
+    e.preventDefault(); // Prevent the default form submission
+    fetcher.submit(
+      {},
+      {
+        method: "post",
+        action: `/collections/${model}`,
+        encType: "application/json",
+      }
+    );
+  };
   return (
     <>
       <Tooltip label="Add" openDelay={500}>
@@ -79,6 +91,11 @@ export const ModalPopUp = ({ model, data, button, addedData, addToForm }) => {
                   }
                 })) || <ListItem>no {model}</ListItem>}
             </UnorderedList>
+            <div>
+              <Button backgroundColor="#dddddd" onClick={handleInnerFormSubmit}>
+                New
+              </Button>
+            </div>
           </ModalBody>
 
           <ModalFooter>
