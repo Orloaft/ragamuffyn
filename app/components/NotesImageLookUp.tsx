@@ -14,7 +14,7 @@ const NotesImageLookUp: React.FC<any> = ({ noteIds, onChange }) => {
       { ids: noteIds },
       { method: "post", action: "/api/getByIds", encType: "application/json" }
     );
-  }, []);
+  }, [noteIds]);
 
   if (fetcher.state === "loading") return <p>Loading...</p>;
   if (fetcher.data && fetcher.data.error)

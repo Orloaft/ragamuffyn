@@ -7,7 +7,9 @@ import {
   ModalCloseButton,
   ModalBody,
   Button,
+  IconButton,
 } from "@chakra-ui/react";
+import { EditIcon } from "@chakra-ui/icons";
 
 const CustomModal = ({ buttonLabel, content, title }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,7 +19,15 @@ const CustomModal = ({ buttonLabel, content, title }) => {
 
   return (
     <>
-      <Button onClick={onOpen}>{buttonLabel}</Button>
+      <IconButton
+        height="50%"
+        left="10%"
+        zIndex="15"
+        colorScheme="grey"
+        onClick={onOpen}
+        aria-label="edit"
+        icon={<EditIcon />}
+      ></IconButton>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

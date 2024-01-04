@@ -116,7 +116,10 @@ const BattleGrid: React.FC<any> = () => {
   const [bgPosX, setBgPosX] = useState(50); // Initial X position (in percentage)
   const [bgPosY, setBgPosY] = useState(50); // Initial Y position (in percentage)
   const [bgRotate, setBgRotate] = useState(0);
-
+  console.log(
+    "selectedcell props",
+    cellProperties[selectedCell !== null ? selectedCell : ""]
+  );
   const handleCellImageChange = (e, cellKey) => {
     const file = e.target.files ? e.target.files[0] : null;
 
@@ -133,6 +136,7 @@ const BattleGrid: React.FC<any> = () => {
     property: keyof CellProperty,
     value: number | string | boolean
   ) => {
+    console.log("selected cell", selectedCell);
     if (selectedCell) {
       setCellProperties((prev) => ({
         ...prev,
@@ -337,6 +341,7 @@ const BattleGrid: React.FC<any> = () => {
               setData([...data, c]);
             }}
           />
+
           <UnorderedList listStyleType={"none"} color="#dddddd">
             {data &&
               data.map((e) => {
@@ -353,16 +358,6 @@ const BattleGrid: React.FC<any> = () => {
                 );
               })}
           </UnorderedList>
-          <CustomModal
-            title="images"
-            content={
-              <NotesImageLookUp
-                noteIds={imageNoteIds}
-                onChange={updateCellProperty}
-              />
-            }
-            buttonLabel="images"
-          />
         </DrawerContent>
       </Drawer>
       <Box
@@ -411,14 +406,120 @@ const BattleGrid: React.FC<any> = () => {
                       left={`-${cellProps.size * 50 + 40}%`}
                     >
                       <Flex flexDirection="column" gap="2">
-                        <IconButton
-                          left="10%"
-                          height="50%"
-                          aria-label="settings"
-                          colorScheme="grey"
-                          icon={<SettingsIcon />}
-                          onClick={onOpen}
-                        />{" "}
+                        <CustomModal
+                          title="images"
+                          content={
+                            <>
+                              {" "}
+                              {selectedCell && (
+                                <Box>
+                                  {" "}
+                                  <Text>Selected Cell</Text>
+                                  <Text>Cell Size</Text>
+                                  <Slider
+                                    value={cellProperties[selectedCell]?.size}
+                                    min={0.15}
+                                    step={0.1}
+                                    max={10}
+                                    onChange={(val) =>
+                                      updateCellProperty("size", val)
+                                    }
+                                  >
+                                    <SliderTrack>
+                                      <SliderFilledTrack />
+                                    </SliderTrack>
+                                    <SliderThumb />
+                                  </Slider>
+                                  {/* Slider for adjusting X coordinate */}
+                                  <Text>X Position</Text>
+                                  <Slider
+                                    defaultValue={0}
+                                    min={-50}
+                                    max={50}
+                                    orientation="horizontal"
+                                    onChange={(val) =>
+                                      updateCellProperty("posX", val)
+                                    }
+                                  >
+                                    <SliderTrack>
+                                      <SliderFilledTrack />
+                                    </SliderTrack>
+                                    <SliderThumb />
+                                  </Slider>
+                                  {/* Slider for adjusting Y coordinate */}
+                                  <Text>Y Position</Text>
+                                  <Slider
+                                    defaultValue={0}
+                                    min={-50}
+                                    max={50}
+                                    orientation="horizontal"
+                                    onChange={(val) =>
+                                      updateCellProperty("posY", val)
+                                    }
+                                  >
+                                    <SliderTrack>
+                                      <SliderFilledTrack />
+                                    </SliderTrack>
+                                    <SliderThumb />
+                                  </Slider>
+                                  {/* <NotesImageLookUp data={data} /> */}
+                                  <Text>Image</Text>
+                                  <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) =>
+                                      handleCellImageChange(e, selectedCell)
+                                    }
+                                  />
+                                  {cellProperties[selectedCell].image && (
+                                    <Image
+                                      zIndex="10"
+                                      alt="Cell Image"
+                                      src={
+                                        cellProperties[selectedCell]
+                                          .image as string
+                                      }
+                                    />
+                                  )}
+                                </Box>
+                              )}
+                              <EncounterElementsLookUp
+                                addedData={data}
+                                addToForm={(c: any) => {
+                                  setData([...data, c]);
+                                }}
+                              />{" "}
+                              {data.length ? (
+                                <>
+                                  {" "}
+                                  <NotesImageLookUp
+                                    noteIds={imageNoteIds}
+                                    onChange={updateCellProperty}
+                                  />
+                                  <UnorderedList listStyleType="none">
+                                    {data.map((e) => {
+                                      return (
+                                        <ListItem
+                                          key={e.id}
+                                          onClick={() => {
+                                            setImageNoteIds(
+                                              JSON.parse(e.data).notes
+                                            );
+                                          }}
+                                        >
+                                          {e.name}
+                                        </ListItem>
+                                      );
+                                    })}{" "}
+                                  </UnorderedList>
+                                </>
+                              ) : (
+                                ""
+                              )}
+                            </>
+                          }
+                          buttonLabel="images"
+                        />
                         <IconButton
                           height="50%"
                           left="10%"
