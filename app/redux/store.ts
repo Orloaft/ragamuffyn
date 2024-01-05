@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import dataEntrySlice from "./dataEntrySlice";
 import dataObjSlice from "./dataObjSlice";
+import battleGridSlice from "./battleGridSlice";
 
 export const store = configureStore({
   reducer: {
     dataEntries: dataEntrySlice,
     dataObj: dataObjSlice,
+    battleGrid: battleGridSlice,
   },
 });
 

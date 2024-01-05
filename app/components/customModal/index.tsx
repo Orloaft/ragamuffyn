@@ -6,12 +6,11 @@ import {
   ModalHeader,
   ModalCloseButton,
   ModalBody,
-  Button,
   IconButton,
 } from "@chakra-ui/react";
 import { EditIcon } from "@chakra-ui/icons";
 
-const CustomModal = ({ buttonLabel, content, title }) => {
+const CustomModal = ({ content, title }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const onOpen = () => setIsOpen(true);
@@ -31,7 +30,11 @@ const CustomModal = ({ buttonLabel, content, title }) => {
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent
+          backgroundImage={"url('/marble.avif')"}
+          color="#dddddd"
+          marginLeft={"50%"}
+        >
           <ModalHeader>{title}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>{content}</ModalBody>

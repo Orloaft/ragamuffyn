@@ -1,10 +1,18 @@
-import { Box, Tab, TabList, Tabs, Image } from "@chakra-ui/react";
+import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
+import { Box, Tab, TabList, Tabs, IconButton } from "@chakra-ui/react";
 import { NavLink, useLocation } from "@remix-run/react";
 import { motion, useAnimation } from "framer-motion";
+import { useState } from "react";
 const MotionBox = motion(Box);
 export default function CollectionsNav() {
   const location = useLocation();
   const currentPath = location.pathname;
+  const [isVisible, setIsVisible] = useState(true);
+
+  const toggleNavVisibility = () => {
+    setIsVisible(!isVisible);
+    controls.start({ y: isVisible ? "-100%" : "0" });
+  };
 
   const extractPath = () => {
     const parts = currentPath.split("/");
@@ -29,64 +37,66 @@ export default function CollectionsNav() {
     "/collections/locations": 5,
     "/collections/notes": 6,
     "/upload": 7,
+    "/grid": 8,
+    "/player": 9,
   }; // Default to first tab if path not found
   let tabIndex = tabIndexMapping[extractPath()] ?? 0;
   const controls = useAnimation();
 
-  const handleMouseEnter = () => {
-    controls.start({ x: -20, transition: { duration: 0.25 } }); // Slide up by 10px
-  };
-
-  const handleMouseLeave = () => {
-    controls.start({ x: 0, transition: { duration: 0.25 } }); // Return to original position
-  };
   return (
-    <Tabs index={tabIndex}>
-      {" "}
-      <MotionBox
-        width="fit-content"
-        height="fit-content"
+    <MotionBox
+      initial={{ y: "0" }}
+      animate={controls}
+      width="100%"
+      position="relative"
+    >
+      <Tabs index={tabIndex} display={isVisible ? "block" : "none"}>
+        <TabList
+          backgroundImage={"url('/marble.avif')"}
+          color="#dddddd"
+          height="3rem"
+        >
+          <Tab>
+            <NavLink to="/collections/characters">Characters</NavLink>
+          </Tab>
+          <Tab>
+            <NavLink to="/collections/npcs">Npcs</NavLink>
+          </Tab>
+          <Tab>
+            <NavLink to="/collections/items">Items</NavLink>
+          </Tab>
+          <Tab>
+            <NavLink to="/collections/campaigns">Campaigns</NavLink>
+          </Tab>
+          <Tab>
+            <NavLink to="/collections/encounters">Ecounters</NavLink>
+          </Tab>
+          <Tab>
+            <NavLink to="/collections/locations">Locations</NavLink>
+          </Tab>{" "}
+          <Tab>
+            <NavLink to="/collections/notes">Notes</NavLink>
+          </Tab>
+          <Tab>
+            <NavLink to="/upload">Upload</NavLink>
+          </Tab>
+          <Tab>
+            <NavLink to="/grid">Grid</NavLink>
+          </Tab>
+          <Tab>
+            <NavLink to="/player">Player</NavLink>
+          </Tab>
+        </TabList>
+      </Tabs>
+      <IconButton
+        aria-label="hide"
+        icon={isVisible ? <ChevronUpIcon /> : <ChevronDownIcon />}
+        onClick={toggleNavVisibility}
         position="absolute"
-        right="10"
-        animate={controls}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
-        <Image src="/logo.png" alt="logo" borderRadius="50%" height="3rem" />
-      </MotionBox>
-      <TabList
-        backgroundImage={"url('/marble.avif')"}
-        color="#dddddd"
-        height="3rem"
-      >
-        <Tab>
-          <NavLink to="/collections/characters">Characters</NavLink>
-        </Tab>
-        <Tab>
-          <NavLink to="/collections/npcs">Npcs</NavLink>
-        </Tab>
-        <Tab>
-          <NavLink to="/collections/items">Items</NavLink>
-        </Tab>
-        <Tab>
-          <NavLink to="/collections/campaigns">Campaigns</NavLink>
-        </Tab>
-        <Tab>
-          <NavLink to="/collections/encounters">Ecounters</NavLink>
-        </Tab>
-        <Tab>
-          <NavLink to="/collections/locations">Locations</NavLink>
-        </Tab>{" "}
-        <Tab>
-          <NavLink to="/collections/notes">Notes</NavLink>
-        </Tab>
-        <Tab>
-          <NavLink to="/upload">Upload</NavLink>
-        </Tab>
-        <Tab>
-          <NavLink to="/grid">Grid</NavLink>
-        </Tab>
-      </TabList>
-    </Tabs>
+        top={isVisible ? "0" : "40%"}
+        right="1rem"
+        zIndex="15"
+      />
+    </MotionBox>
   );
 }

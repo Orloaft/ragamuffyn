@@ -80,12 +80,10 @@ const Document = withEmotionCache(
           ))}
         </head>
         <body>
-          <Box>
-            {children}
-            <ScrollRestoration />
-            <Scripts />
-            <LiveReload />
-          </Box>
+          {children}
+          <ScrollRestoration />
+          <Scripts />
+          <LiveReload />
         </body>
       </html>
     );
@@ -98,11 +96,12 @@ export default function App() {
         <CollectionsNav />
         <Provider store={store}>
           <Box
-            bgImage="url('/parchment.jpg')"
+            background={`url("/parchment.jpg")`}
             bgPosition="center"
             bgRepeat="no-repeat"
             bgSize="cover"
-            minHeight="100vh" // Full viewport height
+            width="100vw"
+            height="100vh" // Full viewport height
           >
             <Outlet />
           </Box>

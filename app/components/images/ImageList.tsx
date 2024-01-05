@@ -40,7 +40,7 @@ export const ImageListComponent = ({ images, onChange, setCellImage }) => {
             <IconButton
               onClick={() => {
                 setCellImage
-                  ? setCellImage("image", src)
+                  ? setCellImage(src)
                   : onChange({
                       target: {
                         name: "images",
