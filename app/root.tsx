@@ -100,10 +100,12 @@ export default function App() {
             bgPosition="center"
             bgRepeat="no-repeat"
             bgSize="cover"
-            width="100vw"
-            height="100vh" // Full viewport height
+            width="fit-content"
+            height="fit-content" // Full viewport height
           >
-            <Outlet />
+            <Box minWidth="100vw" minHeight="100vh">
+              <Outlet />
+            </Box>
           </Box>
         </Provider>
       </ChakraProvider>

@@ -1,15 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import io from "socket.io-client";
-import {
-  Box,
-  Grid,
-  Slider,
-  SliderTrack,
-  SliderFilledTrack,
-  SliderThumb,
-  Center,
-} from "@chakra-ui/react";
+import { Box, Grid, IconButton } from "@chakra-ui/react";
 import Cell from "~/components/battleGrid/Cell";
+import { DragHandleIcon, AddIcon, MinusIcon } from "@chakra-ui/icons";
+
 export default function Index() {
   const socket = io("http://localhost:8080"); // Replace with your server URL and portx
 
@@ -25,10 +19,39 @@ export default function Index() {
     bgSize: 100,
     bg: "",
   });
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const [isPanningEnabled, setIsPanningEnabled] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startPos, setStartPos] = useState({ x: 0, y: 0 });
+  const onMouseDown = useCallback(
+    (e) => {
+      if (!isPanningEnabled) return;
+      setIsDragging(true);
+      setStartPos({
+        x: e.clientX - containerRef.current.scrollLeft,
+        y: e.clientY - containerRef.current.scrollTop,
+      });
+    },
+    [isPanningEnabled]
+  );
 
+  const onMouseMove = useCallback(
+    (e) => {
+      if (!isDragging || !isPanningEnabled) return;
+      containerRef.current.scrollLeft =
+        startPos.x -
+        (e.clientX - containerRef.current.getBoundingClientRect().left);
+      containerRef.current.scrollTop =
+        startPos.y -
+        (e.clientY - containerRef.current.getBoundingClientRect().top);
+    },
+    [isDragging, isPanningEnabled, startPos]
+  );
+  const onMouseUp = useCallback(() => {
+    setIsDragging(false);
+  }, []);
   useEffect(() => {
     socket.on("gridUpdate", (data) => {
-      console.log(data);
       setSocketData(data);
 
       return () => {
@@ -38,70 +61,99 @@ export default function Index() {
     });
   }, [socket]);
 
-  const handleZoomChange = (value) => {
-    setSocketData((prev) => ({ ...prev, zoomLevel: value }));
-  };
-
-  // Destructure values from socketData
-  const {
-    selectedCell,
-
-    highlighted,
-  } = socketData;
+  const [zoom, setZoom] = useState(1);
 
   return (
-    <Box width="100vw" height="100vh" position="relative" overflow="hidden">
-      {" "}
-      <Box position="absolute" zIndex="10" width="10rem" left="10" top="20">
-        {" "}
-        <Slider
-          aria-label="zoom-level"
-          min={0.5} // Minimum zoom level
-          max={2} // Maximum zoom level
-          step={0.1} // Step of each zoom change
-          value={socketData.zoomLevel}
-          onChange={handleZoomChange}
+    <Box
+      onMouseDown={onMouseDown}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseUp}
+      onMouseUp={onMouseUp}
+      style={{
+        cursor: isDragging
+          ? "grabbing"
+          : isPanningEnabled
+          ? "grab"
+          : "crosshair",
+      }}
+      ref={containerRef}
+      width={[
+        socketData.gridSize * 25 + "vw",
+        socketData.gridSize * 20 + "vw",
+        socketData.gridSize * 10 + "vw",
+        socketData.gridSize * 10 + "vw",
+      ]} // Adjust these values as needed for different breakpoints
+      height={[
+        socketData.gridSize * 40 + "vh",
+        socketData.gridSize * 35 + "vh",
+        socketData.gridSize * 25 + "vh",
+        socketData.gridSize * 10 + "vh",
+      ]} // Adjust these values
+      position="relative"
+      overflow="auto"
+      boxSizing="border-box"
+      zIndex="10"
+    >
+      <Box position="fixed" zIndex="20">
+        <IconButton
+          aria-label="allow panning"
+          colorScheme="grey"
+          onClick={() => setIsPanningEnabled(() => !isPanningEnabled)}
+          icon={<DragHandleIcon color={isPanningEnabled ? "white" : "black"} />}
         >
-          <SliderTrack>
-            <SliderFilledTrack />
-          </SliderTrack>
-          <SliderThumb />
-        </Slider>
-      </Box>
-      <Box
-        h="100vh"
-        position="relative"
-        overflow="hidden"
-        transform={`scale(${socketData.zoomLevel})`}
-      >
-        <Box
-          position="absolute"
-          top="0"
-          left="0"
-          width="100vw"
-          height="100vh"
-          bgImage={socketData.bg}
-          bgPosition={`${socketData.bgPosX}% ${socketData.bgPosY}%`}
-          bgSize="contain" // 'cover' will ensure the background covers the entire box
-          backgroundRepeat="no-repeat"
-          transform={`rotate(${socketData.bgRotate * 10}deg) scale(${
-            socketData.bgSize / 100
-          })`}
-          transformOrigin="center center"
-          zIndex="1"
+          enable panning
+        </IconButton>
+        {/* <IconButton
+          colorScheme="grey"
+          aria-label="Zoom in"
+          icon={<AddIcon />}
+          onClick={() => setZoom(() => zoom + 1)}
         />
-
-        <Center width="100%" height="100%">
+        <IconButton
+          colorScheme="grey"
+          aria-label="Zoom out"
+          icon={<MinusIcon />}
+          onClick={() => setZoom(() => (zoom > 1 ? zoom - 1 : zoom - 0.2))}
+        /> */}
+      </Box>
+      <Box h="100%" w="100%" position="absolute">
+        <Box
+          minHeight="100%"
+          height="fit-content"
+          minWidth="100%"
+          width="fit-content"
+          position="relative"
+          transformOrigin="top center"
+          transform={
+            socketData.zoomLevel !== 1 ? `scale(${socketData.zoomLevel})` : ""
+          }
+          zIndex="15"
+        >
           <Grid
             templateRows={`repeat(${socketData.gridSize}, 50px)`}
             templateColumns={`repeat(${socketData.gridSize}, 50px)`}
             gap={0}
+            overflow="hidden"
             position="absolute"
-            width="100%"
-            height="100%"
-            zIndex="20"
+            top="50%" // Center vertically
+            left="50%" // Center horizontally
+            transform="translate(-50%, -50%)" // Adjust for exact centering
           >
-            {highlighted.map((row: any, rowIndex) =>
+            {" "}
+            <Box
+              position="absolute"
+              height={socketData.bgSize * 10}
+              width={socketData.bgSize * 10}
+              bgImage={socketData.bg}
+              top={-socketData.bgPosY + 25 + "%"}
+              bgPosition={`${socketData.bgPosX}% `}
+              bgSize={`contain`} // 'cover' will ensure the background covers the entire box
+              backgroundRepeat="no-repeat"
+              transform={`rotate(${socketData.bgRotate * 10}deg) `}
+              transformOrigin="center center"
+              zIndex="-1"
+            />
+            {socketData.highlighted.map((row: any, rowIndex) =>
               row.map((isHighlighted, colIndex) => {
                 const cellKey = `${rowIndex}-${colIndex}`;
                 const cellProps = socketData.cellProperties[cellKey];
@@ -111,9 +163,9 @@ export default function Index() {
                     <Cell
                       isMoving={cellProps ? cellProps.moving : false}
                       cellProps={cellProps}
-                      isSelected={selectedCell === cellKey}
+                      isSelected={socketData.selectedCell === cellKey}
                       onClick={() => {
-                        // Define your click handler logic if needed
+                        // handleSquareClick(rowIndex, colIndex);
                       }}
                     />
                   </Box>
@@ -121,7 +173,7 @@ export default function Index() {
               })
             )}
           </Grid>
-        </Center>
+        </Box>
       </Box>
     </Box>
   );

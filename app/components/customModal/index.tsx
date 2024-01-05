@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { EditIcon } from "@chakra-ui/icons";
 
-const CustomModal = ({ content, title }) => {
+const CustomModal = ({ content, title, zoom }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const onOpen = () => setIsOpen(true);
@@ -19,7 +19,6 @@ const CustomModal = ({ content, title }) => {
   return (
     <>
       <IconButton
-        height="50%"
         left="10%"
         zIndex="15"
         colorScheme="grey"
@@ -33,6 +32,7 @@ const CustomModal = ({ content, title }) => {
         <ModalContent
           backgroundImage={"url('/marble.avif')"}
           color="#dddddd"
+          width={"20%"}
           marginLeft={"50%"}
         >
           <ModalHeader>{title}</ModalHeader>

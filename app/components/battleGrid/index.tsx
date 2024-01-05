@@ -1,5 +1,5 @@
 import type { ChangeEvent } from "react";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   Box,
   Drawer,
@@ -19,17 +19,27 @@ import {
   UnorderedList,
   ListItem,
   Button,
-  Center,
 } from "@chakra-ui/react";
 import Cell from "./Cell";
-import { ArrowUpDownIcon, DownloadIcon, SettingsIcon } from "@chakra-ui/icons";
+import {
+  AddIcon,
+  ArrowUpDownIcon,
+  DownloadIcon,
+  DragHandleIcon,
+  MinusIcon,
+  SettingsIcon,
+} from "@chakra-ui/icons";
 
 import EncounterElementsLookUp from "../EncounterElementsLookUp";
 import NotesImageLookUp from "../NotesImageLookUp";
 import CustomModal from "../customModal";
 import { useBattleGrid } from "./useBattleGrid";
 import { useDispatch } from "react-redux";
-import { setGridSize, setSelectedCell } from "~/redux/battleGridSlice";
+import {
+  setGridSize,
+  setSelectedCell,
+  setZoomLevel,
+} from "~/redux/battleGridSlice";
 export interface CellProperty {
   size: number;
   posX: number;
@@ -71,13 +81,6 @@ const BattleGrid: React.FC<any> = () => {
   const dispatch = useDispatch();
   const containerRef = React.useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const container = containerRef.current;
-    if (container) {
-      const scrollCenter = (container.scrollWidth - container.clientWidth) / 2;
-      container.scrollLeft = scrollCenter;
-    }
-  }, []);
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
 
@@ -89,42 +92,117 @@ const BattleGrid: React.FC<any> = () => {
       reader.readAsDataURL(file);
     }
   };
+  const handleZoomIn = () => {
+    dispatch(setZoomLevel(Math.min(zoomLevel + 0.1, 2))); // Assuming 2 is the max zoom level
+  };
 
+  const handleZoomOut = () => {
+    dispatch(setZoomLevel(Math.max(zoomLevel - 0.1, 0.5))); // Assuming 0.5 is the min zoom level
+  };
+
+  const [isPanningEnabled, setIsPanningEnabled] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
+  const [isDragging, setIsDragging] = useState(false);
+  const [startPos, setStartPos] = useState({ x: 0, y: 0 });
+  const onMouseDown = useCallback(
+    (e) => {
+      if (!isPanningEnabled) return;
+      setIsDragging(true);
+      setStartPos({
+        x: e.clientX - containerRef.current.scrollLeft,
+        y: e.clientY - containerRef.current.scrollTop,
+      });
+    },
+    [isPanningEnabled]
+  );
 
+  const onMouseMove = useCallback(
+    (e) => {
+      if (!isDragging || !isPanningEnabled) return;
+      containerRef.current.scrollLeft =
+        startPos.x -
+        (e.clientX - containerRef.current.getBoundingClientRect().left);
+      containerRef.current.scrollTop =
+        startPos.y -
+        (e.clientY - containerRef.current.getBoundingClientRect().top);
+    },
+    [isDragging, isPanningEnabled, startPos]
+  );
+  const onMouseUp = useCallback(() => {
+    setIsDragging(false);
+  }, []);
   return (
     <Box
+      onMouseDown={onMouseDown}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseUp}
+      onMouseUp={onMouseUp}
+      style={{
+        cursor: isDragging
+          ? "grabbing"
+          : isPanningEnabled
+          ? "grab"
+          : "crosshair",
+      }}
       ref={containerRef}
-      width="100vw"
-      height="100vh"
+      width={[
+        gridSize * 25 + "vw",
+        gridSize * 20 + "vw",
+        gridSize * 10 + "vw",
+        gridSize * 10 + "vw",
+      ]} // Adjust these values as needed for different breakpoints
+      height={[
+        gridSize * 40 + "vh",
+        gridSize * 35 + "vh",
+        gridSize * 25 + "vh",
+        gridSize * 10 + "vh",
+      ]} // Adjust these values as needed for different breakpoints
       position="relative"
       overflow="auto"
       boxSizing="border-box"
       zIndex="10"
     >
-      {" "}
-      <IconButton
-        position="absolute"
-        ref={btnRef}
-        zIndex="20"
-        colorScheme="grey"
-        onClick={onOpen}
-        icon={<SettingsIcon />}
-      >
-        Settings
-      </IconButton>
-      <IconButton
-        aria-label="update"
-        position="absolute"
-        zIndex="20"
-        top="20"
-        colorScheme="grey"
-        onClick={emitGridUpdate}
-        icon={<DownloadIcon />}
-      >
-        update
-      </IconButton>
+      <Box position="fixed" zIndex="20">
+        <IconButton
+          ref={btnRef}
+          zIndex="20"
+          colorScheme="grey"
+          onClick={onOpen}
+          icon={<SettingsIcon />}
+        >
+          Settings
+        </IconButton>
+        <IconButton
+          aria-label="update"
+          zIndex="20"
+          colorScheme="grey"
+          onClick={emitGridUpdate}
+          icon={<DownloadIcon />}
+        >
+          update
+        </IconButton>
+        <IconButton
+          aria-label="allow panning"
+          colorScheme="grey"
+          onClick={() => setIsPanningEnabled(() => !isPanningEnabled)}
+          icon={<DragHandleIcon color={isPanningEnabled ? "white" : "black"} />}
+        >
+          enable panning
+        </IconButton>
+        <IconButton
+          colorScheme="grey"
+          aria-label="Zoom in"
+          icon={<AddIcon />}
+          onClick={handleZoomIn}
+        />
+        <IconButton
+          colorScheme="grey"
+          aria-label="Zoom out"
+          icon={<MinusIcon />}
+          onClick={handleZoomOut}
+        />
+      </Box>
       <Drawer
         isOpen={isOpen}
         placement="right"
@@ -336,38 +414,38 @@ const BattleGrid: React.FC<any> = () => {
       </Drawer>
       <Box h="100%" w="100%" position="absolute">
         <Box
-          height="100%"
-          width="100%"
+          minHeight="100%"
+          height="fit-content"
+          minWidth="100%"
+          width="fit-content"
           position="relative"
-          overflowY="scroll"
           transformOrigin="top center"
-          border="teal 4px solid"
-          transform={`scale(${zoomLevel}) `}
+          transform={zoomLevel !== 1 ? `scale(${zoomLevel})` : ""}
           zIndex="15"
-          display="flex" // Added for flexbox layout
-          alignItems="center" // Align children vertically center
-          justifyContent="center" // Align children horizontally center
+          //   display="flex" // Added for flexbox layout
+          //   alignItems="center" // Align children vertically center
+          // Align children horizontally center
         >
           {" "}
           <Grid
-            border="pink 4px solid"
             templateRows={`repeat(${gridSize}, 50px)`}
             templateColumns={`repeat(${gridSize}, 50px)`}
             gap={0}
+            overflow="hidden"
             position="absolute"
             top="50%" // Center vertically
-            left="50%" // Center horizontally
+            left={50 + (zoomLevel - 1) * 8 + "%"} // Center horizontally
             transform="translate(-50%, -50%)" // Adjust for exact centering
           >
             {" "}
             <Box
               position="absolute"
-              width="100%"
-              height="100%"
+              height={bgSize * 10}
+              width={bgSize * 10}
               bgImage={bg}
               top={-bgPosY + 25 + "%"}
               bgPosition={`${bgPosX}% `}
-              bgSize={`${10 + bgSize / 5}rem`} // 'cover' will ensure the background covers the entire box
+              bgSize={`contain`} // 'cover' will ensure the background covers the entire box
               backgroundRepeat="no-repeat"
               transform={`rotate(${bgRotate * 10}deg) `}
               transformOrigin="center center"
@@ -385,11 +463,12 @@ const BattleGrid: React.FC<any> = () => {
                         zIndex="15"
                         position="absolute"
                         top="0"
-                        left={`-${cellProps.size * 50 + 40}%`}
+                        left={`-${zoomLevel * 50 + 40}%`}
                       >
                         <Flex flexDirection="column" gap="2">
                           <CustomModal
                             title="images"
+                            zoom={zoomLevel}
                             content={
                               <>
                                 {" "}
@@ -520,7 +599,6 @@ const BattleGrid: React.FC<any> = () => {
                             }
                           />
                           <IconButton
-                            height="50%"
                             left="10%"
                             zIndex="15"
                             aria-label="move"

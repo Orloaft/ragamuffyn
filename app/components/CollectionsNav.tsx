@@ -49,6 +49,7 @@ export default function CollectionsNav() {
       animate={controls}
       width="100%"
       position="relative"
+      zIndex="20"
     >
       <Tabs index={tabIndex} display={isVisible ? "block" : "none"}>
         <TabList
@@ -89,13 +90,13 @@ export default function CollectionsNav() {
         </TabList>
       </Tabs>
       <IconButton
+        colorScheme="grey"
         aria-label="hide"
         icon={isVisible ? <ChevronUpIcon /> : <ChevronDownIcon />}
         onClick={toggleNavVisibility}
         position="absolute"
         top={isVisible ? "0" : "40%"}
         right="1rem"
-        zIndex="15"
       />
     </MotionBox>
   );
