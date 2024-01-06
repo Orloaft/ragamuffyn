@@ -1,9 +1,24 @@
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
-import { Box, Tab, TabList, Tabs, IconButton } from "@chakra-ui/react";
+import {
+  Box,
+  Tab,
+  TabList,
+  Tabs,
+  IconButton,
+  useBreakpointValue,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Flex,
+  Text,
+} from "@chakra-ui/react";
 import { NavLink, useLocation } from "@remix-run/react";
 import { motion, useAnimation } from "framer-motion";
 import { useState } from "react";
+
 const MotionBox = motion(Box);
+
 export default function CollectionsNav() {
   const location = useLocation();
   const currentPath = location.pathname;
@@ -24,7 +39,18 @@ export default function CollectionsNav() {
     // Join the first three parts and the leading part before the first slash
     return parts.slice(0, 3).join("/");
   };
-
+  const navLinks = [
+    { label: "Characters", path: "/collections/characters" },
+    { label: "Npcs", path: "/collections/npcs" },
+    { label: "Items", path: "/collections/items" },
+    { label: "Campaigns", path: "/collections/campaigns" },
+    { label: "Encounters", path: "/collections/encounters" },
+    { label: "Locations", path: "/collections/locations" },
+    { label: "notes", path: "/collections/notes" },
+    { label: "Upload", path: "/upload" },
+    { label: "Grid", path: "/grid" },
+    { label: "Player", path: "/player" },
+  ];
   type TabIndexMapping = {
     [key: string]: number;
   };
@@ -42,13 +68,14 @@ export default function CollectionsNav() {
   }; // Default to first tab if path not found
   let tabIndex = tabIndexMapping[extractPath()] ?? 0;
   const controls = useAnimation();
+  const isSmallScreen = useBreakpointValue({ base: true, md: false });
 
   return (
     <MotionBox
       initial={{ y: "0" }}
       animate={controls}
       width="100%"
-      position="relative"
+      position="fixed"
       zIndex="20"
     >
       <Tabs index={tabIndex} display={isVisible ? "block" : "none"}>
@@ -56,45 +83,42 @@ export default function CollectionsNav() {
           backgroundImage={"url('/marble.avif')"}
           color="#dddddd"
           height="3rem"
+          overflowX={isSmallScreen ? "auto" : "initial"}
         >
-          <Tab>
-            <NavLink to="/collections/characters">Characters</NavLink>
-          </Tab>
-          <Tab>
-            <NavLink to="/collections/npcs">Npcs</NavLink>
-          </Tab>
-          <Tab>
-            <NavLink to="/collections/items">Items</NavLink>
-          </Tab>
-          <Tab>
-            <NavLink to="/collections/campaigns">Campaigns</NavLink>
-          </Tab>
-          <Tab>
-            <NavLink to="/collections/encounters">Ecounters</NavLink>
-          </Tab>
-          <Tab>
-            <NavLink to="/collections/locations">Locations</NavLink>
-          </Tab>{" "}
-          <Tab>
-            <NavLink to="/collections/notes">Notes</NavLink>
-          </Tab>
-          <Tab>
-            <NavLink to="/upload">Upload</NavLink>
-          </Tab>
-          <Tab>
-            <NavLink to="/grid">Grid</NavLink>
-          </Tab>
-          <Tab>
-            <NavLink to="/player">Player</NavLink>
-          </Tab>
+          {isSmallScreen ? (
+            <Menu>
+              <Flex alignItems={"center"}>
+                <MenuButton
+                  colorScheme="grey"
+                  as={IconButton}
+                  icon={<ChevronDownIcon />}
+                />{" "}
+                <Text>Navigate</Text>
+              </Flex>
+              <MenuList background={`url("/marble.avif")`}>
+                {navLinks.map((link, index) => (
+                  <MenuItem key={index} background={"transparent"}>
+                    <NavLink to={link.path}>{link.label}</NavLink>
+                  </MenuItem>
+                ))}
+              </MenuList>
+            </Menu>
+          ) : (
+            navLinks.map((link, index) => (
+              <Tab key={index}>
+                <NavLink to={link.path}>{link.label}</NavLink>
+              </Tab>
+            ))
+          )}
         </TabList>
       </Tabs>
       <IconButton
+        size={"lg"}
         colorScheme="grey"
         aria-label="hide"
         icon={isVisible ? <ChevronUpIcon /> : <ChevronDownIcon />}
         onClick={toggleNavVisibility}
-        position="absolute"
+        position="fixed"
         top={isVisible ? "0" : "40%"}
         right="1rem"
       />

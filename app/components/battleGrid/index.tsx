@@ -147,17 +147,17 @@ const BattleGrid: React.FC<any> = () => {
       }}
       ref={containerRef}
       width={[
-        gridSize * 25 + "vw",
-        gridSize * 20 + "vw",
-        gridSize * 10 + "vw",
-        gridSize * 10 + "vw",
-      ]} // Adjust these values as needed for different breakpoints
+        gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 20 + "vw",
+        gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 10 + "vw",
+        gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 10 + "vw",
+        gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 10 + "vw",
+      ]}
       height={[
-        gridSize * 40 + "vh",
-        gridSize * 35 + "vh",
-        gridSize * 25 + "vh",
-        gridSize * 10 + "vh",
-      ]} // Adjust these values as needed for different breakpoints
+        gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 30 + "vh",
+        gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 20 + "vh",
+        gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 15 + "vh",
+        gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 10 + "vh",
+      ]}
       position="relative"
       overflow="auto"
       boxSizing="border-box"

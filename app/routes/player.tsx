@@ -78,17 +78,17 @@ export default function Index() {
       }}
       ref={containerRef}
       width={[
-        socketData.gridSize * 25 + "vw",
-        socketData.gridSize * 20 + "vw",
-        socketData.gridSize * 10 + "vw",
-        socketData.gridSize * 10 + "vw",
-      ]} // Adjust these values as needed for different breakpoints
+        socketData.gridSize * socketData.zoomLevel * 20 + "vw",
+        socketData.gridSize * socketData.zoomLevel * 10 + "vw",
+        socketData.gridSize * socketData.zoomLevel * 10 + "vw",
+        socketData.gridSize * socketData.zoomLevel * 10 + "vw",
+      ]}
       height={[
-        socketData.gridSize * 40 + "vh",
-        socketData.gridSize * 35 + "vh",
-        socketData.gridSize * 25 + "vh",
-        socketData.gridSize * 10 + "vh",
-      ]} // Adjust these values
+        socketData.gridSize * socketData.zoomLevel * 30 + "vh",
+        socketData.gridSize * socketData.zoomLevel * 20 + "vh",
+        socketData.gridSize * socketData.zoomLevel * 15 + "vh",
+        socketData.gridSize * socketData.zoomLevel * 10 + "vh",
+      ]}
       position="relative"
       overflow="auto"
       boxSizing="border-box"

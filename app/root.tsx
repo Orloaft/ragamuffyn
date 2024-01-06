@@ -98,6 +98,7 @@ export default function App() {
           <Box
             background={`url("/parchment.jpg")`}
             bgPosition="center"
+            bgAttachment="fixed"
             bgRepeat="no-repeat"
             bgSize="cover"
             width="fit-content"
