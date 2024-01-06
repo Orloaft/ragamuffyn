@@ -69,6 +69,7 @@ const Document = withEmotionCache(
     return (
       <html lang="en">
         <head>
+          <title>Ragamuffyn</title>
           <Meta />
           <Links />
           {serverStyleData?.map(({ key, ids, css }) => (

@@ -1,5 +1,6 @@
 import { matchSorter } from "match-sorter";
 import type {
+  Prisma,
   campaign,
   character,
   encounter,
@@ -11,6 +12,8 @@ import { PrismaClient } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
 import { debugLog } from "./utils/logger";
 import type { ImageData } from "./components/images/ImageUpload";
+import type { DefaultArgs } from "@prisma/client/runtime/library";
+import type { BattleGridState } from "./redux/encounterSlice";
 export interface DataEntry {
   id: string;
   name?: string;
@@ -57,6 +60,7 @@ export interface EncounterData extends HasNotes {
   currentTurn: number; // ID of the character/monster whose turn it is
   round: number; // Current round of the encounter
   npcs: string[];
+  gridProps: BattleGridState | null;
 }
 export interface CampaignData extends HasNotes {
   [key: string]: any;
@@ -289,6 +293,7 @@ export async function createDataEntry(model: string) {
           round: 0,
           notes: [],
           npcs: [],
+          gridProps: null,
         }),
       });
       break;
@@ -356,7 +361,7 @@ export async function createNpc(data: DataEntry): Promise<DataEntry> {
   });
 }
 
-export async function updateNpc(id: string, data: any): Promise<NPC> {
+export async function updateNpc(id: string, data: any): Promise<DataEntry> {
   let updates = { ...data };
   ["items", "notes"].forEach((a) => {
     if (!updates.hasOwnProperty(a)) {
@@ -393,12 +398,12 @@ export async function updateCampaign(
     data: { name: updates.name, data: JSON.stringify(update) },
   });
 }
-export async function deleteNpc(id: string): Promise<NPC> {
+export async function deleteNpc(id: string): Promise<DataEntry> {
   return await prisma.npc.delete({
     where: { id },
   });
 }
-export async function deleteCampaign(id: string): Promise<Campaign> {
+export async function deleteCampaign(id: string): Promise<DataEntry> {
   return await prisma.campaign.delete({
     where: { id },
   });
@@ -410,7 +415,7 @@ export async function createItem(data: any): Promise<DataEntry> {
     data: { ...data, id: `I${id}` },
   });
 }
-export async function createCampaign(data: any): Promise<Campaign> {
+export async function createCampaign(data: any): Promise<DataEntry> {
   let id = uuidv4();
   debugLog("creating campaign in db:", { ...data, id: `C${id}` });
   return await prisma.campaign.create({
@@ -427,27 +432,27 @@ export async function updateItem(
     data: { name: data.name, data: JSON.stringify(data) },
   });
 }
-export async function getItem(id: string): Promise<Item | null> {
+export async function getItem(id: string): Promise<DataEntry | null> {
   return await prisma.item.findUnique({
     where: { id },
   });
 }
-export async function getNpc(id: string): Promise<NPC | null> {
+export async function getNpc(id: string): Promise<DataEntry | null> {
   return await prisma.npc.findUnique({
     where: { id },
   });
 }
-export async function getCharacter(id: string): Promise<Character | null> {
+export async function getCharacter(id: string): Promise<DataEntry | null> {
   return await prisma.character.findUnique({
     where: { id },
   });
 }
-export async function getCampaign(id: string): Promise<Campaign | null> {
+export async function getCampaign(id: string): Promise<DataEntry | null> {
   return await prisma.campaign.findUnique({
     where: { id },
   });
 }
-export async function deleteItem(id: string): Promise<Item> {
+export async function deleteItem(id: string): Promise<DataEntry> {
   return await prisma.item.delete({
     where: { id },
   });
@@ -543,7 +548,17 @@ export async function deleteLocation(id: string): Promise<any> {
 }
 
 // Create a new Location
-export async function createLocation(data: any): Promise<DataEntry> {
+export async function createLocation(data: any): Promise<
+  Prisma.Prisma__locationClient<
+    {
+      id: string;
+      name: string | null;
+      data: string | null;
+    },
+    never,
+    DefaultArgs
+  >
+> {
   let id = uuidv4();
   debugLog("creating location in db:", { ...data, id: `L${id}` });
   return await prisma.location.create({
@@ -576,7 +591,17 @@ export async function updateLocation(
   });
 }
 
-export async function createNote(data: DataEntry): Promise<DataEntry> {
+export async function createNote(data: DataEntry): Promise<
+  Prisma.Prisma__locationClient<
+    {
+      id: string;
+      name: string | null;
+      data: string | null;
+    },
+    never,
+    DefaultArgs
+  >
+> {
   let id = uuidv4();
   debugLog("creating note in db:", { ...data, id: `O${id}` });
   return await prisma.note.create({
@@ -584,7 +609,17 @@ export async function createNote(data: DataEntry): Promise<DataEntry> {
   });
 }
 // Create a new Encounter
-export async function createEncounter(data: DataEntry): Promise<DataEntry> {
+export async function createEncounter(data: DataEntry): Promise<
+  Prisma.Prisma__locationClient<
+    {
+      id: string;
+      name: string | null;
+      data: string | null;
+    },
+    never,
+    DefaultArgs
+  >
+> {
   let id = uuidv4();
   debugLog("creating encounter in db:", { ...data, id: `E${id}` });
   return await prisma.encounter.create({

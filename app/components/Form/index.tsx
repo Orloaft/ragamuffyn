@@ -168,6 +168,9 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
       case "round":
         return;
         break;
+      case "gridProps":
+        return;
+        break;
       case "bio":
         return (
           <div>

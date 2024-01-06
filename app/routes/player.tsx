@@ -52,7 +52,7 @@ export default function Index() {
   }, []);
   useEffect(() => {
     socket.on("gridUpdate", (data) => {
-      setSocketData(data);
+      setSocketData(JSON.parse(data).gridProps);
 
       return () => {
         //   socket.off("gridUpdated");

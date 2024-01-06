@@ -48,7 +48,7 @@ export default function CollectionsNav() {
     { label: "Locations", path: "/collections/locations" },
     { label: "notes", path: "/collections/notes" },
     { label: "Upload", path: "/upload" },
-    { label: "Grid", path: "/grid" },
+
     { label: "Player", path: "/player" },
   ];
   type TabIndexMapping = {
@@ -63,7 +63,6 @@ export default function CollectionsNav() {
     "/collections/locations": 5,
     "/collections/notes": 6,
     "/upload": 7,
-    "/grid": 8,
     "/player": 9,
   }; // Default to first tab if path not found
   let tabIndex = tabIndexMapping[extractPath()] ?? 0;

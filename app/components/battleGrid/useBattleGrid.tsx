@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import {
   setGridSize,
   setZoomLevel,
@@ -7,21 +7,54 @@ import {
   setHighlighted,
   updateCellProperties,
   updateCellProperty,
-} from "../../redux/battleGridSlice";
+  setBg,
+  setBgPosX,
+  setBgPosY,
+  setBgRotate,
+  setBgSize,
+  setNpcs,
+  setInitiativeOrder,
+} from "../../redux/encounterSlice";
 import type { CellProperty } from ".";
 import { io } from "socket.io-client";
 
-export const useBattleGrid = () => {
+export const useBattleGrid = (data?: any) => {
   const dispatch = useDispatch();
-  const { highlighted, gridSize, zoomLevel, selectedCell, cellProperties } =
-    useSelector((state) => state.battleGrid);
-  const [bgSize, setBgSize] = useState(100); // Background size
-  const [bgPosX, setBgPosX] = useState(50); // Background X position
-  const [bgPosY, setBgPosY] = useState(50); // Background Y position
-  const [bgRotate, setBgRotate] = useState(0); // Background rotation
-  const [bg, setBg] = useState<any>();
-  const socket = io("http://localhost:8080");
+  const encounterData = JSON.parse(data.data);
+  const gridData = encounterData.gridProps;
+  const reduxState = useSelector((state) => state.encounter);
 
+  const socket = io("http://localhost:8080");
+  useEffect(() => {
+    if (data) {
+      dispatch(setNpcs(encounterData.npcs));
+      dispatch(setInitiativeOrder(encounterData.initiativeOrder));
+      dispatch(setGridSize(gridData.gridSize || reduxState.gridProps.gridSize));
+      dispatch(
+        setZoomLevel(gridData.zoomLevel || reduxState.gridProps.zoomLevel)
+      );
+      dispatch(
+        setSelectedCell(
+          gridData.selectedCell || reduxState.gridProps.selectedCell
+        )
+      );
+      dispatch(
+        setHighlighted(gridData.highlighted || reduxState.gridProps.highlighted)
+      );
+      dispatch(setBg(gridData.bg || reduxState.gridProps.bg));
+      dispatch(setBgSize(gridData.bgSize || reduxState.gridProps.bgSize));
+      dispatch(setBgPosY(gridData.bgPosY || reduxState.gridProps.bgPosY));
+      dispatch(setBgPosX(gridData.bgPosX || reduxState.gridProps.bgPosX));
+      dispatch(setBgRotate(gridData.bgRotate || reduxState.gridProps.bgRotate));
+      if (gridData.cellProperties) {
+        dispatch(
+          updateCellProperties(
+            data.cellProperties || reduxState.gridProps.cellProperties
+          )
+        );
+      }
+    }
+  }, [dispatch, data]);
   useEffect(() => {
     // socket.on("gridUpdated", (data) => {
     //   // Handle incoming grid updates
@@ -34,38 +67,11 @@ export const useBattleGrid = () => {
       socket.disconnect();
     };
   }, [socket]); // Include socket in the dependency array
-
+  const { gridProps } = reduxState;
   const emitGridUpdate = useCallback(() => {
-    const currentProps = {
-      highlighted,
-      gridSize,
-      zoomLevel,
-      selectedCell,
-      cellProperties,
-      bgPosX,
-      bgPosY,
-      bgRotate,
-      bgSize,
-      bg,
-    };
-    socket.emit("updateGrid", currentProps);
-  }, [
-    highlighted,
-    gridSize,
-    zoomLevel,
-    selectedCell,
-    cellProperties,
-    bgPosX,
-    bgPosY,
-    bgRotate,
-    bgSize,
-    bg,
-    socket,
-  ]);
-  useEffect(() => {
-    // This is an example. You might have different logic in your useEffect.
-    dispatch(setGridSize(10)); // Set initial grid size or based on some logic
-  }, [dispatch]);
+    console.log("emitty");
+    socket.emit("updateGrid", { state: reduxState, id: data.id });
+  }, [reduxState, socket]);
 
   const handleZoomChange = (value: number) => {
     dispatch(setZoomLevel(value));
@@ -74,21 +80,24 @@ export const useBattleGrid = () => {
   const handleSquareClick = (rowIndex: number, colIndex: number) => {
     const cellKey = `${rowIndex}-${colIndex}`;
 
-    const isNewCellSelected = cellKey !== selectedCell;
+    const isNewCellSelected = cellKey !== reduxState.selectedCell;
 
     let movingData = { image: null, size: 1, posX: 0, posY: 0, moving: false };
 
-    if (selectedCell && cellProperties[selectedCell].moving) {
-      movingData.image = cellProperties[selectedCell].image;
-      movingData.size = cellProperties[selectedCell].size;
-      movingData.posX = cellProperties[selectedCell].posX;
-      movingData.posY = cellProperties[selectedCell].posY;
+    if (
+      gridProps.selectedCell &&
+      gridProps.cellProperties[gridProps.selectedCell].moving
+    ) {
+      movingData.image = gridProps.cellProperties[gridProps.selectedCell].image;
+      movingData.size = gridProps.cellProperties[gridProps.selectedCell].size;
+      movingData.posX = gridProps.cellProperties[gridProps.selectedCell].posX;
+      movingData.posY = gridProps.cellProperties[gridProps.selectedCell].posY;
       movingData.moving = true;
       dispatch(
         updateCellProperties({
-          ...cellProperties,
-          [selectedCell]: {
-            ...cellProperties[selectedCell],
+          ...gridProps.cellProperties,
+          [gridProps.selectedCell]: {
+            ...gridProps.cellProperties[gridProps.selectedCell],
             image: null,
             moving: false,
           },
@@ -99,15 +108,15 @@ export const useBattleGrid = () => {
     if (isNewCellSelected) {
       dispatch(
         updateCellProperties({
-          ...cellProperties,
+          ...gridProps.cellProperties,
           [cellKey]: movingData.moving
             ? { ...movingData, moving: false }
-            : { ...cellProperties[cellKey] },
+            : { ...gridProps.cellProperties[cellKey] },
         })
       );
       if (movingData.moving) {
-        updateCellPropertyHandler("moving", false, selectedCell);
-        updateCellPropertyHandler("image", null, selectedCell);
+        updateCellPropertyHandler("moving", false, gridProps.selectedCell);
+        updateCellPropertyHandler("image", null, gridProps.selectedCell);
       }
 
       dispatch(setSelectedCell(cellKey));
@@ -115,7 +124,7 @@ export const useBattleGrid = () => {
       dispatch(setSelectedCell(null));
     }
 
-    const newHighlighted = highlighted.map((row, rIdx) =>
+    const newHighlighted = gridProps.highlighted.map((row, rIdx) =>
       rIdx === rowIndex
         ? row.map((col, cIdx) => (cIdx === colIndex ? !col : col))
         : row
@@ -123,9 +132,11 @@ export const useBattleGrid = () => {
     dispatch(setHighlighted(newHighlighted));
   };
   useEffect(() => {
-    const newHighlighted = Array(gridSize).fill(Array(gridSize).fill(false));
+    const newHighlighted = Array(gridProps.gridSize).fill(
+      Array(gridProps.gridSize).fill(false)
+    );
     dispatch(setHighlighted(newHighlighted));
-  }, [dispatch, gridSize]);
+  }, [dispatch, gridProps.gridSize]);
 
   const handleCellImageChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -154,25 +165,27 @@ export const useBattleGrid = () => {
   };
 
   return {
-    highlighted,
-    gridSize,
-    zoomLevel,
-    selectedCell,
-    cellProperties,
-    bgSize,
-    setBgSize,
-    bgPosX,
-    setBgPosX,
-    bgPosY,
-    setBgPosY,
-    bgRotate,
-    setBgRotate,
+    highlighted: gridProps.highlighted,
+    gridSize: gridProps.gridSize,
+    zoomLevel: gridProps.zoomLevel,
+    selectedCell: gridProps.selectedCell,
+    cellProperties: gridProps.cellProperties,
+    bgSize: gridProps.bgSize,
+    setBgSize: (size: any) => dispatch(setBgSize(size)),
+    bgPosX: gridProps.bgPosX,
+    setBgPosX: (v: any) => dispatch(setBgPosX(v)),
+    bgPosY: gridProps.bgPosY,
+    setBgPosY: (v: any) => dispatch(setBgPosY(v)),
+    bgRotate: gridProps.bgRotate,
+    setBgRotate: (v: any) => dispatch(setBgRotate(v)),
     handleZoomChange,
     handleSquareClick,
     handleCellImageChange,
     updateCellPropertyHandler,
     emitGridUpdate,
-    bg,
-    setBg,
+    bg: gridProps.bg,
+    setBg: (v: any) => dispatch(setBg(v)),
+    npcs: reduxState.npcs,
+    setNpcs: (v: any) => dispatch(setNpcs(v)),
   };
 };

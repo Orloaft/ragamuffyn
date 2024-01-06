@@ -1,6 +1,8 @@
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 const app = require("express"); // Update with the actual path
+const axios = require("axios")
+
 
 const server = createServer(app);
 const io = new Server(server, {
@@ -16,9 +18,13 @@ io.on("connection", (socket) => {
   socket.on("testEvent", (data) => {
     console.log("Received testEvent:", data);
   });
-  socket.on("updateGrid", (data) => {
-    console.log("updating",data);
-    socket.broadcast.emit("gridUpdate", data);
+  socket.on("updateGrid", async(data) => {
+    console.log("yeeet")
+     axios.post(`http://localhost:3000/api/updateData`,{id:data.id,updates:data.state}).then((res)=>{
+   
+      socket.broadcast.emit("gridUpdate", res.data.data);
+     }).catch((err)=>console.log(err))
+  
   });
 
   socket.on("disconnect", () => {

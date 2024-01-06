@@ -76,7 +76,11 @@ export default function DataEntryView({ data, type, useStore, id }: any) {
       <div>
         <h3>{noteData.name || "no name"}</h3>
         <p>{noteData.text}</p>
-        <ImageListComponent images={noteData.images} onChange={false} />
+        <ImageListComponent
+          images={noteData.images}
+          onChange={false}
+          setCellImage={null}
+        />
       </div>
     );
   const renderItemData = (itemData: ItemData) => (
@@ -144,7 +148,7 @@ export default function DataEntryView({ data, type, useStore, id }: any) {
         </div>
         <Button>
           {" "}
-          <NavLink to={`/battle/${id}`}>Battle</NavLink>
+          <NavLink to={`/grid/${id}`}>Battle grid</NavLink>
         </Button>
       </div>
     );
