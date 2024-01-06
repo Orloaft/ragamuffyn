@@ -33,11 +33,11 @@ export const useBattleGrid = (data?: any) => {
       dispatch(
         setZoomLevel(gridData.zoomLevel || reduxState.gridProps.zoomLevel)
       );
-      dispatch(
-        setSelectedCell(
-          gridData.selectedCell || reduxState.gridProps.selectedCell
-        )
-      );
+      // dispatch(
+      //   setSelectedCell(
+      //     gridData.selectedCell || reduxState.gridProps.selectedCell
+      //   )
+      // );
       dispatch(
         setHighlighted(gridData.highlighted || reduxState.gridProps.highlighted)
       );

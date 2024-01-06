@@ -83,7 +83,7 @@ const BattleGrid: React.FC<any> = ({ encounterData }) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const { data, loading } = useDataLookUp(npcs);
   let npcData = loading ? null : data;
-  console.log("data", data, npcs);
+  console.log("data", data, npcs, selectedCell);
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
 
