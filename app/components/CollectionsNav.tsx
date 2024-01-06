@@ -15,14 +15,12 @@ import {
 } from "@chakra-ui/react";
 import { NavLink, useLocation } from "@remix-run/react";
 import { motion, useAnimation } from "framer-motion";
-import { useState } from "react";
 
 const MotionBox = motion(Box);
 
-export default function CollectionsNav() {
+export default function CollectionsNav({ isVisible, setIsVisible }) {
   const location = useLocation();
   const currentPath = location.pathname;
-  const [isVisible, setIsVisible] = useState(true);
 
   const toggleNavVisibility = () => {
     setIsVisible(!isVisible);

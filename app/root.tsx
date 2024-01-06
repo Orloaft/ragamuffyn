@@ -1,5 +1,5 @@
 // root.tsx
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { withEmotionCache } from "@emotion/react";
 import { Box, ChakraProvider } from "@chakra-ui/react";
 import {
@@ -91,10 +91,11 @@ const Document = withEmotionCache(
   }
 );
 export default function App() {
+  const [isVisible, setIsVisible] = useState(true);
   return (
     <Document>
       <ChakraProvider>
-        <CollectionsNav />
+        <CollectionsNav isVisible={isVisible} setIsVisible={setIsVisible} />
         <Provider store={store}>
           <Box
             background={`url("/parchment.jpg")`}
@@ -103,9 +104,13 @@ export default function App() {
             bgRepeat="no-repeat"
             bgSize="cover"
             width="fit-content"
-            height="fit-content" // Full viewport height
+            height="fit-content"
           >
-            <Box minWidth="100vw" minHeight="100vh">
+            <Box
+              minWidth="100vw"
+              minHeight="100vh"
+              paddingTop={isVisible ? "3rem" : "0"}
+            >
               <Outlet />
             </Box>
           </Box>

@@ -49,7 +49,7 @@ export const useBattleGrid = (data?: any) => {
       if (gridData.cellProperties) {
         dispatch(
           updateCellProperties(
-            data.cellProperties || reduxState.gridProps.cellProperties
+            gridData.cellProperties || reduxState.gridProps.cellProperties
           )
         );
       }
