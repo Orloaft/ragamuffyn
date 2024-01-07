@@ -38,6 +38,29 @@ const createInitialCellProperties = (gridSize: number): CellProperties => {
   }
   return cellProperties;
 };
+const resizeCellProperties = (
+  gridSize: number,
+  oldProperties: CellProperties
+): CellProperties => {
+  console.log("resizing to", gridSize);
+  const cellProperties: CellProperties = {};
+  for (let row = 0; row < gridSize; row++) {
+    for (let col = 0; col < gridSize; col++) {
+      const cellKey = `${row}-${col}`;
+      cellProperties[cellKey] = oldProperties[cellKey]
+        ? oldProperties[cellKey]
+        : {
+            size: 1, // Default size
+            posX: 0, // Default X position
+            posY: 0, // Default Y position
+            image: null, // No image initially
+            moving: false, // Not moving initially
+          };
+    }
+  }
+
+  return cellProperties;
+};
 const initialState: EncounterData = {
   name: "",
   description: "",
@@ -77,6 +100,11 @@ export const encounterSlice = createSlice({
     // Reducer to set the grid size
     setGridSize: (state, action: PayloadAction<number>) => {
       state.gridProps && (state.gridProps.gridSize = action.payload);
+      state.gridProps &&
+        (state.gridProps.cellProperties = resizeCellProperties(
+          state.gridProps.gridSize,
+          state.gridProps.cellProperties
+        ));
     },
 
     // Reducer to set the zoom level
@@ -109,9 +137,11 @@ export const encounterSlice = createSlice({
       state,
       action: PayloadAction<{ [key: string]: CellProperty }>
     ) => {
+      console.log("initializing cell props");
       state.gridProps && (state.gridProps.cellProperties = action.payload);
     },
     updateCellProperties: (state, action: PayloadAction<any>) => {
+      console.log("updating cell props", action.payload);
       state.gridProps && (state.gridProps.cellProperties = action.payload);
     },
     updateCellProperty: (

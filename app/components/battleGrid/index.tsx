@@ -25,7 +25,6 @@ import {
   AddIcon,
   ArrowUpDownIcon,
   DownloadIcon,
-  DragHandleIcon,
   MinusIcon,
   SettingsIcon,
 } from "@chakra-ui/icons";
@@ -35,11 +34,7 @@ import NotesImageLookUp from "../NotesImageLookUp";
 import CustomModal from "../customModal";
 import { useBattleGrid } from "./useBattleGrid";
 import { useDispatch } from "react-redux";
-import {
-  setGridSize,
-  setSelectedCell,
-  setZoomLevel,
-} from "~/redux/encounterSlice";
+import { setSelectedCell, setZoomLevel } from "~/redux/encounterSlice";
 import useDataLookUp from "./useDataLookUp";
 export interface CellProperty {
   size: number;
@@ -75,6 +70,7 @@ const BattleGrid: React.FC<any> = ({ encounterData }) => {
     bg,
     setBg,
     npcs,
+    setGridSize,
     setNpcs,
   } = useBattleGrid(encounterData);
 
@@ -83,7 +79,7 @@ const BattleGrid: React.FC<any> = ({ encounterData }) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const { data, loading } = useDataLookUp(npcs);
   let npcData = loading ? null : data;
-  console.log("data", data, npcs, selectedCell);
+  console.log(encounterData);
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
 
@@ -102,7 +98,7 @@ const BattleGrid: React.FC<any> = ({ encounterData }) => {
   const handleZoomOut = () => {
     dispatch(setZoomLevel(Math.max(zoomLevel - 0.1, 0.5))); // Assuming 0.5 is the min zoom level
   };
-
+  console.log("cell props", cellProperties, "selected cell", selectedCell);
   // const [isPanningEnabled, setIsPanningEnabled] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
@@ -267,7 +263,7 @@ const BattleGrid: React.FC<any> = ({ encounterData }) => {
                   min={10}
                   max={40}
                   step={1}
-                  onChange={(val) => dispatch(setGridSize(val))}
+                  onChange={(val) => setGridSize(val)}
                 >
                   <SliderTrack>
                     <SliderFilledTrack />
@@ -328,20 +324,22 @@ const BattleGrid: React.FC<any> = ({ encounterData }) => {
                   Unselect
                 </Button>
                 <Text>Cell Size</Text>
-                <Slider
-                  value={cellProperties[selectedCell]?.size}
-                  min={0.15}
-                  step={0.1}
-                  max={10}
-                  onChange={(val) =>
-                    updateCellPropertyHandler("size", val, selectedCell)
-                  }
-                >
-                  <SliderTrack>
-                    <SliderFilledTrack />
-                  </SliderTrack>
-                  <SliderThumb />
-                </Slider>
+                {cellProperties[selectedCell] && (
+                  <Slider
+                    value={cellProperties[selectedCell].size}
+                    min={0.15}
+                    step={0.1}
+                    max={10}
+                    onChange={(val) =>
+                      updateCellPropertyHandler("size", val, selectedCell)
+                    }
+                  >
+                    <SliderTrack>
+                      <SliderFilledTrack />
+                    </SliderTrack>
+                    <SliderThumb />
+                  </Slider>
+                )}
                 {/* Slider for adjusting X coordinate */}
                 <Text>X Position</Text>
                 <Slider
@@ -476,14 +474,14 @@ const BattleGrid: React.FC<any> = ({ encounterData }) => {
                               content={
                                 <>
                                   {" "}
-                                  {selectedCell && (
+                                  {cellProperties[selectedCell] && (
                                     <Box>
                                       {" "}
                                       <Text>Selected Cell</Text>
                                       <Text>Image Size</Text>
                                       <Slider
                                         value={
-                                          cellProperties[selectedCell]?.size
+                                          cellProperties[selectedCell].size
                                         }
                                         min={0.15}
                                         step={0.1}
@@ -550,7 +548,7 @@ const BattleGrid: React.FC<any> = ({ encounterData }) => {
                                           handleCellImageChange(e, selectedCell)
                                         }
                                       />
-                                      {cellProperties[selectedCell].image && (
+                                      {cellProperties[selectedCell] && (
                                         <Image
                                           zIndex="10"
                                           alt="Cell Image"

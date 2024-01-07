@@ -18,15 +18,18 @@ import {
 import type { CellProperty } from ".";
 import { io } from "socket.io-client";
 
+import { useFetcher } from "@remix-run/react";
 export const useBattleGrid = (data?: any) => {
   const dispatch = useDispatch();
   const encounterData = JSON.parse(data.data);
+
   const gridData = encounterData.gridProps;
   const reduxState = useSelector((state) => state.encounter);
-
+  const fetcher = useFetcher();
   const socket = io("http://localhost:8080");
   useEffect(() => {
     if (data) {
+      console.log("re despatch on useEffect");
       dispatch(setNpcs(encounterData.npcs));
       dispatch(setInitiativeOrder(encounterData.initiativeOrder));
       dispatch(setGridSize(gridData.gridSize || reduxState.gridProps.gridSize));
@@ -54,7 +57,7 @@ export const useBattleGrid = (data?: any) => {
         );
       }
     }
-  }, [dispatch, data]);
+  }, [dispatch, data.data]);
   useEffect(() => {
     // socket.on("gridUpdated", (data) => {
     //   // Handle incoming grid updates
@@ -69,8 +72,15 @@ export const useBattleGrid = (data?: any) => {
   }, [socket]); // Include socket in the dependency array
   const { gridProps } = reduxState;
   const emitGridUpdate = useCallback(() => {
-    console.log("emitty");
-    socket.emit("updateGrid", { state: reduxState, id: data.id });
+    console.log("emitty", data.id);
+    fetcher.submit(
+      {
+        id: data.id,
+        updates: reduxState,
+      },
+      { method: "post", action: "/api/updateData", encType: "application/json" }
+    );
+    socket.emit("updateGrid", reduxState);
   }, [reduxState, socket]);
 
   const handleZoomChange = (value: number) => {
@@ -167,6 +177,7 @@ export const useBattleGrid = (data?: any) => {
   return {
     highlighted: gridProps.highlighted,
     gridSize: gridProps.gridSize,
+    setGridSize: (s: any) => dispatch(setGridSize(s)),
     zoomLevel: gridProps.zoomLevel,
     selectedCell: gridProps.selectedCell,
     cellProperties: gridProps.cellProperties,
