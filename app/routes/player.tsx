@@ -17,9 +17,14 @@ export default function Index() {
     bgSize: 100,
     bg: "",
   });
+
   const containerRef = React.useRef<HTMLDivElement>(null);
   const [socket, setSocket] = useState<Socket | null>(null);
   const [zoomLevel, setZoomLevel] = useState<number>(1);
+  const containerSize =
+    zoomLevel > 1
+      ? zoomLevel * socketData.gridSize * 50
+      : socketData.gridSize * 50;
   useEffect(() => {
     // Establish connection
     const newSocket = io("http://localhost:8080");
@@ -41,18 +46,8 @@ export default function Index() {
         cursor: "crosshair",
       }}
       ref={containerRef}
-      width={[
-        socketData.gridSize * zoomLevel * 20 + "vw",
-        socketData.gridSize * zoomLevel * 10 + "vw",
-        socketData.gridSize * zoomLevel * 10 + "vw",
-        socketData.gridSize * zoomLevel * 10 + "vw",
-      ]}
-      height={[
-        socketData.gridSize * zoomLevel * 30 + "vh",
-        socketData.gridSize * zoomLevel * 20 + "vh",
-        socketData.gridSize * zoomLevel * 15 + "vh",
-        socketData.gridSize * zoomLevel * 10 + "vh",
-      ]}
+      width={containerSize * 1.5 + "px"}
+      height={containerSize * 1.5 + "px"}
       position="relative"
       overflow="auto"
       boxSizing="border-box"

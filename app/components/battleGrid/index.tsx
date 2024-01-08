@@ -72,7 +72,8 @@ const BattleGrid: React.FC<any> = ({ encounterData }) => {
     setGridSize,
     setNpcs,
   } = useBattleGrid();
-
+  const containerSize =
+    zoomLevel > 1 ? zoomLevel * gridSize * 50 : gridSize * 50;
   const [imageNoteIds, setImageNoteIds] = useState<string[]>([]);
   const dispatch = useDispatch();
   const containerRef = React.useRef<HTMLDivElement>(null);
@@ -108,18 +109,20 @@ const BattleGrid: React.FC<any> = ({ encounterData }) => {
         cursor: "crosshair",
       }}
       ref={containerRef}
-      width={[
-        gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 20 + "vw",
-        gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 10 + "vw",
-        gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 10 + "vw",
-        gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 10 + "vw",
-      ]}
-      height={[
-        gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 30 + "vh",
-        gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 20 + "vh",
-        gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 15 + "vh",
-        gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 10 + "vh",
-      ]}
+      // width={[
+      //   gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 20 + "vw",
+      //   gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 10 + "vw",
+      //   gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 10 + "vw",
+      //   gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 10 + "vw",
+      // ]}
+      // height={[
+      //   gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 30 + "vh",
+      //   gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 20 + "vh",
+      //   gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 15 + "vh",
+      //   gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 10 + "vh",
+      // ]}
+      width={`${containerSize * 1.5}px`}
+      height={`${containerSize * 1.5}px`}
       position="relative"
       overflow="auto"
       boxSizing="border-box"
