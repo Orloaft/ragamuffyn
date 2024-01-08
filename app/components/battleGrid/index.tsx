@@ -30,7 +30,6 @@ import {
 } from "@chakra-ui/icons";
 
 import EncounterElementsLookUp from "../EncounterElementsLookUp";
-import NotesImageLookUp from "../NotesImageLookUp";
 import CustomModal from "../customModal";
 import { useBattleGrid } from "./useBattleGrid";
 import { useDispatch } from "react-redux";
@@ -72,14 +71,14 @@ const BattleGrid: React.FC<any> = ({ encounterData }) => {
     npcs,
     setGridSize,
     setNpcs,
-  } = useBattleGrid(encounterData);
+  } = useBattleGrid();
 
   const [imageNoteIds, setImageNoteIds] = useState<string[]>([]);
   const dispatch = useDispatch();
   const containerRef = React.useRef<HTMLDivElement>(null);
   const { data, loading } = useDataLookUp(npcs);
   let npcData = loading ? null : data;
-  console.log(encounterData);
+
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
 
@@ -99,50 +98,13 @@ const BattleGrid: React.FC<any> = ({ encounterData }) => {
     dispatch(setZoomLevel(Math.max(zoomLevel - 0.1, 0.5))); // Assuming 0.5 is the min zoom level
   };
   console.log("cell props", cellProperties, "selected cell", selectedCell);
-  // const [isPanningEnabled, setIsPanningEnabled] = useState(false);
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
-  // const [isDragging, setIsDragging] = useState(false);
-  // const [startPos, setStartPos] = useState({ x: 0, y: 0 });
-  // const onMouseDown = useCallback(
-  //   (e) => {
-  //     if (!isPanningEnabled) return;
-  //     setIsDragging(true);
-  //     setStartPos({
-  //       x: e.clientX - containerRef.current.scrollLeft,
-  //       y: e.clientY - containerRef.current.scrollTop,
-  //     });
-  //   },
-  //   [isPanningEnabled]
-  // );
 
-  // const onMouseMove = useCallback(
-  //   (e) => {
-  //     if (!isDragging || !isPanningEnabled) return;
-  //     containerRef.current.scrollLeft =
-  //       startPos.x -
-  //       (e.clientX - containerRef.current.getBoundingClientRect().left);
-  //     containerRef.current.scrollTop =
-  //       startPos.y -
-  //       (e.clientY - containerRef.current.getBoundingClientRect().top);
-  //   },
-  //   [isDragging, isPanningEnabled, startPos]
-  // );
-  // const onMouseUp = useCallback(() => {
-  //   setIsDragging(false);
-  // }, []);
   return (
     <Box
-      // onMouseDown={onMouseDown}
-      // onMouseMove={onMouseMove}
-      // onMouseLeave={onMouseUp}
-      // onMouseUp={onMouseUp}
       style={{
-        // cursor: isDragging
-        //   ? "grabbing"
-        //   : isPanningEnabled
-        //   ? "grab"
-        //   : "crosshair",
         cursor: "crosshair",
       }}
       ref={containerRef}
@@ -389,12 +351,14 @@ const BattleGrid: React.FC<any> = ({ encounterData }) => {
               </Box>
             )}
           </Box>
-          <EncounterElementsLookUp
-            addedData={npcs}
-            addToForm={(c: any) => {
-              setNpcs([...npcs, c]);
-            }}
-          />
+          {npcs && (
+            <EncounterElementsLookUp
+              addedData={npcs}
+              addToForm={(c: any) => {
+                setNpcs([...npcs, c]);
+              }}
+            />
+          )}
 
           <UnorderedList listStyleType={"none"} color="#dddddd">
             {npcData &&
@@ -561,44 +525,11 @@ const BattleGrid: React.FC<any> = ({ encounterData }) => {
                                     </Box>
                                   )}
                                   <EncounterElementsLookUp
-                                    addedData={data}
+                                    addedData={npcs}
                                     addToForm={(c: any) => {
-                                      setData([...data, c]);
+                                      // add logic for adding things to encounter
                                     }}
                                   />{" "}
-                                  {data.length ? (
-                                    <>
-                                      {" "}
-                                      <NotesImageLookUp
-                                        noteIds={imageNoteIds}
-                                        onChange={(img) => {
-                                          updateCellPropertyHandler(
-                                            "image",
-                                            img,
-                                            selectedCell
-                                          );
-                                        }}
-                                      />
-                                      <UnorderedList listStyleType="none">
-                                        {data.map((e) => {
-                                          return (
-                                            <ListItem
-                                              key={e.id}
-                                              onClick={() => {
-                                                setImageNoteIds(
-                                                  JSON.parse(e.data).notes
-                                                );
-                                              }}
-                                            >
-                                              {e.name}
-                                            </ListItem>
-                                          );
-                                        })}{" "}
-                                      </UnorderedList>
-                                    </>
-                                  ) : (
-                                    ""
-                                  )}
                                 </>
                               }
                             />

@@ -1,12 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
-import io from "socket.io-client";
+import io, { Socket } from "socket.io-client";
 import { Box, Grid, IconButton } from "@chakra-ui/react";
 import Cell from "~/components/battleGrid/Cell";
-import { DragHandleIcon, AddIcon, MinusIcon } from "@chakra-ui/icons";
+import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 
 export default function Index() {
-  const socket = io("http://localhost:8080"); // Replace with your server URL and portx
-
   const [socketData, setSocketData] = useState({
     highlighted: [],
     gridSize: 0,
@@ -20,74 +18,40 @@ export default function Index() {
     bg: "",
   });
   const containerRef = React.useRef<HTMLDivElement>(null);
-  const [isPanningEnabled, setIsPanningEnabled] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startPos, setStartPos] = useState({ x: 0, y: 0 });
-  const onMouseDown = useCallback(
-    (e) => {
-      if (!isPanningEnabled) return;
-      setIsDragging(true);
-      setStartPos({
-        x: e.clientX - containerRef.current.scrollLeft,
-        y: e.clientY - containerRef.current.scrollTop,
-      });
-    },
-    [isPanningEnabled]
-  );
-
-  const onMouseMove = useCallback(
-    (e) => {
-      if (!isDragging || !isPanningEnabled) return;
-      containerRef.current.scrollLeft =
-        startPos.x -
-        (e.clientX - containerRef.current.getBoundingClientRect().left);
-      containerRef.current.scrollTop =
-        startPos.y -
-        (e.clientY - containerRef.current.getBoundingClientRect().top);
-    },
-    [isDragging, isPanningEnabled, startPos]
-  );
-  const onMouseUp = useCallback(() => {
-    setIsDragging(false);
-  }, []);
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [zoomLevel, setZoomLevel] = useState<number>(1);
   useEffect(() => {
-    socket.on("gridUpdate", (data) => {
-      setSocketData(JSON.parse(data).gridProps);
+    // Establish connection
+    const newSocket = io("http://localhost:8080");
+    setSocket(newSocket);
 
-      return () => {
-        //   socket.off("gridUpdated");
-        socket.disconnect();
-      };
+    // Handle incoming messages
+    newSocket.on("gridUpdate", (data) => {
+      console.log("data", data);
+      setSocketData(() => data.gridProps);
     });
-  }, [socket]);
 
-  const [zoom, setZoom] = useState(1);
-
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
   return (
     <Box
-      onMouseDown={onMouseDown}
-      onMouseMove={onMouseMove}
-      onMouseLeave={onMouseUp}
-      onMouseUp={onMouseUp}
       style={{
-        cursor: isDragging
-          ? "grabbing"
-          : isPanningEnabled
-          ? "grab"
-          : "crosshair",
+        cursor: "crosshair",
       }}
       ref={containerRef}
       width={[
-        socketData.gridSize * socketData.zoomLevel * 20 + "vw",
-        socketData.gridSize * socketData.zoomLevel * 10 + "vw",
-        socketData.gridSize * socketData.zoomLevel * 10 + "vw",
-        socketData.gridSize * socketData.zoomLevel * 10 + "vw",
+        socketData.gridSize * zoomLevel * 20 + "vw",
+        socketData.gridSize * zoomLevel * 10 + "vw",
+        socketData.gridSize * zoomLevel * 10 + "vw",
+        socketData.gridSize * zoomLevel * 10 + "vw",
       ]}
       height={[
-        socketData.gridSize * socketData.zoomLevel * 30 + "vh",
-        socketData.gridSize * socketData.zoomLevel * 20 + "vh",
-        socketData.gridSize * socketData.zoomLevel * 15 + "vh",
-        socketData.gridSize * socketData.zoomLevel * 10 + "vh",
+        socketData.gridSize * zoomLevel * 30 + "vh",
+        socketData.gridSize * zoomLevel * 20 + "vh",
+        socketData.gridSize * zoomLevel * 15 + "vh",
+        socketData.gridSize * zoomLevel * 10 + "vh",
       ]}
       position="relative"
       overflow="auto"
@@ -96,25 +60,21 @@ export default function Index() {
     >
       <Box position="fixed" zIndex="20">
         <IconButton
-          aria-label="allow panning"
-          colorScheme="grey"
-          onClick={() => setIsPanningEnabled(() => !isPanningEnabled)}
-          icon={<DragHandleIcon color={isPanningEnabled ? "white" : "black"} />}
-        >
-          enable panning
-        </IconButton>
-        {/* <IconButton
           colorScheme="grey"
           aria-label="Zoom in"
           icon={<AddIcon />}
-          onClick={() => setZoom(() => zoom + 1)}
+          onClick={() => setZoomLevel(() => zoomLevel + 0.2)}
         />
         <IconButton
           colorScheme="grey"
           aria-label="Zoom out"
           icon={<MinusIcon />}
-          onClick={() => setZoom(() => (zoom > 1 ? zoom - 1 : zoom - 0.2))}
-        /> */}
+          onClick={() =>
+            setZoomLevel(() =>
+              zoomLevel > 1 ? zoomLevel - 0.2 : zoomLevel - 0.2
+            )
+          }
+        />
       </Box>
       <Box h="100%" w="100%" position="absolute">
         <Box
@@ -124,9 +84,7 @@ export default function Index() {
           width="fit-content"
           position="relative"
           transformOrigin="top center"
-          transform={
-            socketData.zoomLevel !== 1 ? `scale(${socketData.zoomLevel})` : ""
-          }
+          transform={zoomLevel !== 1 ? `scale(${zoomLevel})` : ""}
           zIndex="15"
         >
           <Grid

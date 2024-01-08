@@ -22,7 +22,9 @@ interface UpdateCellPropertyPayload {
   property: keyof CellProperty;
   value: number | string | boolean | null;
 }
-const createInitialCellProperties = (gridSize: number): CellProperties => {
+export const createInitialCellProperties = (
+  gridSize: number
+): CellProperties => {
   const cellProperties: CellProperties = {};
   for (let row = 0; row < gridSize; row++) {
     for (let col = 0; col < gridSize; col++) {
@@ -42,7 +44,6 @@ const resizeCellProperties = (
   gridSize: number,
   oldProperties: CellProperties
 ): CellProperties => {
-  console.log("resizing to", gridSize);
   const cellProperties: CellProperties = {};
   for (let row = 0; row < gridSize; row++) {
     for (let col = 0; col < gridSize; col++) {
@@ -62,6 +63,7 @@ const resizeCellProperties = (
   return cellProperties;
 };
 const initialState: EncounterData = {
+  id: "",
   name: "",
   description: "",
   locations: [],
@@ -106,6 +108,15 @@ export const encounterSlice = createSlice({
           state.gridProps.cellProperties
         ));
     },
+    setName: (state, action) => {
+      state.name = action.payload;
+    },
+    setId: (state, action) => {
+      state.id = action.payload;
+    },
+    setRound: (state, action) => {
+      state.round = action.payload;
+    },
 
     // Reducer to set the zoom level
     setZoomLevel: (state, action: PayloadAction<number>) => {
@@ -128,6 +139,9 @@ export const encounterSlice = createSlice({
     },
     setBgPosY: (state, action: PayloadAction<any>) => {
       state.gridProps && (state.gridProps.bgPosY = action.payload);
+    },
+    setDescription: (state, action) => {
+      state.description = action.payload;
     },
     // Reducer to set the selected cell
     setSelectedCell: (state, action: PayloadAction<string | null>) => {
@@ -184,6 +198,10 @@ export const {
   setCurrentTurn,
   setInitiativeOrder,
   setNpcs,
+  setName,
+  setId,
+  setRound,
+  setDescription,
 } = encounterSlice.actions;
 
 export default encounterSlice.reducer;

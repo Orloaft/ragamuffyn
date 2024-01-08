@@ -19,12 +19,9 @@ io.on("connection", (socket) => {
     console.log("Received testEvent:", data);
   });
   socket.on("updateGrid", async(data) => {
-    console.log("yeeet")
-     axios.post(`http://localhost:3000/api/updateData`,{id:data.id,updates:data.state}).then((res)=>{
-   
-      socket.broadcast.emit("gridUpdate", res.data.data);
-     }).catch((err)=>console.log(err))
-  
+    console.log("yeeet",data)
+ 
+     socket.broadcast.emit("gridUpdate",data);
   });
 
   socket.on("disconnect", () => {

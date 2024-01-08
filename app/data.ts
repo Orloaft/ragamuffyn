@@ -13,7 +13,10 @@ import { v4 as uuidv4 } from "uuid";
 import { debugLog } from "./utils/logger";
 import type { ImageData } from "./components/images/ImageUpload";
 import type { DefaultArgs } from "@prisma/client/runtime/library";
-import type { BattleGridState } from "./redux/encounterSlice";
+import {
+  createInitialCellProperties,
+  type BattleGridState,
+} from "./redux/encounterSlice";
 export interface DataEntry {
   id: string;
   name?: string;
@@ -52,6 +55,7 @@ export interface LocationData extends HasNotes {
   encounters: string[];
 }
 export interface EncounterData extends HasNotes {
+  id?: string;
   [key: string]: any;
   name: string;
   description: string;
@@ -224,7 +228,7 @@ export async function fetchDataEntriesById(ids: string[]) {
   let dataArray = [];
   for await (const id of ids) {
     let data = await getDataById(id);
-    console.log("getting data from db", data);
+
     dataArray.push(data);
   }
   return dataArray;
@@ -293,7 +297,18 @@ export async function createDataEntry(model: string) {
           round: 0,
           notes: [],
           npcs: [],
-          gridProps: null,
+          gridProps: {
+            highlighted: Array(28).fill(Array(28).fill(false)),
+            gridSize: 10,
+            zoomLevel: 1,
+            selectedCell: null,
+            cellProperties: createInitialCellProperties(10),
+            bg: null,
+            bgSize: 100,
+            bgPosY: 50,
+            bgPosX: 50,
+            bgRotate: 0,
+          },
         }),
       });
       break;
@@ -621,7 +636,7 @@ export async function createEncounter(data: DataEntry): Promise<
   >
 > {
   let id = uuidv4();
-  debugLog("creating encounter in db:", { ...data, id: `E${id}` });
+  console.log("creating encounter in db:", { ...data, id: `E${id}` });
   return await prisma.encounter.create({
     data: { ...data, id: `E${id}` },
   });

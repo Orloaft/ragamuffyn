@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import LevelInput from "../inputs/LevelInput";
 import ClassInput from "../inputs/ClassInput";
-import { Form, useNavigate } from "@remix-run/react";
+import { Form, useFetcher, useNavigate } from "@remix-run/react";
 import DataEntryInput from "../inputs/DataEntryInput";
 import PlayersInput from "../inputs/PlayersInput";
 import {
@@ -23,6 +23,7 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
   data,
 }: FormDataByModel<T>) => {
   const navigate = useNavigate();
+  const fetcher = useFetcher();
   const [formFields, setFormFields] = useState<T>(data);
   useEffect(() => {
     setFormFields(data);
@@ -38,43 +39,12 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-
-    const formData = new FormData();
-
-    for (const field in formFields) {
-      if (formFields.hasOwnProperty(field)) {
-        if (Array.isArray(formFields[field])) {
-          formFields[field].forEach((item: any) => {
-            console.log("appending:", field, item);
-            formData.append(field, item);
-          });
-        } else {
-          formData.append(field, formFields[field]);
-        }
-        // This check is to ensure you don't include inherited properties
-      }
-    }
-
-    try {
-      console.log("formdata", formData);
-      const response = await fetch(event.currentTarget.action, {
-        method: "POST",
-        body: formData,
-        // Note: When submitting FormData, the 'Content-Type' should not be set manually
-        // as the browser will set it along with the correct boundary
-      });
-
-      if (response.ok) {
-        navigate(-1);
-        // Handle successful submission here, like redirecting to a thank you page
-      } else {
-        console.error("Form submission failed");
-        // Handle errors here
-      }
-    } catch (error) {
-      console.error("Error submitting the form", error);
-      // Handle network errors here
-    }
+    fetcher.submit(
+      {
+        updates: { ...formFields, id: data.id },
+      },
+      { method: "post", action: "/api/updateData", encType: "application/json" }
+    );
   };
   const keyToInput = (key: any, value: any) => {
     switch (key) {
@@ -166,6 +136,9 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
       case "players":
         return <PlayersInput onChange={handleChange} value={value} />;
       case "round":
+        return;
+        break;
+      case "id":
         return;
         break;
       case "gridProps":

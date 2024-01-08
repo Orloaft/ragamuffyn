@@ -38,7 +38,7 @@ export default function EditContact() {
   const [dataObj, setDataObj] = useState<any>(JSON.parse(data.data));
 
   useEffect(() => {
-    setDataObj(JSON.parse(data.data));
+    setDataObj({ ...JSON.parse(data.data), id: data.id });
     console.log(dataObj);
   }, [data]);
   const modelType = modelToDataType(model as string);

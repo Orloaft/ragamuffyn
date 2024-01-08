@@ -1,17 +1,33 @@
-// useSocket.ts
-import { useEffect } from "react";
-import io from "socket.io-client";
+import { useEffect, useState } from "react";
+import io, { Socket } from "socket.io-client";
 
-export const useSocket = (url: string) => {
+// Define the shape of the data you expect to receive
+interface BroadcastMessage {
+  // ... your data structure here
+}
+
+function useSocket(url: string) {
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [messages, setMessages] = useState<BroadcastMessage[]>([]);
+
   useEffect(() => {
-    const socket = io(url);
+    // Establish connection
+    const newSocket = io(url);
+    setSocket(newSocket);
 
-    socket.on("connect", () => {
-      console.log("connected to socket server");
+    // Handle incoming messages
+    newSocket.on("broadcast", (message: BroadcastMessage) => {
+      setMessages((prevMessages) => [...prevMessages, message]);
     });
 
+    // Cleanup on unmount
     return () => {
-      socket.disconnect();
+      newSocket.disconnect();
     };
   }, [url]);
-};
+
+  // Expose socket and messages to the component
+  return { socket, messages };
+}
+
+export default useSocket;
