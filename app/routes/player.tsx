@@ -1,10 +1,18 @@
-import React, { useCallback, useEffect, useState } from "react";
-import io, { Socket } from "socket.io-client";
+import React, { useEffect, useState } from "react";
+import type { Socket } from "socket.io-client";
+import io from "socket.io-client";
 import { Box, Grid, IconButton } from "@chakra-ui/react";
 import Cell from "~/components/battleGrid/Cell";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
+import type { LoaderFunction } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+
+export const loader: LoaderFunction = () => {
+  return { socketUrl: process.env.PUBLIC_SOCKET_URL };
+};
 
 export default function Index() {
+  const data = useLoaderData();
   const [socketData, setSocketData] = useState({
     highlighted: [],
     gridSize: 0,
@@ -27,7 +35,7 @@ export default function Index() {
       : socketData.gridSize * 50;
   useEffect(() => {
     // Establish connection
-    const newSocket = io("http://localhost:8080");
+    const newSocket = io(data.socketUrl);
     setSocket(newSocket);
 
     // Handle incoming messages

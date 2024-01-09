@@ -19,11 +19,12 @@ import type { CellProperty } from ".";
 import { io } from "socket.io-client";
 
 import { useFetcher } from "@remix-run/react";
-export const useBattleGrid = () => {
+export const useBattleGrid = (socketUrl) => {
   const dispatch = useDispatch();
   const reduxState = useSelector((state) => state.encounter);
   const fetcher = useFetcher();
-  const socket = io("http://localhost:8080");
+  console.log(socketUrl + " socker urrl");
+  const socket = io(socketUrl);
   console.log("current redux state", reduxState);
   useEffect(() => {
     // socket.on("gridUpdated", (data) => {

@@ -29,12 +29,13 @@ export const loader = async ({ params, context }: LoaderFunctionArgs) => {
     // throw new Response("Not Found", { status: 404 });
   }
 
-  return json({ data });
+  return json({ data, socketUrl: process.env.PUBLIC_SOCKET_URL });
 };
 
 export default function Index() {
-  const { data } = useLoaderData<typeof loader>();
+  const { data, socketUrl } = useLoaderData<typeof loader>();
   const dispatch = useDispatch();
+
   const dataForRedux = useMemo(() => {
     return data ? { id: data?.id, ...JSON.parse(data.data as string) } : {};
   }, [data]);
@@ -55,5 +56,5 @@ export default function Index() {
       dispatch(updateCellProperties(dataForRedux.gridProps?.cellProperties));
     }
   }, [dataForRedux]);
-  return <BattleGrid />;
+  return socketUrl && <BattleGrid socketUrl={socketUrl} />;
 }

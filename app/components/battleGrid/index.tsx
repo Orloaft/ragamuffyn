@@ -46,7 +46,7 @@ export interface CellProperty {
 export interface CellProperties {
   [key: string]: CellProperty;
 }
-const BattleGrid: React.FC<any> = ({ encounterData }) => {
+const BattleGrid: React.FC<any> = ({ socketUrl }) => {
   const {
     highlighted,
     gridSize,
@@ -71,7 +71,7 @@ const BattleGrid: React.FC<any> = ({ encounterData }) => {
     npcs,
     setGridSize,
     setNpcs,
-  } = useBattleGrid();
+  } = useBattleGrid(socketUrl);
   const containerSize =
     zoomLevel > 1 ? zoomLevel * gridSize * 50 : gridSize * 50;
   const [imageNoteIds, setImageNoteIds] = useState<string[]>([]);
@@ -79,7 +79,6 @@ const BattleGrid: React.FC<any> = ({ encounterData }) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const { data, loading } = useDataLookUp(npcs);
   let npcData = loading ? null : data;
-
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
 
@@ -540,6 +539,7 @@ const BattleGrid: React.FC<any> = ({ encounterData }) => {
                               left="10%"
                               zIndex="15"
                               aria-label="move"
+                              background={"black"}
                               colorScheme="grey"
                               icon={<ArrowUpDownIcon />}
                               onClick={() => {

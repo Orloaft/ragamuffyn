@@ -19,6 +19,7 @@ const CustomModal = ({ content, title, zoom }) => {
   return (
     <>
       <IconButton
+        background={"black"}
         left="10%"
         zIndex="15"
         colorScheme="grey"

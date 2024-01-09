@@ -18,17 +18,22 @@ export default function Cell({ cellProps, isSelected, onClick, isMoving }) {
       height="50px"
     >
       {cellProps && cellProps.image && (
-        <Image
-          src={cellProps.image}
-          alt="Cell Image"
-          position="absolute"
-          bottom={cellProps.posY}
-          right={cellProps.posX}
-          zIndex="10"
-          borderRadius="50%"
-          opacity="1"
-          transform={`scale(${cellProps.size})`}
-        />
+        <Box>
+          <Image
+            src={cellProps.image}
+            alt="Cell Image"
+            position="absolute"
+            bottom={cellProps.posY}
+            right={cellProps.posX}
+            border={
+              isSelected ? (4 - cellProps.size / 2) / 2 + `px solid cyan` : ""
+            }
+            zIndex="10"
+            borderRadius="50%"
+            opacity="1"
+            transform={`scale(${cellProps.size})`}
+          />
+        </Box>
       )}
 
       <AspectRatio ratio={1}>

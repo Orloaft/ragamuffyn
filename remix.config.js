@@ -5,4 +5,8 @@ export default {
   // assetsBuildDirectory: "public/build",
   // publicPath: "/build/",
   // serverBuildPath: "build/index.js",
+  environmentVariables: {
+    PUBLIC_APP_URL: process.env.PUBLIC_APP_URL,
+    PUBLIC_SOCKET_URL: process.env.PUBLIC_SOCKET_URL
+  }
 };

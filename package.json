@@ -9,7 +9,7 @@
     "start": "remix-serve ./build/index.js",
     "typecheck": "tsc",
     "run-socket": "node app/socketServer.cjs",
-    "dev-socket": "concurrently \"npm run run-socket\" \"npm run dev\""
+    "dev-socket": "concurrently \"npm run dev\" \"npm run run-socket\""
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
@@ -19,14 +19,18 @@
     "@prisma/client": "^5.6.0",
     "@reduxjs/toolkit": "^2.0.1",
     "@remix-run/css-bundle": "^2.3.1",
+    "@remix-run/express": "^2.4.1",
     "@remix-run/node": "^2.3.1",
     "@remix-run/react": "^2.3.1",
     "@remix-run/serve": "^2.3.1",
     "axios": "^1.6.5",
+    "commander": "^11.1.0",
+    "dotenv": "^16.3.1",
     "framer-motion": "^10.17.9",
     "isbot": "^3.6.8",
     "lodash": "^4.17.21",
     "match-sorter": "^6.3.1",
+    "node-jq": "^4.2.2",
     "passport": "^0.7.0",
     "prisma": "^5.6.0",
     "react": "^18.2.0",
