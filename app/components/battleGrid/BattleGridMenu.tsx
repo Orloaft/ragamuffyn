@@ -1,7 +1,23 @@
-import { Box, Flex, UnorderedList, Text, ListItem } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  UnorderedList,
+  Text,
+  ListItem,
+  IconButton,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  Input,
+} from "@chakra-ui/react";
+import { v4 as uuidv4 } from "uuid";
 import CustomModal from "../customModal";
-import { ViewIcon } from "@chakra-ui/icons";
+import { CloseIcon, EditIcon, ViewIcon } from "@chakra-ui/icons";
 import EncounterElementsLookUp from "../EncounterElementsLookUp";
+import { indexOf, max, min } from "lodash";
+import { useEffect, useState } from "react";
 
 export default function BattleGridMenu({
   initiativeOrder,
@@ -11,17 +27,108 @@ export default function BattleGridMenu({
   addNpc,
   setInitiativeOrder,
 }) {
+  const [editStates, setEditStates] = useState(
+    initiativeOrder.map(() => ({ editing: false, inputValue: "" }))
+  );
+  useEffect(() => {
+    setEditStates(
+      initiativeOrder.map(() => ({ editing: false, inputValue: "" }))
+    );
+  }, [initiativeOrder]);
   return (
     <CustomModal
-      width={"70%"}
+      width={"100%"}
       content={
         <Box color={"#dddddd"}>
-          <Flex>
+          <Flex justifyContent={"space-between"}>
             <Box>
               <Text>Initiative order</Text>
-              <UnorderedList listStyleType={"none"}>
-                {initiativeOrder.map((el) => {
-                  return <ListItem key={el.id}>{el.name}</ListItem>;
+              <UnorderedList listStyleType="none">
+                {initiativeOrder.map((el, index) => {
+                  const id = uuidv4();
+                  return (
+                    <ListItem
+                      key={id}
+                      display="flex"
+                      justifyContent="space-around"
+                    >
+                      {editStates[index] && editStates[index].editing ? (
+                        <Input
+                          value={editStates[index].inputValue}
+                          onChange={(e) => {
+                            const newEditStates = [...editStates];
+                            newEditStates[index].inputValue = e.target.value;
+                            setEditStates(newEditStates);
+                          }}
+                        />
+                      ) : (
+                        <Text>{el.tag ? el.tag : el.name}</Text>
+                      )}
+
+                      <Flex>
+                        {" "}
+                        <NumberInput
+                          width={"30%"}
+                          value={el.damageTrack || 0} // Use el.damageTrack if it exists, otherwise default to 0
+                          onChange={(valueAsString) => {
+                            const newOrder = initiativeOrder.map(
+                              (item, idx) => {
+                                if (idx === index) {
+                                  // Create a new object with updated damageTrack
+                                  return {
+                                    ...item,
+                                    damageTrack: parseInt(valueAsString),
+                                  };
+                                }
+                                return item;
+                              }
+                            );
+                            setInitiativeOrder(newOrder);
+                          }}
+                          min={-9999}
+                          max={9999}
+                          step={1}
+                        >
+                          <NumberInputField />
+                          <NumberInputStepper>
+                            <NumberIncrementStepper />
+                            <NumberDecrementStepper />
+                          </NumberInputStepper>
+                        </NumberInput>
+                        <IconButton
+                          onClick={() => {
+                            const newOrder = initiativeOrder.filter(
+                              (_, idx) => idx !== index
+                            );
+                            setInitiativeOrder(newOrder);
+                          }}
+                          aria-label="remove"
+                          icon={<CloseIcon />}
+                        />
+                        <IconButton
+                          aria-label="edit"
+                          icon={<EditIcon />}
+                          onClick={() => {
+                            const newEditStates = [...editStates];
+                            if (
+                              newEditStates[index].editing &&
+                              newEditStates[index].inputValue
+                            ) {
+                              const newOrder = [...initiativeOrder];
+                              newOrder[index] = {
+                                ...newOrder[index],
+                                tag: newEditStates[index].inputValue,
+                              };
+                              setInitiativeOrder(newOrder);
+                            }
+                            newEditStates[index].editing =
+                              !newEditStates[index].editing;
+                            setEditStates(newEditStates);
+                          }}
+                        />
+                      </Flex>
+                    </ListItem>
+                  );
                 })}
               </UnorderedList>
             </Box>
@@ -46,7 +153,10 @@ export default function BattleGridMenu({
                     <ListItem
                       key={npc.id}
                       onClick={() =>
-                        setInitiativeOrder([...initiativeOrder, npc])
+                        setInitiativeOrder([
+                          ...initiativeOrder,
+                          { ...npc, damageTrack: 0, tag: "" },
+                        ])
                       }
                     >
                       {npc.name}

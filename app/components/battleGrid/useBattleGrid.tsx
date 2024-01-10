@@ -17,39 +17,32 @@ import {
   setCharacters,
 } from "../../redux/encounterSlice";
 import type { CellProperty } from ".";
-import { io } from "socket.io-client";
 
 import { useFetcher } from "@remix-run/react";
+import { useToast } from "@chakra-ui/react";
 export const useBattleGrid = () => {
+  const toast = useToast();
   const dispatch = useDispatch();
   const reduxState = useSelector((state) => state.encounter);
   const fetcher = useFetcher();
 
-  const socket = io("http://localhost:3000");
-
-  useEffect(() => {
-    // socket.on("gridUpdated", (data) => {
-    //   // Handle incoming grid updates
-    //   // Possibly dispatch a Redux action to update the state
-    // });
-
-    // Cleanup function to close the socket connection
-    return () => {
-      //   socket.off("gridUpdated");
-      socket.disconnect();
-    };
-  }, [socket]); // Include socket in the dependency array
   const { gridProps } = reduxState;
   const emitGridUpdate = useCallback(() => {
-    console.log("emitty", reduxState);
     fetcher.submit(
       {
         updates: reduxState,
       },
       { method: "post", action: "/api/updateData", encType: "application/json" }
     );
-    socket.emit("updateGrid", reduxState);
-  }, [reduxState, socket]);
+    toast({
+      title: "Upload",
+      description: "Encounter data saved.",
+      status: "success",
+      duration: 1500,
+      isClosable: false,
+    });
+    // socket.emit("updateGrid", reduxState);
+  }, [reduxState, fetcher]);
 
   const handleZoomChange = (value: number) => {
     dispatch(setZoomLevel(value));

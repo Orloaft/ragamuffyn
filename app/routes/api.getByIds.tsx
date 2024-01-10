@@ -9,7 +9,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     // Parse the incoming request to get the array of IDs
     const requestBody = await request.json();
     const ids = requestBody.ids;
-
+    console.log("ids", ids);
     if (!Array.isArray(ids)) {
       throw new Error("Invalid input");
     }

@@ -1,5 +1,5 @@
 import type { ChangeEvent } from "react";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Box,
   Drawer,
@@ -19,6 +19,8 @@ import {
   UnorderedList,
   ListItem,
   Button,
+  Spinner,
+  Stack,
 } from "@chakra-ui/react";
 import Cell from "./Cell";
 import {
@@ -82,14 +84,21 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
   } = useBattleGrid();
   const containerSize =
     zoomLevel > 1 ? zoomLevel * gridSize * 50 : gridSize * 50;
-  const [imageNoteIds, setImageNoteIds] = useState<string[]>([]);
   const dispatch = useDispatch();
   const containerRef = React.useRef<HTMLDivElement>(null);
   const { data: npcEntries, loading: npcLoading } = useDataLookUp(npcs);
-  let npcData = npcLoading ? null : npcEntries;
+  let npcData: any = npcLoading ? null : npcEntries;
   const { data: characterEntries, loading: characterLoading } =
     useDataLookUp(characters);
   let characterData = characterLoading ? null : characterEntries;
+  const noteIdArray = useMemo(() => {
+    let tempNoteIdArray = [];
+    npcData &&
+      npcData.forEach((d) => {
+        tempNoteIdArray = [...tempNoteIdArray, ...JSON.parse(d.data).notes];
+      });
+    return tempNoteIdArray;
+  }, [npcData]);
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
 
@@ -137,8 +146,9 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
       boxSizing="border-box"
       zIndex="10"
     >
-      <Box position="fixed" zIndex="20">
+      <Box position="fixed" zIndex="20" display={"flex"} alignItems={"center"}>
         <IconButton
+          background="black"
           ref={btnRef}
           zIndex="20"
           colorScheme="grey"
@@ -148,6 +158,7 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
           Settings
         </IconButton>
         <IconButton
+          background="black"
           aria-label="update"
           zIndex="20"
           colorScheme="grey"
@@ -159,17 +170,19 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
 
         <IconButton
           colorScheme="grey"
+          background="black"
           aria-label="Zoom in"
           icon={<AddIcon />}
           onClick={handleZoomIn}
         />
         <IconButton
+          background="black"
           colorScheme="grey"
           aria-label="Zoom out"
           icon={<MinusIcon />}
           onClick={handleZoomOut}
         />
-        {npcData && characterData && (
+        {(npcData && characterData && (
           <BattleGridMenu
             initiativeOrder={initiativeOrder}
             characterData={characterData}
@@ -178,7 +191,7 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
             addNpc={(c) => setNpcs([...npcs, c])}
             setInitiativeOrder={setInitiativeOrder}
           />
-        )}
+        )) || <Spinner size="lg" />}
       </Box>
       <Drawer
         isOpen={isOpen}
@@ -197,199 +210,93 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
             color="#dddddd"
             zIndex="10"
           >
-            {!selectedCell && (
-              <>
-                <Text minWidth="100px">Battle Map:</Text>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                />
-                <Image zIndex="10" alt="Cell Image" src={bg} />
-                <Text>Zoom</Text>
-                <Slider
-                  aria-label="zoom-level"
-                  min={0.5} // Minimum zoom level
-                  max={2} // Maximum zoom level
-                  step={0.1} // Step of each zoom change
-                  value={zoomLevel}
-                  onChange={handleZoomChange}
-                >
-                  <SliderTrack />
+            <>
+              <Text minWidth="100px">Battle Map:</Text>
+              <input type="file" accept="image/*" onChange={handleFileChange} />
+              <Image zIndex="10" alt="Cell Image" src={bg} />
+              <Text>Zoom</Text>
+              <Slider
+                aria-label="zoom-level"
+                min={0.5} // Minimum zoom level
+                max={2} // Maximum zoom level
+                step={0.1} // Step of each zoom change
+                value={zoomLevel}
+                onChange={handleZoomChange}
+              >
+                <SliderTrack />
+                <SliderFilledTrack />
+                <SliderThumb />
+              </Slider>
+              <Text>Rotate</Text>
+              <Slider
+                aria-label="rotate"
+                min={0} // Minimum zoom level
+                max={25} // Maximum zoom level
+                step={1} // Step of each zoom change
+                value={bgRotate}
+                onChange={(e) => {
+                  setBgRotate(e);
+                }}
+              >
+                <SliderTrack />
+                <SliderFilledTrack />
+                <SliderThumb />
+              </Slider>
+              <Text minWidth="100px">Grid Size:</Text>
+              <Slider
+                defaultValue={10}
+                min={10}
+                max={40}
+                step={1}
+                onChange={(val) => setGridSize(val)}
+              >
+                <SliderTrack>
                   <SliderFilledTrack />
-                  <SliderThumb />
-                </Slider>
-                <Text>Rotate</Text>
-                <Slider
-                  aria-label="rotate"
-                  min={0} // Minimum zoom level
-                  max={25} // Maximum zoom level
-                  step={1} // Step of each zoom change
-                  value={bgRotate}
-                  onChange={(e) => {
-                    setBgRotate(e);
-                  }}
-                >
-                  <SliderTrack />
+                </SliderTrack>
+                <SliderThumb />
+              </Slider>
+              <Text>Size</Text>
+              <Slider
+                defaultValue={100}
+                min={50} // Minimum size (in percentage)
+                max={200} // Maximum size (in percentage)
+                onChange={(val) => setBgSize(val)}
+              >
+                <SliderTrack>
                   <SliderFilledTrack />
-                  <SliderThumb />
-                </Slider>
-                <Text minWidth="100px">Grid Size:</Text>
-                <Slider
-                  defaultValue={10}
-                  min={10}
-                  max={40}
-                  step={1}
-                  onChange={(val) => setGridSize(val)}
-                >
-                  <SliderTrack>
-                    <SliderFilledTrack />
-                  </SliderTrack>
-                  <SliderThumb />
-                </Slider>
-                <Text>Size</Text>
-                <Slider
-                  defaultValue={100}
-                  min={50} // Minimum size (in percentage)
-                  max={200} // Maximum size (in percentage)
-                  onChange={(val) => setBgSize(val)}
-                >
-                  <SliderTrack>
-                    <SliderFilledTrack />
-                  </SliderTrack>
-                  <SliderThumb />
-                </Slider>
-                {/* Slider for adjusting X coordinate */}
-                <Text>X Position</Text>
-                <Slider
-                  defaultValue={50}
-                  min={0}
-                  max={100}
-                  orientation="horizontal"
-                  onChange={(val) => setBgPosX(val)}
-                >
-                  <SliderTrack>
-                    <SliderFilledTrack />
-                  </SliderTrack>
-                  <SliderThumb />
-                </Slider>
-                {/* Slider for adjusting Y coordinate */}
-                <Text>Y Position</Text>
-                <Slider
-                  defaultValue={50}
-                  min={0}
-                  max={100}
-                  orientation="horizontal"
-                  onChange={(val) => setBgPosY(val)}
-                >
-                  <SliderTrack>
-                    <SliderFilledTrack />
-                  </SliderTrack>
-                  <SliderThumb />
-                </Slider>{" "}
-              </>
-            )}
-            {selectedCell && (
-              <Box>
-                {" "}
-                <Text>Selected Cell</Text>
-                <Button
-                  onClick={() => {
-                    dispatch(setSelectedCell(null));
-                  }}
-                >
-                  Unselect
-                </Button>
-                <Text>Cell Size</Text>
-                {cellProperties[selectedCell] && (
-                  <Slider
-                    value={cellProperties[selectedCell].size}
-                    min={0.15}
-                    step={0.1}
-                    max={10}
-                    onChange={(val) =>
-                      updateCellPropertyHandler("size", val, selectedCell)
-                    }
-                  >
-                    <SliderTrack>
-                      <SliderFilledTrack />
-                    </SliderTrack>
-                    <SliderThumb />
-                  </Slider>
-                )}
-                {/* Slider for adjusting X coordinate */}
-                <Text>X Position</Text>
-                <Slider
-                  defaultValue={0}
-                  min={-50}
-                  max={50}
-                  orientation="horizontal"
-                  onChange={(val) =>
-                    updateCellPropertyHandler("posX", val, selectedCell)
-                  }
-                >
-                  <SliderTrack>
-                    <SliderFilledTrack />
-                  </SliderTrack>
-                  <SliderThumb />
-                </Slider>
-                {/* Slider for adjusting Y coordinate */}
-                <Text>Y Position</Text>
-                <Slider
-                  defaultValue={0}
-                  min={-50}
-                  max={50}
-                  orientation="horizontal"
-                  onChange={(val) =>
-                    updateCellPropertyHandler("posY", val, selectedCell)
-                  }
-                >
-                  <SliderTrack>
-                    <SliderFilledTrack />
-                  </SliderTrack>
-                  <SliderThumb />
-                </Slider>
-                {/* <NotesImageLookUp data={data} /> */}
-                <Text>Image</Text>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => handleCellImageChange(e, selectedCell)}
-                />
-                {cellProperties[selectedCell].image && (
-                  <Image
-                    zIndex="10"
-                    alt="Cell Image"
-                    src={cellProperties[selectedCell].image as string}
-                  />
-                )}
-              </Box>
-            )}
+                </SliderTrack>
+                <SliderThumb />
+              </Slider>
+              {/* Slider for adjusting X coordinate */}
+              <Text>X Position</Text>
+              <Slider
+                defaultValue={50}
+                min={0}
+                max={100}
+                orientation="horizontal"
+                onChange={(val) => setBgPosX(val)}
+              >
+                <SliderTrack>
+                  <SliderFilledTrack />
+                </SliderTrack>
+                <SliderThumb />
+              </Slider>
+              {/* Slider for adjusting Y coordinate */}
+              <Text>Y Position</Text>
+              <Slider
+                defaultValue={50}
+                min={0}
+                max={100}
+                orientation="horizontal"
+                onChange={(val) => setBgPosY(val)}
+              >
+                <SliderTrack>
+                  <SliderFilledTrack />
+                </SliderTrack>
+                <SliderThumb />
+              </Slider>{" "}
+            </>
           </Box>
-          {npcs && (
-            <EncounterElementsLookUp
-              addedData={npcs}
-              addToForm={(c: any) => {
-                setNpcs([...npcs, c]);
-              }}
-            />
-          )}
-
-          <UnorderedList listStyleType={"none"} color="#dddddd">
-            {npcData &&
-              npcData.map((e) => {
-                return (
-                  <ListItem
-                    key={e.id}
-                    onClick={() => {
-                      setImageNoteIds(JSON.parse(e.data).notes);
-                    }}
-                  >
-                    {e.name}
-                  </ListItem>
-                );
-              })}
-          </UnorderedList>
         </DrawerContent>
       </Drawer>
       <Box h="100%" w="100%" position="absolute">
@@ -519,7 +426,16 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
                                         </SliderTrack>
                                         <SliderThumb />
                                       </Slider>
-                                      {/* <NotesImageLookUp data={data} /> */}
+                                      <NotesImageLookUp
+                                        onChange={(i) =>
+                                          updateCellPropertyHandler(
+                                            "image",
+                                            i,
+                                            cellKey
+                                          )
+                                        }
+                                        noteIds={noteIdArray}
+                                      />
                                       <Text>Image</Text>
                                       <input
                                         type="file"
@@ -541,9 +457,15 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
                                     </Box>
                                   )}
                                   <EncounterElementsLookUp
-                                    addedData={npcs}
-                                    addToForm={(c: any) => {
-                                      // add logic for adding things to encounter
+                                    addToForm={(c, model) => {
+                                      switch (model) {
+                                        case "npcs":
+                                          setNpcs([...npcs, c]);
+                                          break;
+                                        case "characters":
+                                          setCharacters([...characters, c]);
+                                          break;
+                                      }
                                     }}
                                   />{" "}
                                 </>

@@ -22,6 +22,7 @@ export interface DataEntry {
   name?: string;
   data?: string;
   createdAt?: string;
+  damageTrack?: any;
 }
 interface HasNotes {
   notes: string[];

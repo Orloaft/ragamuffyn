@@ -26,7 +26,10 @@ export default function Cell({ cellProps, isSelected, onClick, isMoving }) {
             bottom={cellProps.posY}
             right={cellProps.posX}
             border={
-              isSelected ? (4 - cellProps.size / 2) / 2 + `px solid cyan` : ""
+              isSelected
+                ? (4 - cellProps.size / 2) / 2 +
+                  `px ${isMoving ? "dashed" : "solid"} cyan`
+                : ""
             }
             zIndex="10"
             borderRadius="50%"

@@ -8,7 +8,7 @@ import { useFetcher } from "@remix-run/react";
 // Assuming the data prop is an array of DataElement
 const NotesImageLookUp: React.FC<any> = ({ noteIds, onChange }) => {
   const fetcher = useFetcher<any>({ key: "noteById" });
-
+  console.log("noteids", noteIds);
   useEffect(() => {
     fetcher.submit(
       { ids: noteIds },

@@ -20,7 +20,7 @@ const CustomModal = ({ content, title, button, width }) => {
     <>
       <IconButton
         background={"black"}
-        left="10%"
+        left={title === "Encounter" ? "0" : "10%"}
         zIndex="15"
         colorScheme="grey"
         onClick={onOpen}
@@ -28,13 +28,19 @@ const CustomModal = ({ content, title, button, width }) => {
         icon={button}
       ></IconButton>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        isCentered={title === "Encounter"}
+        size={title === "Encounter" ? "half" : "sm"}
+      >
         <ModalOverlay />
         <ModalContent
+          marginLeft={title === "Encounter" ? "" : "50%"}
           backgroundImage={"url('/marble.avif')"}
           color="#dddddd"
-          width={width}
-          marginLeft={"50%"}
+          backgroundRepeat={"no-repeat"}
+          backgroundSize={"cover"}
         >
           <ModalHeader>{title}</ModalHeader>
           <ModalCloseButton />
