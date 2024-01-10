@@ -35,7 +35,7 @@ export default function Index() {
       : socketData.gridSize * 50;
   useEffect(() => {
     // Establish connection
-    const newSocket = io(data.socketUrl);
+    const newSocket = io("http://localhost:3000");
     setSocket(newSocket);
 
     // Handle incoming messages

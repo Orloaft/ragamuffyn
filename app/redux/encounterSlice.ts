@@ -71,6 +71,7 @@ const initialState: EncounterData = {
   currentTurn: 0,
   round: 0,
   notes: [],
+  characters: [],
   npcs: [],
   gridProps: {
     highlighted: Array(28).fill(Array(28).fill(false)),
@@ -97,6 +98,7 @@ export const encounterSlice = createSlice({
       state.initiativeOrder = action.payload;
     },
     setNpcs: (state, action: PayloadAction<any>) => {
+      console.log("updating npcs", action.payload);
       state.npcs = action.payload;
     },
     // Reducer to set the grid size
@@ -107,6 +109,10 @@ export const encounterSlice = createSlice({
           state.gridProps.gridSize,
           state.gridProps.cellProperties
         ));
+    },
+    setCharacters: (state, action) => {
+      console.log("updating characters", action.payload);
+      state.characters = action.payload;
     },
     setName: (state, action) => {
       state.name = action.payload;
@@ -151,11 +157,9 @@ export const encounterSlice = createSlice({
       state,
       action: PayloadAction<{ [key: string]: CellProperty }>
     ) => {
-      console.log("initializing cell props");
       state.gridProps && (state.gridProps.cellProperties = action.payload);
     },
     updateCellProperties: (state, action: PayloadAction<any>) => {
-      console.log("updating cell props", action.payload);
       state.gridProps && (state.gridProps.cellProperties = action.payload);
     },
     updateCellProperty: (
@@ -163,7 +167,7 @@ export const encounterSlice = createSlice({
       action: PayloadAction<UpdateCellPropertyPayload>
     ) => {
       const { cellKey, property, value } = action.payload;
-      console.log("setting prop", property);
+
       // Update property with type checking
       if (property === "size" || property === "posX" || property === "posY") {
         state.gridProps &&
@@ -202,6 +206,7 @@ export const {
   setId,
   setRound,
   setDescription,
+  setCharacters,
 } = encounterSlice.actions;
 
 export default encounterSlice.reducer;

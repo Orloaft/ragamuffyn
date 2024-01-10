@@ -16,7 +16,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
     // Fetch data entries matching these IDs from your backend or database
     const dataEntries = await fetchDataEntriesById(ids);
-    console.log("returning entries", dataEntries, "using", ids);
+
     // Return the array of data entries
     return json(dataEntries);
   } catch (error) {

@@ -60,6 +60,7 @@ export interface EncounterData extends HasNotes {
   name: string;
   description: string;
   locations: string[];
+  characters: string[];
   initiativeOrder: string[]; // Array of IDs to represent the order of turns
   currentTurn: number; // ID of the character/monster whose turn it is
   round: number; // Current round of the encounter
@@ -296,6 +297,7 @@ export async function createDataEntry(model: string) {
           currentTurn: 0,
           round: 0,
           notes: [],
+          characters: [],
           npcs: [],
           gridProps: {
             highlighted: Array(28).fill(Array(28).fill(false)),
@@ -661,11 +663,13 @@ export async function updateEncounter(
 ): Promise<DataEntry> {
   debugLog("updating encounter in db:", id, data);
   let updates = { ...data };
-  ["npcs", "initiativeOrder", "notes", "locations"].forEach((a) => {
-    if (!updates.hasOwnProperty(a)) {
-      updates[a] = [];
+  ["npcs", "initiativeOrder", "notes", "locations", "characters"].forEach(
+    (a) => {
+      if (!updates.hasOwnProperty(a)) {
+        updates[a] = [];
+      }
     }
-  });
+  );
   return await prisma.encounter.update({
     where: { id },
     data: { name: data.name, data: JSON.stringify(updates) },

@@ -22,7 +22,7 @@ export const EncounterElementsModal = ({
   model,
   data,
   button,
-  addedData,
+
   addToForm,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -52,32 +52,31 @@ export const EncounterElementsModal = ({
             >
               {(data.length &&
                 data.map((char: any) => {
-                  if (addedData.find((e: any) => e === char.id)) {
-                    return null; // Skip this item
-                  } else {
-                    return (
-                      <ListItem key={char.id}>
-                        <Flex justify={"space-between"} gap={"1rem"}>
-                          <IdToEntry model={model} id={char.id} isList={true} />
-                          <Flex>
-                            <DataModalPopUp
-                              model={model}
-                              data={{ id: char.id }}
-                              button={<SearchIcon />}
-                            />
-                            <IconButton
-                              onClick={(e) => {
-                                e.preventDefault();
-                                addToForm(char);
-                              }}
-                              aria-label="add"
-                              icon={button}
-                            />
-                          </Flex>
+                  // if (addedData.find((e: any) => e === char.id)) {
+                  //   return null; // Skip this item
+                  // } else {
+                  return (
+                    <ListItem key={char.id}>
+                      <Flex justify={"space-between"} gap={"1rem"}>
+                        <IdToEntry model={model} id={char.id} isList={true} />
+                        <Flex>
+                          <DataModalPopUp
+                            model={model}
+                            data={{ id: char.id }}
+                            button={<SearchIcon />}
+                          />
+                          <IconButton
+                            onClick={(e) => {
+                              e.preventDefault();
+                              addToForm(char, model);
+                            }}
+                            aria-label="add"
+                            icon={button}
+                          />
                         </Flex>
-                      </ListItem>
-                    );
-                  }
+                      </Flex>
+                    </ListItem>
+                  );
                 })) || <ListItem>no {model}</ListItem>}
             </UnorderedList>
           </ModalBody>

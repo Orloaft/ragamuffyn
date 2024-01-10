@@ -1,15 +1,12 @@
 import { Box, Flex, Select } from "@chakra-ui/react";
-
 import { useEffect, useState } from "react";
-
-import { AddIcon, SearchIcon } from "@chakra-ui/icons";
+import { AddIcon } from "@chakra-ui/icons";
 import { useFetcher } from "@remix-run/react";
-
 import { EncounterElementsModal } from "./EncounterElementModal";
 
-export default function EncounterElementsLookUp({ addedData, addToForm }) {
-  const [model, setModel] = useState("encounters");
-  const fetcher = useFetcher<any>();
+export default function EncounterElementsLookUp({ addToForm }) {
+  const [model, setModel] = useState("npcs");
+  const fetcher = useFetcher<any>({ key: "encounterElements" });
 
   useEffect(() => {
     fetcher.load(`/collections/${model}`);
@@ -27,10 +24,8 @@ export default function EncounterElementsLookUp({ addedData, addToForm }) {
               }}
               value={model}
             >
-              <option value="encounters">Encounters</option>
               <option value="npcs">NPCs</option>
               <option value="characters">Characters</option>
-              <option value="notes">Notes</option>
             </Select>{" "}
             <div>
               {fetcher.data.data && (
@@ -38,7 +33,6 @@ export default function EncounterElementsLookUp({ addedData, addToForm }) {
                   model={model}
                   data={fetcher.data.data}
                   button={<AddIcon />}
-                  addedData={addedData}
                   addToForm={addToForm}
                 />
               )}

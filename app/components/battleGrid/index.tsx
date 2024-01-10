@@ -25,8 +25,10 @@ import {
   AddIcon,
   ArrowUpDownIcon,
   DownloadIcon,
+  EditIcon,
   MinusIcon,
   SettingsIcon,
+  ViewIcon,
 } from "@chakra-ui/icons";
 
 import EncounterElementsLookUp from "../EncounterElementsLookUp";
@@ -35,6 +37,8 @@ import { useBattleGrid } from "./useBattleGrid";
 import { useDispatch } from "react-redux";
 import { setSelectedCell, setZoomLevel } from "~/redux/encounterSlice";
 import useDataLookUp from "./useDataLookUp";
+import BattleGridMenu from "./BattleGridMenu";
+import NotesImageLookUp from "../NotesImageLookUp";
 export interface CellProperty {
   size: number;
   posX: number;
@@ -71,14 +75,21 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
     npcs,
     setGridSize,
     setNpcs,
-  } = useBattleGrid(socketUrl);
+    initiativeOrder,
+    characters,
+    setCharacters,
+    setInitiativeOrder,
+  } = useBattleGrid();
   const containerSize =
     zoomLevel > 1 ? zoomLevel * gridSize * 50 : gridSize * 50;
   const [imageNoteIds, setImageNoteIds] = useState<string[]>([]);
   const dispatch = useDispatch();
   const containerRef = React.useRef<HTMLDivElement>(null);
-  const { data, loading } = useDataLookUp(npcs);
-  let npcData = loading ? null : data;
+  const { data: npcEntries, loading: npcLoading } = useDataLookUp(npcs);
+  let npcData = npcLoading ? null : npcEntries;
+  const { data: characterEntries, loading: characterLoading } =
+    useDataLookUp(characters);
+  let characterData = characterLoading ? null : characterEntries;
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
 
@@ -97,7 +108,6 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
   const handleZoomOut = () => {
     dispatch(setZoomLevel(Math.max(zoomLevel - 0.1, 0.5))); // Assuming 0.5 is the min zoom level
   };
-  console.log("cell props", cellProperties, "selected cell", selectedCell);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
@@ -146,14 +156,7 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
         >
           update
         </IconButton>
-        {/* <IconButton
-          aria-label="allow panning"
-          colorScheme="grey"
-          onClick={() => setIsPanningEnabled(() => !isPanningEnabled)}
-          icon={<DragHandleIcon color={isPanningEnabled ? "white" : "black"} />}
-        >
-          enable panning
-        </IconButton> */}
+
         <IconButton
           colorScheme="grey"
           aria-label="Zoom in"
@@ -166,6 +169,16 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
           icon={<MinusIcon />}
           onClick={handleZoomOut}
         />
+        {npcData && characterData && (
+          <BattleGridMenu
+            initiativeOrder={initiativeOrder}
+            characterData={characterData}
+            addCharacter={(c) => setCharacters([...characters, c])}
+            npcData={npcData}
+            addNpc={(c) => setNpcs([...npcs, c])}
+            setInitiativeOrder={setInitiativeOrder}
+          />
+        )}
       </Box>
       <Drawer
         isOpen={isOpen}
@@ -436,7 +449,8 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
                           <Flex flexDirection="column" gap="2">
                             <CustomModal
                               title="images"
-                              zoom={zoomLevel}
+                              width={"20%"}
+                              button={<EditIcon />}
                               content={
                                 <>
                                   {" "}

@@ -5,14 +5,14 @@ import { invariant } from "framer-motion";
 import { useEffect, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import BattleGrid from "~/components/battleGrid";
-import { EncounterData, getDataById } from "~/data";
+import { getDataById } from "~/data";
 import {
   setBg,
   setBgPosX,
   setBgPosY,
   setBgRotate,
+  setCharacters,
   setDescription,
-  setEncounterState,
   setGridSize,
   setId,
   setInitiativeOrder,
@@ -29,19 +29,20 @@ export const loader = async ({ params, context }: LoaderFunctionArgs) => {
     // throw new Response("Not Found", { status: 404 });
   }
 
-  return json({ data, socketUrl: process.env.PUBLIC_SOCKET_URL });
+  return json({ data });
 };
 
 export default function Index() {
-  const { data, socketUrl } = useLoaderData<typeof loader>();
+  const { data } = useLoaderData<typeof loader>();
   const dispatch = useDispatch();
 
-  const dataForRedux = useMemo(() => {
-    return data ? { id: data?.id, ...JSON.parse(data.data as string) } : {};
-  }, [data]);
-  console.log("data:", data, "data for redux", dataForRedux);
   useEffect(() => {
+    const dataForRedux = data
+      ? { id: data?.id, ...JSON.parse(data.data as string) }
+      : {};
+
     if (dataForRedux.id) {
+      console.log("setting up redux");
       dispatch(setDescription(dataForRedux.description));
       dispatch(setId(dataForRedux.id));
       dispatch(setName(data.name));
@@ -54,7 +55,8 @@ export default function Index() {
       dispatch(setBgRotate(dataForRedux.gridProps?.bgRotate));
       dispatch(setBg(dataForRedux.gridProps?.bg));
       dispatch(updateCellProperties(dataForRedux.gridProps?.cellProperties));
+      dispatch(setCharacters(dataForRedux.characters));
     }
-  }, [dataForRedux]);
-  return socketUrl && <BattleGrid socketUrl={socketUrl} />;
+  }, []);
+  return <BattleGrid />;
 }

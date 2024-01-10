@@ -14,18 +14,19 @@ import {
   setBgSize,
   setNpcs,
   setInitiativeOrder,
+  setCharacters,
 } from "../../redux/encounterSlice";
 import type { CellProperty } from ".";
 import { io } from "socket.io-client";
 
 import { useFetcher } from "@remix-run/react";
-export const useBattleGrid = (socketUrl) => {
+export const useBattleGrid = () => {
   const dispatch = useDispatch();
   const reduxState = useSelector((state) => state.encounter);
   const fetcher = useFetcher();
-  console.log(socketUrl + " socker urrl");
-  const socket = io(socketUrl);
-  console.log("current redux state", reduxState);
+
+  const socket = io("http://localhost:3000");
+
   useEffect(() => {
     // socket.on("gridUpdated", (data) => {
     //   // Handle incoming grid updates
@@ -53,7 +54,7 @@ export const useBattleGrid = (socketUrl) => {
   const handleZoomChange = (value: number) => {
     dispatch(setZoomLevel(value));
   };
-
+  console.log(reduxState, "reduxiooo");
   const handleSquareClick = (rowIndex: number, colIndex: number) => {
     const cellKey = `${rowIndex}-${colIndex}`;
 
@@ -165,5 +166,9 @@ export const useBattleGrid = (socketUrl) => {
     setBg: (v: any) => dispatch(setBg(v)),
     npcs: reduxState.npcs,
     setNpcs: (v: any) => dispatch(setNpcs(v)),
+    initiativeOrder: reduxState.initiativeOrder,
+    setInitiativeOrder: (v) => dispatch(setInitiativeOrder(v)),
+    characters: reduxState.characters,
+    setCharacters: (v: any) => dispatch(setCharacters(v)),
   };
 };

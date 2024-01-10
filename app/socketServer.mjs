@@ -9,7 +9,13 @@ import { Server } from 'socket.io';
 import * as build from "../build/index.js"
 const app = express();
 const server = createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: 'http://localhost:3000',
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
 
 // Socket.IO setup
 io.on('connection', (socket) => {
@@ -29,13 +35,14 @@ io.on('connection', (socket) => {
 });
 
 // Serve static assets
-app.use(express.static('../public'));
+app.use(express.static('./public'));
 
 app.all(
   '*',
   createRequestHandler({
     build: build,
     // Remix specific configurations
+    mode: process.env.NODE_ENV,
   })
 );
 

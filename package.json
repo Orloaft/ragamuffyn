@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "build": "remix build",
-    "dev": "remix dev --manual",
+    "dev": "node app/socketServer.mjs",
     "start": "remix-serve ./build/index.js",
     "typecheck": "tsc",
-    "run-socket": "node app/socketServer.cjs",
+    "run-socket": "node app/socketServer.mjs",
     "dev-socket": "concurrently \"npm run dev\" \"npm run run-socket\""
   },
   "dependencies": {
