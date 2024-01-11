@@ -1,7 +1,8 @@
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
-import { UnorderedList, Image, Flex, IconButton } from "@chakra-ui/react";
+import { UnorderedList, Image, Flex, IconButton, Box } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
+import CustomModal from "../customModal";
 
 export const ImageListComponent = ({ images, onChange, setCellImage }) => {
   // State to store the image sources
@@ -13,7 +14,7 @@ export const ImageListComponent = ({ images, onChange, setCellImage }) => {
       const sources = await Promise.all(
         images.map(async (i: string) => {
           const img = JSON.parse(i);
-          console.log(img);
+
           if (img.file !== null) {
             // If there's a file, read it and return the data URL
             return img.file;
@@ -31,11 +32,25 @@ export const ImageListComponent = ({ images, onChange, setCellImage }) => {
   }, [images]);
 
   return (
-    <UnorderedList maxHeight="20rem" overflowY="scroll" padding="2rem 1rem">
+    <UnorderedList
+      maxHeight="20rem"
+      overflowY="scroll"
+      padding="2rem 1rem"
+      display={"flex"}
+      gap={"2rem"}
+    >
       {imageSources.map((src: any) => (
-        <Flex key={uuidv4()}>
+        <Flex key={src} justifyContent={"space-between"}>
           {" "}
-          <Image maxWidth="80%" src={src} />{" "}
+          <Box maxWidth={"50%"}>
+            {" "}
+            <CustomModal
+              content={<Image src={src} />}
+              size={"full"}
+              title={""}
+              button={<Image src={src} />}
+            />{" "}
+          </Box>
           {onChange && (
             <IconButton
               onClick={() => {

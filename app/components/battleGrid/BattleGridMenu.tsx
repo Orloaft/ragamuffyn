@@ -1,23 +1,22 @@
+import React, { useState } from "react";
 import {
   Box,
   Flex,
   UnorderedList,
   Text,
   ListItem,
-  IconButton,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
+  Button,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+  IconButton,
   Input,
 } from "@chakra-ui/react";
-import { v4 as uuidv4 } from "uuid";
-import CustomModal from "../customModal";
 import { CloseIcon, EditIcon, ViewIcon } from "@chakra-ui/icons";
-import EncounterElementsLookUp from "../EncounterElementsLookUp";
-import { indexOf, max, min } from "lodash";
-import { useEffect, useState } from "react";
+import CustomModal from "../customModal"; // Adjust this import based on your file structure
+import EncounterElementsLookUp from "../EncounterElementsLookUp"; // Adjust this import based on your file structure
 
 export default function BattleGridMenu({
   initiativeOrder,
@@ -30,14 +29,52 @@ export default function BattleGridMenu({
   const [editStates, setEditStates] = useState(
     initiativeOrder.map(() => ({ editing: false, inputValue: "" }))
   );
-  useEffect(() => {
+  const [selectedNpc, setSelectedNpc] = useState(null);
+  const [selectedCharacter, setSelectedCharacter] = useState(null);
+
+  useState(() => {
     setEditStates(
       initiativeOrder.map(() => ({ editing: false, inputValue: "" }))
     );
   }, [initiativeOrder]);
+
+  const handleNpcClick = (npc) => {
+    setSelectedNpc(npc);
+    setSelectedCharacter(null); // Deselect character if an NPC is selected
+  };
+
+  const handleCharacterClick = (character) => {
+    setSelectedCharacter(character);
+    setSelectedNpc(null); // Deselect NPC if a character is selected
+  };
+
+  const addSelectedItem = () => {
+    if (selectedNpc) {
+      setInitiativeOrder([
+        ...initiativeOrder,
+        { ...selectedNpc, damageTrack: 0, tag: selectedNpc.name },
+      ]);
+    } else if (selectedCharacter) {
+      setInitiativeOrder([
+        ...initiativeOrder,
+        { ...selectedCharacter, damageTrack: 0, tag: selectedCharacter.name },
+      ]);
+    }
+  };
+
+  const removeSelectedItem = () => {
+    setInitiativeOrder(
+      initiativeOrder.filter(
+        (item) => item !== selectedNpc && item !== selectedCharacter
+      )
+    );
+  };
+
   return (
     <CustomModal
-      width={"100%"}
+      size={"full"}
+      title={"Encounter"}
+      button={<ViewIcon />}
       content={
         <Box color={"#dddddd"}>
           <Flex justifyContent={"space-between"}>
@@ -131,7 +168,6 @@ export default function BattleGridMenu({
                 })}
               </UnorderedList>
             </Box>
-
             <EncounterElementsLookUp
               addToForm={(c, model) => {
                 switch (model) {
@@ -144,51 +180,53 @@ export default function BattleGridMenu({
                 }
               }}
             />
-            <Flex direction={"column"}>
-              <Text>Npcs</Text>
-              <UnorderedList listStyleType={"none"}>
-                {npcData.map((npc) => {
-                  return (
+            <Box border="1px solid gray" padding="10px" borderRadius="md">
+              <Flex direction={"column"}>
+                <Text>Characters</Text>
+                <UnorderedList listStyleType={"none"}>
+                  {characterData.map((character) => (
+                    <ListItem
+                      key={character.id}
+                      onClick={() => handleCharacterClick(character)}
+                      bg={
+                        selectedCharacter === character
+                          ? "lightgray"
+                          : "transparent"
+                      }
+                      cursor="pointer"
+                    >
+                      {character.name}
+                    </ListItem>
+                  ))}
+                </UnorderedList>
+              </Flex>
+            </Box>
+            <Box border="1px solid gray" padding="10px" borderRadius="md">
+              <Flex direction={"column"} marginBottom="10px">
+                <Text>NPCs</Text>
+                <UnorderedList listStyleType={"none"}>
+                  {npcData.map((npc) => (
                     <ListItem
                       key={npc.id}
-                      onClick={() =>
-                        setInitiativeOrder([
-                          ...initiativeOrder,
-                          { ...npc, damageTrack: 0, tag: npc.name },
-                        ])
-                      }
+                      onClick={() => handleNpcClick(npc)}
+                      bg={selectedNpc === npc ? "lightgray" : "transparent"}
+                      cursor="pointer"
                     >
                       {npc.name}
                     </ListItem>
-                  );
-                })}
-              </UnorderedList>
-            </Flex>
-            <Flex direction={"column"}>
-              <Text>Characters</Text>
-              <UnorderedList listStyleType={"none"}>
-                {characterData.map((c) => {
-                  return (
-                    <ListItem
-                      key={c.id}
-                      onClick={() =>
-                        setInitiativeOrder([
-                          ...initiativeOrder,
-                          { ...c, damageTrack: 0, tag: c.name },
-                        ])
-                      }
-                    >
-                      {c.name}
-                    </ListItem>
-                  );
-                })}
-              </UnorderedList>
+                  ))}
+                </UnorderedList>
+              </Flex>
+            </Box>{" "}
+            <Flex marginTop="10px">
+              <Button onClick={addSelectedItem} marginRight="5px">
+                Add
+              </Button>
+              <Button onClick={removeSelectedItem}>Remove</Button>
             </Flex>
           </Flex>
         </Box>
       }
-      title={"Encounter"}
-      button={<ViewIcon />}
     />
   );
 }

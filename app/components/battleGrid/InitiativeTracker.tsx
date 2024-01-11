@@ -9,12 +9,24 @@ import {
   Tag,
   Button,
 } from "@chakra-ui/react";
+import { DataModalPopUp } from "../DataModalPopUp";
+import { SearchIcon } from "@chakra-ui/icons";
 
 const InitiativeTracker = ({
   initiativeOrder,
   setInitiativeOrder,
   currentTurn,
 }) => {
+  const idToModel = (id) => {
+    switch (id.charAt(0)) {
+      case "H":
+        return "characters";
+        break;
+      case "N":
+        return "npcs";
+        break;
+    }
+  };
   const [showInitiative, setShowInitiative] = useState(true);
   return (
     <>
@@ -64,6 +76,11 @@ const InitiativeTracker = ({
               >
                 {i.tag ? i.tag : i.name}
               </Tag>
+              <DataModalPopUp
+                data={i}
+                button={<SearchIcon />}
+                model={idToModel(i.id)}
+              />
             </Flex>
           ))}
         </Flex>

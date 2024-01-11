@@ -22,6 +22,8 @@ export const DataModalPopUp = ({ data, button, model }) => {
       {" "}
       <Tooltip label="details" openDelay={500}>
         <IconButton
+          background={"black"}
+          color="#dddddd"
           onClick={(e) => {
             e.preventDefault();
             onOpen();

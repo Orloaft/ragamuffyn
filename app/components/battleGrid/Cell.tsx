@@ -24,26 +24,33 @@ export default function Cell({
       height="50px"
     >
       {cellProps && cellProps.image && (
-        <Box>
+        <Box
+          position="absolute"
+          bottom={cellProps.posY}
+          right={cellProps.posX}
+          zIndex="10"
+          width={cellProps.size + "rem"}
+          height={cellProps.size + "rem"}
+          borderRadius="50%"
+          background={"white"}
+          border={
+            currentTurn === cellProps.tag
+              ? (4 - cellProps.size / 2.5) / 2 +
+                `px ${isMoving ? "dashed" : "solid"} gold`
+              : isSelected
+              ? (4 - cellProps.size / 2.5) / 2 +
+                `px ${isMoving ? "dashed" : "solid"} cyan`
+              : ""
+          }
+        >
           <Image
             src={cellProps.image}
             alt="Cell Image"
-            position="absolute"
-            bottom={cellProps.posY}
-            right={cellProps.posX}
-            border={
-              currentTurn === cellProps.tag
-                ? (4 - cellProps.size / 2) / 2 +
-                  `px ${isMoving ? "dashed" : "solid"} gold`
-                : isSelected
-                ? (4 - cellProps.size / 2) / 2 +
-                  `px ${isMoving ? "dashed" : "solid"} cyan`
-                : ""
-            }
-            zIndex="10"
-            borderRadius="50%"
+            borderRadius="full"
+            boxSize="100%"
+            objectFit="contain"
             opacity="1"
-            transform={`scale(${cellProps.size})`}
+            objectPosition={"center"}
           />
         </Box>
       )}

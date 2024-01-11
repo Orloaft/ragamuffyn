@@ -45,7 +45,7 @@ const CellMenu = ({
       <Flex flexDirection="column" gap="2">
         <CustomModal
           title="images"
-          width={"20%"}
+          size={"lg"}
           button={<EditIcon />}
           content={
             <>

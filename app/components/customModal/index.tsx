@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { EditIcon } from "@chakra-ui/icons";
 
-const CustomModal = ({ content, title, button, width }) => {
+const CustomModal = ({ content, title, button, size }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const onOpen = () => setIsOpen(true);
@@ -32,7 +32,7 @@ const CustomModal = ({ content, title, button, width }) => {
         isOpen={isOpen}
         onClose={onClose}
         isCentered={title === "Encounter"}
-        size={title === "Encounter" ? "half" : "sm"}
+        size={size}
       >
         <ModalOverlay />
         <ModalContent

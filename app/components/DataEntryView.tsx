@@ -68,6 +68,13 @@ export default function DataEntryView({ data, type, useStore, id }: any) {
               return <IdToEntry key={i} isList={true} id={i} model="items" />;
             })}
         </div>
+        <div>
+          Notes
+          {charData.notes &&
+            charData.notes.map((i) => {
+              return <IdToEntry key={i} isList={false} id={i} model="notes" />;
+            })}
+        </div>
       </div>
     );
 
@@ -216,6 +223,13 @@ export default function DataEntryView({ data, type, useStore, id }: any) {
                 return <IdToEntry key={i} id={i} model="items" isList={true} />;
               })}
           </dd>
+        </div>
+        <div>
+          Notes
+          {npcData.notes &&
+            npcData.notes.map((i) => {
+              return <IdToEntry key={i} isList={false} id={i} model="notes" />;
+            })}
         </div>
       </dl>
     );
