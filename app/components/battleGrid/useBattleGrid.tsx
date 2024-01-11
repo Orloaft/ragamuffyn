@@ -48,11 +48,11 @@ export const useBattleGrid = () => {
   const handleZoomChange = (value: number) => {
     dispatch(setZoomLevel(value));
   };
-  console.log(reduxState, "reduxiooo");
+
   const handleSquareClick = (rowIndex: number, colIndex: number) => {
     const cellKey = `${rowIndex}-${colIndex}`;
 
-    const isNewCellSelected = cellKey !== reduxState.selectedCell;
+    const isNewCellSelected = cellKey !== reduxState.gridProps.selectedCell;
 
     let movingData = {
       image: null,

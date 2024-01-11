@@ -27,6 +27,11 @@ import {
   Input,
   Center,
   AbsoluteCenter,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
 } from "@chakra-ui/react";
 import Cell from "./Cell";
 import {
@@ -48,6 +53,9 @@ import { setZoomLevel } from "~/redux/encounterSlice";
 import useDataLookUp from "./useDataLookUp";
 import BattleGridMenu from "./BattleGridMenu";
 import NotesImageLookUp from "../NotesImageLookUp";
+import MapMenu from "./MapMenu";
+import InitiativeTracker from "./InitiativeTracker";
+import CellMenu from "./CellMenu";
 
 export interface CellProperty {
   size: number;
@@ -76,7 +84,6 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
     setBgPosY,
     bgRotate,
     setBgRotate,
-    handleZoomChange,
     handleSquareClick,
     handleCellImageChange,
     updateCellPropertyHandler,
@@ -97,6 +104,7 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
     zoomLevel > 1 ? zoomLevel * gridSize * 50 : gridSize * 50;
   const dispatch = useDispatch();
   const containerRef = React.useRef<HTMLDivElement>(null);
+
   const [showTagInput, setShowTagInput] = useState(false);
   const [tagInput, setTagInput] = useState("");
   const { data: npcEntries, loading: npcLoading } = useDataLookUp(npcs);
@@ -105,16 +113,16 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
     useDataLookUp(characters);
   let characterData = characterLoading ? null : characterEntries;
   const noteIdArray = useMemo(() => {
-    let tempNoteIdArray = [];
+    let tempNoteIdArray: any[] = [];
     npcData &&
-      npcData.forEach((d) => {
+      npcData.forEach((d: { data: string }) => {
         tempNoteIdArray = [...tempNoteIdArray, ...JSON.parse(d.data).notes];
       });
     return tempNoteIdArray;
   }, [npcData]);
   function getNextTurnTag(): string {
     const currentIndex = initiativeOrder.findIndex(
-      (item) => item.tag === currentTurn
+      (item: { tag: any }) => item.tag === currentTurn
     );
 
     // If currentTurn is not found, return an empty string or handle as needed
@@ -146,7 +154,6 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
   };
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const btnRef = React.useRef();
 
   return (
     <Box
@@ -154,18 +161,6 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
         cursor: "crosshair",
       }}
       ref={containerRef}
-      // width={[
-      //   gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 20 + "vw",
-      //   gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 10 + "vw",
-      //   gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 10 + "vw",
-      //   gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 10 + "vw",
-      // ]}
-      // height={[
-      //   gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 30 + "vh",
-      //   gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 20 + "vh",
-      //   gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 15 + "vh",
-      //   gridSize * (zoomLevel >= 1 ? zoomLevel : 1) * 10 + "vh",
-      // ]}
       width={`${containerSize * 1.5}px`}
       height={`${containerSize * 1.5}px`}
       position="relative"
@@ -212,9 +207,9 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
           <BattleGridMenu
             initiativeOrder={initiativeOrder}
             characterData={characterData}
-            addCharacter={(c) => setCharacters([...characters, c])}
+            addCharacter={(c: any) => setCharacters([...characters, c])}
             npcData={npcData}
-            addNpc={(c) => setNpcs([...npcs, c])}
+            addNpc={(c: any) => setNpcs([...npcs, c])}
             setInitiativeOrder={setInitiativeOrder}
           />
         )) || <Spinner size="lg" />}{" "}
@@ -231,126 +226,25 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
           next turn
         </IconButton>
       </Box>{" "}
-      <Flex zIndex={"20"} position={"fixed"} top={"20%"} direction={"column"}>
-        {initiativeOrder.map((i, index) => {
-          return (
-            <Tag
-              key={i.id + index}
-              background={i.tag === currentTurn ? "gray" : "black"}
-              color={"#dddddd"}
-              padding={".5rem"}
-            >
-              {i.tag ? i.tag : i.name}
-            </Tag>
-          );
-        })}
+      <Flex zIndex={"20"} position={"fixed"} right={"0"}>
+        <InitiativeTracker
+          setInitiativeOrder={setInitiativeOrder}
+          initiativeOrder={initiativeOrder}
+          currentTurn={currentTurn}
+        />
       </Flex>
-      <Drawer
-        isOpen={isOpen}
-        placement="right"
+      <MapMenu
         onClose={onClose}
-        finalFocusRef={btnRef}
-      >
-        <DrawerOverlay />
-        <DrawerContent bgImage="url(/marble.avif)">
-          <DrawerCloseButton />
-          <Box
-            width="10rem"
-            height="fit-content"
-            borderRadius=".25rem"
-            padding=".5rem"
-            color="#dddddd"
-            zIndex="10"
-          >
-            <>
-              <Text minWidth="100px">Battle Map:</Text>
-              <input type="file" accept="image/*" onChange={handleFileChange} />
-              <Image zIndex="10" alt="Cell Image" src={bg} />
-              <Text>Zoom</Text>
-              <Slider
-                aria-label="zoom-level"
-                min={0.5} // Minimum zoom level
-                max={2} // Maximum zoom level
-                step={0.1} // Step of each zoom change
-                value={zoomLevel}
-                onChange={handleZoomChange}
-              >
-                <SliderTrack />
-                <SliderFilledTrack />
-                <SliderThumb />
-              </Slider>
-              <Text>Rotate</Text>
-              <Slider
-                aria-label="rotate"
-                min={0} // Minimum zoom level
-                max={25} // Maximum zoom level
-                step={1} // Step of each zoom change
-                value={bgRotate}
-                onChange={(e) => {
-                  setBgRotate(e);
-                }}
-              >
-                <SliderTrack />
-                <SliderFilledTrack />
-                <SliderThumb />
-              </Slider>
-              <Text minWidth="100px">Grid Size:</Text>
-              <Slider
-                defaultValue={10}
-                min={10}
-                max={40}
-                step={1}
-                onChange={(val) => setGridSize(val)}
-              >
-                <SliderTrack>
-                  <SliderFilledTrack />
-                </SliderTrack>
-                <SliderThumb />
-              </Slider>
-              <Text>Size</Text>
-              <Slider
-                defaultValue={100}
-                min={50} // Minimum size (in percentage)
-                max={200} // Maximum size (in percentage)
-                onChange={(val) => setBgSize(val)}
-              >
-                <SliderTrack>
-                  <SliderFilledTrack />
-                </SliderTrack>
-                <SliderThumb />
-              </Slider>
-              {/* Slider for adjusting X coordinate */}
-              <Text>X Position</Text>
-              <Slider
-                defaultValue={50}
-                min={0}
-                max={100}
-                orientation="horizontal"
-                onChange={(val) => setBgPosX(val)}
-              >
-                <SliderTrack>
-                  <SliderFilledTrack />
-                </SliderTrack>
-                <SliderThumb />
-              </Slider>
-              {/* Slider for adjusting Y coordinate */}
-              <Text>Y Position</Text>
-              <Slider
-                defaultValue={50}
-                min={0}
-                max={100}
-                orientation="horizontal"
-                onChange={(val) => setBgPosY(val)}
-              >
-                <SliderTrack>
-                  <SliderFilledTrack />
-                </SliderTrack>
-                <SliderThumb />
-              </Slider>{" "}
-            </>
-          </Box>
-        </DrawerContent>
-      </Drawer>
+        isOpen={isOpen}
+        handleFileChange={handleFileChange}
+        bg={bg}
+        bgRotate={bgRotate}
+        setBgRotate={setBgRotate}
+        setBgSize={setBgSize}
+        setGridSize={setGridSize}
+        setBgPosX={setBgPosX}
+        setBgPosY={setBgPosY}
+      />
       <Box h="100%" w="100%" position="absolute">
         <Box
           minHeight="100%"
@@ -361,9 +255,6 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
           transformOrigin="top center"
           transform={zoomLevel !== 1 ? `scale(${zoomLevel})` : ""}
           zIndex="15"
-          //   display="flex" // Added for flexbox layout
-          //   alignItems="center" // Align children vertically center
-          // Align children horizontally center
         >
           {" "}
           <Grid
@@ -391,188 +282,31 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
               zIndex="-1"
             />
             {highlighted &&
-              highlighted.map((row, rowIndex) =>
-                row.map((isHighlighted, colIndex) => {
+              highlighted.map((row: any[], rowIndex: number) =>
+                row.map((isHighlighted: any, colIndex: number) => {
                   const cellKey = `${rowIndex}-${colIndex}`;
                   const cellProps = cellProperties[cellKey];
 
                   return (
                     <Box key={cellKey} position="relative">
                       {selectedCell === cellKey && (
-                        <Box
-                          zIndex="15"
-                          position="absolute"
-                          top="0"
-                          left={`-${zoomLevel * 50 + 40}%`}
-                        >
-                          <Flex flexDirection="column" gap="2">
-                            <CustomModal
-                              title="images"
-                              width={"20%"}
-                              button={<EditIcon />}
-                              content={
-                                <>
-                                  {" "}
-                                  {cellProperties[selectedCell] && (
-                                    <Box>
-                                      {" "}
-                                      <Text>Selected Cell</Text>
-                                      <Box color={"#dddddd"}>
-                                        <Flex>
-                                          <Button
-                                            onClick={() => {
-                                              showTagInput &&
-                                                updateCellPropertyHandler(
-                                                  "tag",
-                                                  tagInput,
-                                                  selectedCell
-                                                );
-                                              setShowTagInput(
-                                                () => !showTagInput
-                                              );
-                                              setTagInput("");
-                                            }}
-                                          >
-                                            Set tag
-                                          </Button>
-                                          {cellProperties[selectedCell].tag}
-                                        </Flex>
-
-                                        {showTagInput && (
-                                          <Input
-                                            value={tagInput}
-                                            onChange={(e) =>
-                                              setTagInput(() => e.target.value)
-                                            }
-                                            placeholder="Tag"
-                                            mt={4}
-                                          />
-                                        )}
-                                      </Box>
-                                      <Text>Image Size</Text>
-                                      <Slider
-                                        value={
-                                          cellProperties[selectedCell].size
-                                        }
-                                        min={0.15}
-                                        step={0.1}
-                                        max={10}
-                                        onChange={(val) =>
-                                          updateCellPropertyHandler(
-                                            "size",
-                                            val,
-                                            selectedCell
-                                          )
-                                        }
-                                      >
-                                        <SliderTrack>
-                                          <SliderFilledTrack />
-                                        </SliderTrack>
-                                        <SliderThumb />
-                                      </Slider>
-                                      {/* Slider for adjusting X coordinate */}
-                                      <Text>X Position</Text>
-                                      <Slider
-                                        defaultValue={0}
-                                        min={-50}
-                                        max={50}
-                                        orientation="horizontal"
-                                        onChange={(val) =>
-                                          updateCellPropertyHandler(
-                                            "posX",
-                                            val,
-                                            selectedCell
-                                          )
-                                        }
-                                      >
-                                        <SliderTrack>
-                                          <SliderFilledTrack />
-                                        </SliderTrack>
-                                        <SliderThumb />
-                                      </Slider>
-                                      {/* Slider for adjusting Y coordinate */}
-                                      <Text>Y Position</Text>
-                                      <Slider
-                                        defaultValue={0}
-                                        min={-50}
-                                        max={50}
-                                        orientation="horizontal"
-                                        onChange={(val) =>
-                                          updateCellPropertyHandler(
-                                            "posY",
-                                            val,
-                                            selectedCell
-                                          )
-                                        }
-                                      >
-                                        <SliderTrack>
-                                          <SliderFilledTrack />
-                                        </SliderTrack>
-                                        <SliderThumb />
-                                      </Slider>
-                                      <NotesImageLookUp
-                                        onChange={(i) =>
-                                          updateCellPropertyHandler(
-                                            "image",
-                                            i,
-                                            cellKey
-                                          )
-                                        }
-                                        noteIds={noteIdArray}
-                                      />
-                                      <Text>Image</Text>
-                                      <input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={(e) =>
-                                          handleCellImageChange(e, selectedCell)
-                                        }
-                                      />
-                                      {cellProperties[selectedCell] && (
-                                        <Image
-                                          zIndex="10"
-                                          alt="Cell Image"
-                                          src={
-                                            cellProperties[selectedCell]
-                                              .image as string
-                                          }
-                                        />
-                                      )}
-                                    </Box>
-                                  )}
-                                  <EncounterElementsLookUp
-                                    addToForm={(c, model) => {
-                                      switch (model) {
-                                        case "npcs":
-                                          setNpcs([...npcs, c]);
-                                          break;
-                                        case "characters":
-                                          setCharacters([...characters, c]);
-                                          break;
-                                      }
-                                    }}
-                                  />{" "}
-                                </>
-                              }
-                            />
-                            <IconButton
-                              left="10%"
-                              zIndex="15"
-                              aria-label="move"
-                              background={"black"}
-                              colorScheme="grey"
-                              icon={<ArrowUpDownIcon />}
-                              onClick={() => {
-                                updateCellPropertyHandler(
-                                  "moving",
-                                  true,
-                                  selectedCell
-                                );
-                              }}
-                            />
-                          </Flex>
-                        </Box>
-                      )}{" "}
+                        <CellMenu
+                          setCharacters={setCharacters}
+                          handleCellImageChange={handleCellImageChange}
+                          updateCellPropertyHandler={updateCellPropertyHandler}
+                          tagInput={tagInput}
+                          setTagInput={setTagInput}
+                          setShowTagInput={setShowTagInput}
+                          showTagInput={showTagInput}
+                          selectedCell={selectedCell}
+                          zoomLevel={zoomLevel}
+                          cellProperties={cellProperties}
+                          npcs={npcs}
+                          setNpcs={setNpcs}
+                          noteIdArray={noteIdArray}
+                          characters={characters}
+                        />
+                      )}
                       <Cell
                         currentTurn={currentTurn}
                         isMoving={cellProps ? cellProps.moving : false}

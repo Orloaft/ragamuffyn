@@ -51,6 +51,8 @@ export default function EditContact() {
           backgroundImage={"url('/marble.avif')"}
           width="50%"
           padding="1rem"
+          overflow={"auto"}
+          maxHeight={"80vh"}
         >
           {dataObj && <UpdateForm<typeof modelType> data={dataObj} />}
         </Box>

@@ -44,7 +44,7 @@ export default function CollectionsNav({ isVisible, setIsVisible }) {
     { label: "Campaigns", path: "/collections/campaigns" },
     { label: "Encounters", path: "/collections/encounters" },
     { label: "Locations", path: "/collections/locations" },
-    { label: "notes", path: "/collections/notes" },
+    { label: "Notes", path: "/collections/notes" },
     { label: "Upload", path: "/upload" },
 
     { label: "Player", path: "/player" },

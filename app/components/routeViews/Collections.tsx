@@ -35,6 +35,7 @@ export default function CollectionsView({ data, q, model }: any) {
       padding="1rem"
       height="100vh"
       zIndex="5"
+      overflow={"auto"}
     >
       <div id="sidebar">
         <h1>{model}</h1>
