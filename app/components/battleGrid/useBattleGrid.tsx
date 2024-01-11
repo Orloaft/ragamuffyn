@@ -15,6 +15,7 @@ import {
   setNpcs,
   setInitiativeOrder,
   setCharacters,
+  setCurrentTurn,
 } from "../../redux/encounterSlice";
 import type { CellProperty } from ".";
 
@@ -53,7 +54,14 @@ export const useBattleGrid = () => {
 
     const isNewCellSelected = cellKey !== reduxState.selectedCell;
 
-    let movingData = { image: null, size: 1, posX: 0, posY: 0, moving: false };
+    let movingData = {
+      image: null,
+      size: 1,
+      posX: 0,
+      posY: 0,
+      moving: false,
+      tag: "",
+    };
 
     if (
       gridProps.selectedCell &&
@@ -64,6 +72,7 @@ export const useBattleGrid = () => {
       movingData.posX = gridProps.cellProperties[gridProps.selectedCell].posX;
       movingData.posY = gridProps.cellProperties[gridProps.selectedCell].posY;
       movingData.moving = true;
+      movingData.tag = gridProps.cellProperties[gridProps.selectedCell].tag;
       dispatch(
         updateCellProperties({
           ...gridProps.cellProperties,
@@ -71,6 +80,7 @@ export const useBattleGrid = () => {
             ...gridProps.cellProperties[gridProps.selectedCell],
             image: null,
             moving: false,
+            tag: "",
           },
         })
       );
@@ -88,6 +98,7 @@ export const useBattleGrid = () => {
       if (movingData.moving) {
         updateCellPropertyHandler("moving", false, gridProps.selectedCell);
         updateCellPropertyHandler("image", null, gridProps.selectedCell);
+        updateCellPropertyHandler("tag", "", gridProps.selectedCell);
       }
 
       dispatch(setSelectedCell(cellKey));
@@ -163,5 +174,7 @@ export const useBattleGrid = () => {
     setInitiativeOrder: (v) => dispatch(setInitiativeOrder(v)),
     characters: reduxState.characters,
     setCharacters: (v: any) => dispatch(setCharacters(v)),
+    currentTurn: reduxState.currentTurn,
+    setCurrentTurn: (v) => dispatch(setCurrentTurn(v)),
   };
 };

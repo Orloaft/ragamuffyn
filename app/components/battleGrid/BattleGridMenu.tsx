@@ -45,10 +45,9 @@ export default function BattleGridMenu({
               <Text>Initiative order</Text>
               <UnorderedList listStyleType="none">
                 {initiativeOrder.map((el, index) => {
-                  const id = uuidv4();
                   return (
                     <ListItem
-                      key={id}
+                      key={el.name + el.tag + index}
                       display="flex"
                       justifyContent="space-around"
                     >
@@ -58,7 +57,7 @@ export default function BattleGridMenu({
                           onChange={(e) => {
                             const newEditStates = [...editStates];
                             newEditStates[index].inputValue = e.target.value;
-                            setEditStates(newEditStates);
+                            setEditStates(() => newEditStates);
                           }}
                         />
                       ) : (
@@ -155,7 +154,7 @@ export default function BattleGridMenu({
                       onClick={() =>
                         setInitiativeOrder([
                           ...initiativeOrder,
-                          { ...npc, damageTrack: 0, tag: "" },
+                          { ...npc, damageTrack: 0, tag: npc.name },
                         ])
                       }
                     >
@@ -173,7 +172,10 @@ export default function BattleGridMenu({
                     <ListItem
                       key={c.id}
                       onClick={() =>
-                        setInitiativeOrder([...initiativeOrder, c])
+                        setInitiativeOrder([
+                          ...initiativeOrder,
+                          { ...c, damageTrack: 0, tag: c.name },
+                        ])
                       }
                     >
                       {c.name}

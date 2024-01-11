@@ -31,6 +31,10 @@ export let links: LinksFunction = () => {
   return [
     {
       rel: "stylesheet",
+      href: "/styles/rpg-awesome.min.css",
+    },
+    {
+      rel: "stylesheet",
       href: "/styles/globals.css",
     },
     { rel: "icon", href: "/favicon.ico" },

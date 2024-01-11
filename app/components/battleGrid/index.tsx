@@ -1,5 +1,6 @@
 import type { ChangeEvent } from "react";
 import React, { useMemo, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import {
   Box,
   Drawer,
@@ -21,6 +22,11 @@ import {
   Button,
   Spinner,
   Stack,
+  Tab,
+  Tag,
+  Input,
+  Center,
+  AbsoluteCenter,
 } from "@chakra-ui/react";
 import Cell from "./Cell";
 import {
@@ -30,6 +36,7 @@ import {
   EditIcon,
   MinusIcon,
   SettingsIcon,
+  TimeIcon,
   ViewIcon,
 } from "@chakra-ui/icons";
 
@@ -37,16 +44,18 @@ import EncounterElementsLookUp from "../EncounterElementsLookUp";
 import CustomModal from "../customModal";
 import { useBattleGrid } from "./useBattleGrid";
 import { useDispatch } from "react-redux";
-import { setSelectedCell, setZoomLevel } from "~/redux/encounterSlice";
+import { setZoomLevel } from "~/redux/encounterSlice";
 import useDataLookUp from "./useDataLookUp";
 import BattleGridMenu from "./BattleGridMenu";
 import NotesImageLookUp from "../NotesImageLookUp";
+
 export interface CellProperty {
   size: number;
   posX: number;
   posY: number;
   image: string | null;
   moving: boolean;
+  tag?: string;
 }
 
 export interface CellProperties {
@@ -79,6 +88,8 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
     setNpcs,
     initiativeOrder,
     characters,
+    currentTurn,
+    setCurrentTurn,
     setCharacters,
     setInitiativeOrder,
   } = useBattleGrid();
@@ -86,6 +97,8 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
     zoomLevel > 1 ? zoomLevel * gridSize * 50 : gridSize * 50;
   const dispatch = useDispatch();
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const [showTagInput, setShowTagInput] = useState(false);
+  const [tagInput, setTagInput] = useState("");
   const { data: npcEntries, loading: npcLoading } = useDataLookUp(npcs);
   let npcData: any = npcLoading ? null : npcEntries;
   const { data: characterEntries, loading: characterLoading } =
@@ -99,6 +112,20 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
       });
     return tempNoteIdArray;
   }, [npcData]);
+  function getNextTurnTag(): string {
+    const currentIndex = initiativeOrder.findIndex(
+      (item) => item.tag === currentTurn
+    );
+
+    // If currentTurn is not found, return an empty string or handle as needed
+    if (currentIndex === -1) return initiativeOrder[0].tag;
+
+    // Calculate the index of the next item, wrapping to the first item if at the end of the array
+    const nextIndex = (currentIndex + 1) % initiativeOrder.length;
+
+    // Return the tag of the next item
+    return initiativeOrder[nextIndex].tag;
+  }
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
 
@@ -149,7 +176,7 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
       <Box position="fixed" zIndex="20" display={"flex"} alignItems={"center"}>
         <IconButton
           background="black"
-          ref={btnRef}
+          aria-label="settings"
           zIndex="20"
           colorScheme="grey"
           onClick={onOpen}
@@ -167,7 +194,6 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
         >
           update
         </IconButton>
-
         <IconButton
           colorScheme="grey"
           background="black"
@@ -191,8 +217,34 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
             addNpc={(c) => setNpcs([...npcs, c])}
             setInitiativeOrder={setInitiativeOrder}
           />
-        )) || <Spinner size="lg" />}
-      </Box>
+        )) || <Spinner size="lg" />}{" "}
+        <IconButton
+          aria-label="next turn"
+          background="black"
+          zIndex="20"
+          colorScheme="grey"
+          onClick={() => {
+            setCurrentTurn(getNextTurnTag());
+          }}
+          icon={<TimeIcon />}
+        >
+          next turn
+        </IconButton>
+      </Box>{" "}
+      <Flex zIndex={"20"} position={"fixed"} top={"20%"} direction={"column"}>
+        {initiativeOrder.map((i, index) => {
+          return (
+            <Tag
+              key={i.id + index}
+              background={i.tag === currentTurn ? "gray" : "black"}
+              color={"#dddddd"}
+              padding={".5rem"}
+            >
+              {i.tag ? i.tag : i.name}
+            </Tag>
+          );
+        })}
+      </Flex>
       <Drawer
         isOpen={isOpen}
         placement="right"
@@ -365,6 +417,38 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
                                     <Box>
                                       {" "}
                                       <Text>Selected Cell</Text>
+                                      <Box color={"#dddddd"}>
+                                        <Flex>
+                                          <Button
+                                            onClick={() => {
+                                              showTagInput &&
+                                                updateCellPropertyHandler(
+                                                  "tag",
+                                                  tagInput,
+                                                  selectedCell
+                                                );
+                                              setShowTagInput(
+                                                () => !showTagInput
+                                              );
+                                              setTagInput("");
+                                            }}
+                                          >
+                                            Set tag
+                                          </Button>
+                                          {cellProperties[selectedCell].tag}
+                                        </Flex>
+
+                                        {showTagInput && (
+                                          <Input
+                                            value={tagInput}
+                                            onChange={(e) =>
+                                              setTagInput(() => e.target.value)
+                                            }
+                                            placeholder="Tag"
+                                            mt={4}
+                                          />
+                                        )}
+                                      </Box>
                                       <Text>Image Size</Text>
                                       <Slider
                                         value={
@@ -490,6 +574,7 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
                         </Box>
                       )}{" "}
                       <Cell
+                        currentTurn={currentTurn}
                         isMoving={cellProps ? cellProps.moving : false}
                         cellProps={cellProps}
                         isSelected={selectedCell === cellKey}

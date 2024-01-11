@@ -8,7 +8,13 @@ export interface CellProps {
   onClick: () => void;
 }
 
-export default function Cell({ cellProps, isSelected, onClick, isMoving }) {
+export default function Cell({
+  cellProps,
+  isSelected,
+  onClick,
+  isMoving,
+  currentTurn,
+}) {
   return (
     <Box
       position="relative"
@@ -26,7 +32,10 @@ export default function Cell({ cellProps, isSelected, onClick, isMoving }) {
             bottom={cellProps.posY}
             right={cellProps.posX}
             border={
-              isSelected
+              currentTurn === cellProps.tag
+                ? (4 - cellProps.size / 2) / 2 +
+                  `px ${isMoving ? "dashed" : "solid"} gold`
+                : isSelected
                 ? (4 - cellProps.size / 2) / 2 +
                   `px ${isMoving ? "dashed" : "solid"} cyan`
                 : ""

@@ -63,7 +63,7 @@ export interface EncounterData extends HasNotes {
   locations: string[];
   characters: string[];
   initiativeOrder: string[]; // Array of IDs to represent the order of turns
-  currentTurn: number; // ID of the character/monster whose turn it is
+  currentTurn: string; // ID of the character/monster whose turn it is
   round: number; // Current round of the encounter
   npcs: string[];
   gridProps: BattleGridState | null;
@@ -295,7 +295,7 @@ export async function createDataEntry(model: string) {
           description: "",
           locations: [],
           initiativeOrder: [],
-          currentTurn: 0,
+          currentTurn: "",
           round: 0,
           notes: [],
           characters: [],

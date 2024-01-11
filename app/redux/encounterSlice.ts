@@ -35,6 +35,7 @@ export const createInitialCellProperties = (
         posY: 0, // Default Y position
         image: null, // No image initially
         moving: false, // Not moving initially
+        tag: "",
       };
     }
   }
@@ -56,6 +57,7 @@ const resizeCellProperties = (
             posY: 0, // Default Y position
             image: null, // No image initially
             moving: false, // Not moving initially
+            tag: "",
           };
     }
   }
@@ -172,7 +174,7 @@ export const encounterSlice = createSlice({
       if (property === "size" || property === "posX" || property === "posY") {
         state.gridProps &&
           (state.gridProps.cellProperties[cellKey][property] = value as number);
-      } else if (property === "image") {
+      } else if (property === "image" || property === "tag") {
         state.gridProps &&
           (state.gridProps.cellProperties[cellKey][property] = value as
             | string
