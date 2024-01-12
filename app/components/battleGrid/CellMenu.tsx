@@ -87,7 +87,7 @@ const CellMenu = ({
                     value={cellProperties[selectedCell].size}
                     min={0.15}
                     step={0.1}
-                    max={10}
+                    max={20}
                     onChange={(val) =>
                       updateCellPropertyHandler("size", val, selectedCell)
                     }
@@ -154,10 +154,10 @@ const CellMenu = ({
                 addToForm={(c: any, model: any) => {
                   switch (model) {
                     case "npcs":
-                      setNpcs([...npcs, c]);
+                      setNpcs([...npcs, c.id]);
                       break;
                     case "characters":
-                      setCharacters([...characters, c]);
+                      setCharacters([...characters, c.id]);
                       break;
                   }
                 }}

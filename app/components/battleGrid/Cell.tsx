@@ -16,42 +16,53 @@ export default function Cell({
   currentTurn,
 }) {
   return (
-    <Box
-      position="relative"
-      w="100%"
-      onClick={onClick}
-      width="50px"
-      height="50px"
-    >
+    <Box position="relative" onClick={onClick} width="50px" height="50px">
       {cellProps && cellProps.image && (
         <Box
           position="absolute"
           bottom={cellProps.posY}
           right={cellProps.posX}
-          zIndex="10"
           width={cellProps.size + "rem"}
           height={cellProps.size + "rem"}
-          borderRadius="50%"
-          background={"white"}
-          border={
-            currentTurn === cellProps.tag
-              ? (4 - cellProps.size / 2.5) / 2 +
-                `px ${isMoving ? "dashed" : "solid"} gold`
-              : isSelected
-              ? (4 - cellProps.size / 2.5) / 2 +
-                `px ${isMoving ? "dashed" : "solid"} cyan`
-              : ""
-          }
+          display={"flex"}
+          justifyContent={"center"}
+          alignItems={"center"}
         >
+          {" "}
           <Image
+            background={"white"}
             src={cellProps.image}
             alt="Cell Image"
-            borderRadius="full"
-            boxSize="100%"
+            width={cellProps.size - 0.5 + "rem"}
+            height={cellProps.size - 0.5 + "rem"}
             objectFit="contain"
             opacity="1"
+            borderRadius={"50%"}
             objectPosition={"center"}
+            position="relative"
+            bottom={cellProps.posY}
+            right={cellProps.posX}
+            zIndex="4" // Ensure image is above the background but below the border
           />
+          <Box
+            boxSizing="border-box"
+            position="absolute"
+            bottom={cellProps.posY}
+            right={cellProps.posX}
+            zIndex="5"
+            borderRadius={"50%"}
+            width="100%" // Match wrapper size
+            height="100%" // Match wrapper size
+            border={
+              currentTurn === cellProps.tag
+                ? `0.2rem ${isMoving ? "dashed" : "solid"} gold`
+                : isSelected
+                ? `0.2rem ${isMoving ? "dashed" : "solid"} cyan`
+                : "none"
+            }
+          >
+            {" "}
+          </Box>
         </Box>
       )}
 

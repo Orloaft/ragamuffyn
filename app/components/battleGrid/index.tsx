@@ -1,58 +1,29 @@
 import type { ChangeEvent } from "react";
 import React, { useMemo, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+
 import {
   Box,
-  Drawer,
-  DrawerCloseButton,
-  DrawerContent,
-  DrawerOverlay,
   Flex,
   Grid,
   IconButton,
-  Slider,
-  SliderFilledTrack,
-  SliderThumb,
-  SliderTrack,
-  Text,
   useDisclosure,
-  Image,
-  UnorderedList,
-  ListItem,
-  Button,
   Spinner,
-  Stack,
-  Tab,
-  Tag,
-  Input,
-  Center,
-  AbsoluteCenter,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
 } from "@chakra-ui/react";
 import Cell from "./Cell";
 import {
   AddIcon,
-  ArrowUpDownIcon,
   DownloadIcon,
-  EditIcon,
   MinusIcon,
   SettingsIcon,
   TimeIcon,
-  ViewIcon,
 } from "@chakra-ui/icons";
 
-import EncounterElementsLookUp from "../EncounterElementsLookUp";
-import CustomModal from "../customModal";
 import { useBattleGrid } from "./useBattleGrid";
 import { useDispatch } from "react-redux";
 import { setZoomLevel } from "~/redux/encounterSlice";
 import useDataLookUp from "./useDataLookUp";
 import BattleGridMenu from "./BattleGridMenu";
-import NotesImageLookUp from "../NotesImageLookUp";
+
 import MapMenu from "./MapMenu";
 import InitiativeTracker from "./InitiativeTracker";
 import CellMenu from "./CellMenu";
@@ -114,6 +85,7 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
   let characterData = characterLoading ? null : characterEntries;
   const noteIdArray = useMemo(() => {
     let tempNoteIdArray: any[] = [];
+
     npcData &&
       npcData.forEach((d: { data: string }) => {
         tempNoteIdArray = [...tempNoteIdArray, ...JSON.parse(d.data).notes];
