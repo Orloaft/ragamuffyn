@@ -17,6 +17,7 @@ import {
   createInitialCellProperties,
   type BattleGridState,
 } from "./redux/encounterSlice";
+import type { CharacterSheet } from "./components/CharacterSheetForm";
 export interface DataEntry {
   id: string;
   name?: string;
@@ -34,6 +35,7 @@ export interface CharData extends HasNotes {
   race: string;
   class: string;
   items: string[];
+  characterSheet: CharacterSheet;
 }
 
 export interface NoteData {
@@ -247,6 +249,17 @@ export async function createDataEntry(model: string) {
           class: "",
           race: "",
           items: [],
+          characterSheet: {
+            race: "",
+            class: "",
+            strength: 10,
+            dexterity: 10,
+            constitution: 10,
+            intelligence: 10,
+            wisdom: 10,
+            charisma: 10,
+            abilities: "",
+          },
         }),
       });
       break;
@@ -334,7 +347,17 @@ export async function createDataEntry(model: string) {
         data: JSON.stringify({
           name: "",
           bio: "",
-          characterSheet: "",
+          characterSheet: {
+            race: "",
+            class: "",
+            strength: 10,
+            dexterity: 10,
+            constitution: 10,
+            intelligence: 10,
+            wisdom: 10,
+            charisma: 10,
+            abilities: "",
+          },
           items: [],
         }),
       });
@@ -544,6 +567,19 @@ export async function updateCharacter(
       updates[a] = [];
     }
   });
+  if (!updates.hasOwnProperty("characterSheet")) {
+    updates["characterSheet"] = {
+      race: "",
+      class: "",
+      strength: 10,
+      dexterity: 10,
+      constitution: 10,
+      intelligence: 10,
+      wisdom: 10,
+      charisma: 10,
+      abilities: "",
+    };
+  }
   return await prisma.character.update({
     where: { id },
     data: {

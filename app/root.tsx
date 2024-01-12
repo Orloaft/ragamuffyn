@@ -1,7 +1,7 @@
 // root.tsx
 import React, { useContext, useEffect, useState } from "react";
 import { withEmotionCache } from "@emotion/react";
-import { Box, ChakraProvider, background } from "@chakra-ui/react";
+import { Box, ChakraProvider } from "@chakra-ui/react";
 import {
   Links,
   LiveReload,
@@ -86,7 +86,7 @@ const Document = withEmotionCache(
         </head>
         <body
           style={{
-            background: `url("/parchment.jpg")`,
+            background: `url("/bonfirebg.jpg")`,
             backgroundAttachment: "fixed",
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",

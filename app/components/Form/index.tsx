@@ -14,6 +14,7 @@ import {
   UnorderedList,
 } from "@chakra-ui/react";
 import ImageUpload from "../images/ImageUpload";
+import CharacterForm from "../CharacterSheetForm";
 
 interface FormDataByModel<T> {
   data: T;
@@ -170,7 +171,14 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
         return;
         break;
       case "characterSheet":
-        return;
+        return (
+          <CharacterForm
+            characterData={value}
+            setCharacterData={(v) =>
+              handleChange({ target: { name: "characterSheet", value: v } })
+            }
+          />
+        );
         break;
       case "currentTurn":
         return;
@@ -221,6 +229,7 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
       >
         {formFields && getFields(formFields)}
       </UnorderedList>
+
       <Center>
         {" "}
         <Flex>

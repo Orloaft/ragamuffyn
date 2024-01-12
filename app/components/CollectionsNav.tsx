@@ -1,4 +1,4 @@
-import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, ChevronUpIcon, CopyIcon } from "@chakra-ui/icons";
 import {
   Box,
   Tab,
@@ -66,7 +66,19 @@ export default function CollectionsNav({ isVisible, setIsVisible }) {
   let tabIndex = tabIndexMapping[extractPath()] ?? 0;
   const controls = useAnimation();
   const isSmallScreen = useBreakpointValue({ base: true, md: false });
-
+  function toggleFullScreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        console.error(
+          `Error attempting to enable full-screen mode: ${err.message} (${err.name})`
+        );
+      });
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  }
   return (
     <MotionBox
       initial={{ y: "0" }}
@@ -109,6 +121,16 @@ export default function CollectionsNav({ isVisible, setIsVisible }) {
           )}
         </TabList>
       </Tabs>
+      <IconButton
+        size={"lg"}
+        colorScheme="grey"
+        aria-label="hide"
+        icon={<CopyIcon />}
+        onClick={toggleFullScreen}
+        position="fixed"
+        top={isVisible ? "0" : "40%"}
+        right="4rem"
+      />
       <IconButton
         size={"lg"}
         colorScheme="grey"

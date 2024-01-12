@@ -71,6 +71,7 @@ export const ImageListComponent = ({ images, onChange, setCellImage }) => {
                       },
                     });
               }}
+              size={"sm"}
               aria-label="remove"
               icon={setCellImage ? <AddIcon /> : <DeleteIcon />}
             />
