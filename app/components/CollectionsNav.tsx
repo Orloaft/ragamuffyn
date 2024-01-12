@@ -71,7 +71,7 @@ export default function CollectionsNav({ isVisible, setIsVisible }) {
     <MotionBox
       initial={{ y: "0" }}
       animate={controls}
-      width="100%"
+      width="100vw"
       position="fixed"
       zIndex="20"
     >

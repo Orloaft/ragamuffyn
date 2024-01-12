@@ -86,7 +86,7 @@ const Document = withEmotionCache(
         </head>
         <body
           style={{
-            background: `black`,
+            background: `url("/parchment.jpg")`,
             backgroundAttachment: "fixed",
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
