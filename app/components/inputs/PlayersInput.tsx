@@ -49,7 +49,9 @@ const PlayersInput: React.FC<PlayersInputProps> = ({ value, onChange }) => {
         onChange={(e) => setNewPlayer(e.target.value)}
         placeholder="Enter player's name"
       />
-      <Button onClick={handleAddClick}>Add Player</Button>
+      <Button colorScheme="blue" onClick={handleAddClick}>
+        Add Player
+      </Button>
     </div>
   );
 };

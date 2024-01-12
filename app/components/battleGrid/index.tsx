@@ -148,6 +148,7 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
       <Box position="fixed" zIndex="20" display={"flex"} alignItems={"center"}>
         <IconButton
           background="black"
+          border={"1px solid #dddddd"}
           aria-label="settings"
           zIndex="20"
           colorScheme="grey"
@@ -158,6 +159,7 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
         </IconButton>
         <IconButton
           background="black"
+          border={"1px solid #dddddd"}
           aria-label="update"
           zIndex="20"
           colorScheme="grey"
@@ -169,12 +171,14 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
         <IconButton
           colorScheme="grey"
           background="black"
+          border={"1px solid #dddddd"}
           aria-label="Zoom in"
           icon={<AddIcon />}
           onClick={handleZoomIn}
         />
         <IconButton
           background="black"
+          border={"1px solid #dddddd"}
           colorScheme="grey"
           aria-label="Zoom out"
           icon={<MinusIcon />}
@@ -193,6 +197,7 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
         <IconButton
           aria-label="next turn"
           background="black"
+          border={"1px solid #dddddd"}
           zIndex="20"
           colorScheme="grey"
           onClick={() => {

@@ -23,6 +23,7 @@ export const DataModalPopUp = ({ data, button, model }) => {
       <Tooltip label="details" openDelay={500}>
         <IconButton
           background={"black"}
+          border={"1px solid #dddddd"}
           color="#dddddd"
           onClick={(e) => {
             e.preventDefault();
@@ -34,7 +35,11 @@ export const DataModalPopUp = ({ data, button, model }) => {
       </Tooltip>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent background={"black"} color="#dddddd">
+        <ModalContent
+          background={"black"}
+          border={"1px solid #dddddd"}
+          color="#dddddd"
+        >
           <ModalHeader>{data.name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>

@@ -20,6 +20,7 @@ const CustomModal = ({ content, title, button, size }) => {
     <>
       <IconButton
         background={"black"}
+        border={"1px solid #dddddd"}
         left={title === "Encounter" ? "0" : "10%"}
         zIndex="15"
         colorScheme="grey"
@@ -38,6 +39,7 @@ const CustomModal = ({ content, title, button, size }) => {
         <ModalContent
           marginLeft={title === "Encounter" ? "" : "50%"}
           background={"black"}
+          border={"1px solid #dddddd"}
           color="#dddddd"
           backgroundRepeat={"no-repeat"}
           backgroundSize={"cover"}

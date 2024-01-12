@@ -9,7 +9,7 @@ import type {
 } from "~/data";
 import IdToEntry from "./IdToEntry";
 import { useSelector } from "react-redux";
-import { Box, Button } from "@chakra-ui/react";
+import { Box, Button, Text } from "@chakra-ui/react";
 import { NavLink } from "@remix-run/react";
 
 import { ImageListComponent } from "./images/ImageList";
@@ -206,36 +206,37 @@ export default function DataEntryView({ data, type, useStore, id }: any) {
     npcData && (
       <dl className="-my-3 divide-y divide-gray-100 text-sm">
         <div className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
-          <dt className="font-medium text-gray-900">Name</dt>
           <dd className="text-gray-700 sm:col-span-2">
             {npcData.name || "no name"}
           </dd>{" "}
         </div>
         <div className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
-          <dt className="font-medium text-gray-900">bio</dt>
-          <dd className="text-gray-700 sm:col-span-2">{npcData.bio}</dd>
+          <dd className="text-gray-700 sm:col-span-2">
+            {npcData.bio || <Text>no bio</Text>}
+          </dd>
         </div>
         <div className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
-          <dt className="font-medium text-gray-900">Items</dt>
           <dd className="text-gray-700 sm:col-span-2">
-            {npcData.items &&
+            {(npcData.items &&
+              npcData.items.length &&
               npcData.items.map((i) => {
                 return <IdToEntry key={i} id={i} model="items" isList={true} />;
-              })}
+              })) || <Text>no items</Text>}
           </dd>
         </div>
         <div>
-          Notes
-          {npcData.notes &&
+          {(npcData.notes &&
+            npcData.notes.length &&
             npcData.notes.map((i) => {
               return <IdToEntry key={i} isList={false} id={i} model="notes" />;
-            })}
+            })) || <Text>no notes</Text>}
         </div>
       </dl>
     );
   return (
     <Box
       background={"black"}
+      border={"1px solid #dddddd"}
       color="#dddddd"
       className="flow-root"
       borderRadius=".25rem"

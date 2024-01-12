@@ -83,7 +83,6 @@ export interface NPCdata extends HasNotes {
   [key: string]: any;
   name: string;
   bio: string;
-  characterSheet?: string;
   items: string[];
 }
 
@@ -347,17 +346,7 @@ export async function createDataEntry(model: string) {
         data: JSON.stringify({
           name: "",
           bio: "",
-          characterSheet: {
-            race: "",
-            class: "",
-            strength: 10,
-            dexterity: 10,
-            constitution: 10,
-            intelligence: 10,
-            wisdom: 10,
-            charisma: 10,
-            abilities: "",
-          },
+
           items: [],
         }),
       });

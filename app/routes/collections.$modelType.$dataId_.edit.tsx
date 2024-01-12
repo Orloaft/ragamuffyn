@@ -49,6 +49,7 @@ export default function EditContact() {
         <Box
           style={{ display: "flex", flexDirection: "column" }}
           background={"black"}
+          border={"1px solid #dddddd"}
           width="50%"
           padding="1rem"
           overflow={"auto"}

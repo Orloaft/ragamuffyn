@@ -58,7 +58,9 @@ export default function ImageUpload({ handleChange, images }: any) {
       {preview && (
         <img src={preview} alt="Preview" style={{ maxHeight: "200px" }} />
       )}
-      <Button onClick={handleSave}>Save Image Data</Button>
+      <Button colorScheme="blue" onClick={handleSave}>
+        Save Image Data
+      </Button>
     </div>
   );
 }

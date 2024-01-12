@@ -48,7 +48,11 @@ export const ModalPopUp = ({ model, data, button, addedData, addToForm }) => {
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent background={"black"} color="#dddddd">
+        <ModalContent
+          background={"black"}
+          color="#dddddd"
+          border={"1px solid #dddddd"}
+        >
           <ModalHeader>{model}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
@@ -92,7 +96,7 @@ export const ModalPopUp = ({ model, data, button, addedData, addToForm }) => {
                 })) || <ListItem>no {model}</ListItem>}
             </UnorderedList>
             <div>
-              <Button backgroundColor="#dddddd" onClick={handleInnerFormSubmit}>
+              <Button colorScheme="blue" onClick={handleInnerFormSubmit}>
                 New
               </Button>
             </div>

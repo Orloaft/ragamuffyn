@@ -42,7 +42,11 @@ export const EncounterElementsModal = ({
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent background={"black"} color="#dddddd">
+        <ModalContent
+          background={"black"}
+          border={"1px solid #dddddd"}
+          color="#dddddd"
+        >
           <ModalHeader>{model}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
@@ -82,7 +86,12 @@ export const EncounterElementsModal = ({
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
+            <Button
+              colorScheme="blue"
+              colorScheme="blue"
+              mr={3}
+              onClick={onClose}
+            >
               Close
             </Button>
           </ModalFooter>

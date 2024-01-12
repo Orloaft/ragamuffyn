@@ -68,8 +68,10 @@ export default function Index() {
             }}
           >
             <Flex>
-              <Button type="submit">Delete</Button>
-              <Button>
+              <Button colorScheme="blue" type="submit">
+                Delete
+              </Button>
+              <Button colorScheme="blue">
                 <NavLink to={`/collections/${model}/${id}/edit`}>Edit</NavLink>
               </Button>
             </Flex>

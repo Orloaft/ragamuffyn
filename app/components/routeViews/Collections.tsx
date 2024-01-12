@@ -69,7 +69,7 @@ export default function CollectionsView({ data, q, model }: any) {
             <div id="search-spinner" hidden={!searching} aria-hidden />
           </Form>
           <Form method="post">
-            <Button backgroundColor="#dddddd" type="submit">
+            <Button colorScheme="blue" type="submit">
               New
             </Button>
           </Form>

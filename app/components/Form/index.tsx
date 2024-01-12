@@ -46,6 +46,7 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
       },
       { method: "post", action: "/api/updateData", encType: "application/json" }
     );
+    navigate(-1);
   };
   const keyToInput = (key: any, value: any) => {
     switch (key) {
@@ -233,8 +234,11 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
       <Center>
         {" "}
         <Flex>
-          <Button type="submit">Save</Button>
+          <Button colorScheme="blue" type="submit">
+            Save
+          </Button>
           <Button
+            colorScheme="blue"
             onClick={(e) => {
               e.preventDefault();
               navigate(-1);

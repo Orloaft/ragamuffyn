@@ -219,10 +219,20 @@ export default function BattleGridMenu({
               </Flex>
             </Box>{" "}
             <Flex marginTop="10px">
-              <Button onClick={addSelectedItem} marginRight="5px">
+              <Button
+                colorScheme="blue"
+                onClick={addSelectedItem}
+                marginRight="5px"
+              >
                 Add
               </Button>
-              <Button onClick={removeSelectedItem}>Remove</Button>
+              <Button
+                colorScheme="blue"
+                colorScheme="blue"
+                onClick={removeSelectedItem}
+              >
+                Remove
+              </Button>
             </Flex>
           </Flex>
         </Box>

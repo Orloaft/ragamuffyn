@@ -87,7 +87,7 @@ const CellMenu = ({
                     value={cellProperties[selectedCell].size}
                     min={0.15}
                     step={0.1}
-                    max={20}
+                    max={40}
                     onChange={(val) =>
                       updateCellPropertyHandler("size", val, selectedCell)
                     }
@@ -172,6 +172,7 @@ const CellMenu = ({
           zIndex="15"
           aria-label="move"
           background={"black"}
+          border={"1px solid #dddddd"}
           colorScheme="grey"
           icon={<ArrowUpDownIcon />}
           onClick={() => {
