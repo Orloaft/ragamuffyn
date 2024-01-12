@@ -1,7 +1,7 @@
 // root.tsx
 import React, { useContext, useEffect, useState } from "react";
 import { withEmotionCache } from "@emotion/react";
-import { Box, ChakraProvider } from "@chakra-ui/react";
+import { Box, ChakraProvider, background } from "@chakra-ui/react";
 import {
   Links,
   LiveReload,
@@ -84,7 +84,14 @@ const Document = withEmotionCache(
             />
           ))}
         </head>
-        <body>
+        <body
+          style={{
+            background: `linear-gradient(90deg, rgba(2,0,36,0.9316059187346813) 0%, rgba(20,73,72,1) 47%)`,
+            backgroundAttachment: "fixed",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+          }}
+        >
           {children}
           <ScrollRestoration />
           <Scripts />
@@ -101,15 +108,7 @@ export default function App() {
       <ChakraProvider>
         <CollectionsNav isVisible={isVisible} setIsVisible={setIsVisible} />
         <Provider store={store}>
-          <Box
-            background={`url("/parchment.jpg")`}
-            bgPosition="center"
-            bgAttachment="fixed"
-            bgRepeat="no-repeat"
-            bgSize="cover"
-            width="fit-content"
-            height="fit-content"
-          >
+          <Box>
             <Box
               minWidth="100vw"
               minHeight="100vh"

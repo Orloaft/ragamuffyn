@@ -16,16 +16,18 @@ import {
 const MapMenu = ({
   isOpen,
   onClose,
-
+  bgSize,
   handleFileChange,
   bg,
-
+  gridSize,
   bgRotate,
   setBgRotate,
   setGridSize,
   setBgSize,
   setBgPosX,
   setBgPosY,
+  bgPosX,
+  bgPosY,
 }) => {
   return (
     <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
@@ -59,7 +61,7 @@ const MapMenu = ({
           </Slider>
           <Text minWidth="100px">Grid Size:</Text>
           <Slider
-            defaultValue={10}
+            value={gridSize}
             min={10}
             max={40}
             step={1}
@@ -72,7 +74,7 @@ const MapMenu = ({
           </Slider>
           <Text>Size</Text>
           <Slider
-            defaultValue={100}
+            value={bgSize}
             min={50}
             max={200}
             onChange={(val) => setBgSize(val)}
@@ -84,7 +86,7 @@ const MapMenu = ({
           </Slider>
           <Text>X Position</Text>
           <Slider
-            defaultValue={50}
+            value={bgPosX}
             min={0}
             max={100}
             orientation="horizontal"
@@ -97,7 +99,7 @@ const MapMenu = ({
           </Slider>
           <Text>Y Position</Text>
           <Slider
-            defaultValue={50}
+            value={bgPosY}
             min={0}
             max={100}
             orientation="horizontal"

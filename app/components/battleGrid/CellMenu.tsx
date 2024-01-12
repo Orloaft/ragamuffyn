@@ -103,6 +103,7 @@ const CellMenu = ({
                     defaultValue={0}
                     min={-50}
                     max={50}
+                    step={0.5}
                     orientation="horizontal"
                     onChange={(val) =>
                       updateCellPropertyHandler("posX", val, selectedCell)
@@ -116,6 +117,7 @@ const CellMenu = ({
                   {/* Slider for adjusting Y coordinate */}
                   <Text>Y Position</Text>
                   <Slider
+                    step={0.5}
                     defaultValue={0}
                     min={-50}
                     max={50}

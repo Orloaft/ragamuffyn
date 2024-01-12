@@ -11,6 +11,7 @@ import {
   setBgPosX,
   setBgPosY,
   setBgRotate,
+  setBgSize,
   setCharacters,
   setDescription,
   setGridSize,
@@ -46,6 +47,7 @@ export default function Index() {
       dispatch(setDescription(dataForRedux.description));
       dispatch(setId(dataForRedux.id));
       dispatch(setName(data.name));
+      dispatch(setBgSize(dataForRedux.gridProps.bgSize));
       dispatch(setNpcs(dataForRedux.npcs));
       dispatch(setRound(dataForRedux.round));
       dispatch(setInitiativeOrder(dataForRedux.initiativeOrder));

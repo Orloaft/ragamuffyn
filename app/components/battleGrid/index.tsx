@@ -82,7 +82,7 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
   let npcData: any = npcLoading ? null : npcEntries;
   const { data: characterEntries, loading: characterLoading } =
     useDataLookUp(characters);
-  let characterData = characterLoading ? null : characterEntries;
+  let characterData: any = characterLoading ? null : characterEntries;
   const noteIdArray = useMemo(() => {
     let tempNoteIdArray: any[] = [];
 
@@ -90,8 +90,12 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
       npcData.forEach((d: { data: string }) => {
         tempNoteIdArray = [...tempNoteIdArray, ...JSON.parse(d.data).notes];
       });
+    characterData &&
+      characterData.forEach((d: { data: string }) => {
+        tempNoteIdArray = [...tempNoteIdArray, ...JSON.parse(d.data).notes];
+      });
     return tempNoteIdArray;
-  }, [npcData]);
+  }, [npcData, characterData]);
   function getNextTurnTag(): string {
     const currentIndex = initiativeOrder.findIndex(
       (item: { tag: any }) => item.tag === currentTurn
@@ -132,6 +136,7 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
       style={{
         cursor: "crosshair",
       }}
+      // background={[`url("/parchment.jpg")`, "", "", ""]}
       ref={containerRef}
       width={`${containerSize * 1.5}px`}
       height={`${containerSize * 1.5}px`}
@@ -216,6 +221,10 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
         setGridSize={setGridSize}
         setBgPosX={setBgPosX}
         setBgPosY={setBgPosY}
+        bgPosX={bgPosX}
+        bgPosY={bgPosY}
+        bgSize={bgSize}
+        gridSize={gridSize}
       />
       <Box h="100%" w="100%" position="absolute">
         <Box
