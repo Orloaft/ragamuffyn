@@ -48,7 +48,7 @@ export default function EditContact() {
       <Center>
         <Box
           style={{ display: "flex", flexDirection: "column" }}
-          backgroundImage={"url('/marble.avif')"}
+          background={"black"}
           width="50%"
           padding="1rem"
           overflow={"auto"}

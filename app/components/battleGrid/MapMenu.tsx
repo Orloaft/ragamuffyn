@@ -32,7 +32,7 @@ const MapMenu = ({
   return (
     <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
       <DrawerOverlay />
-      <DrawerContent bgImage="url(/marble.avif)">
+      <DrawerContent bg="black">
         <DrawerCloseButton />
         <Box
           width="10rem"

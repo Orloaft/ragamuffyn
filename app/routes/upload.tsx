@@ -23,7 +23,12 @@ export default function Index() {
 
   return (
     <Center>
-      <Box p={4}>
+      <Box
+        p={4}
+        background={"black"}
+        border={"1px #dddddd solid"}
+        color={"#dddddd"}
+      >
         <Form method="post">
           <Select name="model" placeholder="Select option">
             <option value="notes">notes</option>

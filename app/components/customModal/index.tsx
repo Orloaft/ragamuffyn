@@ -37,7 +37,7 @@ const CustomModal = ({ content, title, button, size }) => {
         <ModalOverlay />
         <ModalContent
           marginLeft={title === "Encounter" ? "" : "50%"}
-          backgroundImage={"url('/marble.avif')"}
+          background={"black"}
           color="#dddddd"
           backgroundRepeat={"no-repeat"}
           backgroundSize={"cover"}

@@ -235,7 +235,7 @@ export default function DataEntryView({ data, type, useStore, id }: any) {
     );
   return (
     <Box
-      backgroundImage={"url('/marble.avif')"}
+      background={"black"}
       color="#dddddd"
       className="flow-root"
       borderRadius=".25rem"

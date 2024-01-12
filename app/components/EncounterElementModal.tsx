@@ -42,7 +42,7 @@ export const EncounterElementsModal = ({
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent backgroundImage={"url('/marble.avif')"} color="#dddddd">
+        <ModalContent background={"black"} color="#dddddd">
           <ModalHeader>{model}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>

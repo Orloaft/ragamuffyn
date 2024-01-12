@@ -46,8 +46,6 @@ export default function CollectionsNav({ isVisible, setIsVisible }) {
     { label: "Locations", path: "/collections/locations" },
     { label: "Notes", path: "/collections/notes" },
     { label: "Upload", path: "/upload" },
-
-    { label: "Player", path: "/player" },
   ];
   type TabIndexMapping = {
     [key: string]: number;
@@ -61,7 +59,6 @@ export default function CollectionsNav({ isVisible, setIsVisible }) {
     "/collections/locations": 5,
     "/collections/notes": 6,
     "/upload": 7,
-    "/player": 9,
   }; // Default to first tab if path not found
   let tabIndex = tabIndexMapping[extractPath()] ?? 0;
   const controls = useAnimation();
@@ -87,9 +84,14 @@ export default function CollectionsNav({ isVisible, setIsVisible }) {
       position="fixed"
       zIndex="20"
     >
-      <Tabs index={tabIndex} display={isVisible ? "block" : "none"}>
+      <Tabs
+        colorScheme="white"
+        variant="enclosed"
+        index={tabIndex}
+        display={isVisible ? "block" : "none"}
+      >
         <TabList
-          backgroundImage={"url('/marble.avif')"}
+          background={"black"}
           color="#dddddd"
           height="3rem"
           overflowX={isSmallScreen ? "auto" : "initial"}
@@ -104,7 +106,7 @@ export default function CollectionsNav({ isVisible, setIsVisible }) {
                 />{" "}
                 <Text>Navigate</Text>
               </Flex>
-              <MenuList background={`url("/marble.avif")`}>
+              <MenuList background={`black`}>
                 {navLinks.map((link, index) => (
                   <MenuItem key={index} background={"transparent"}>
                     <NavLink to={link.path}>{link.label}</NavLink>
@@ -122,8 +124,9 @@ export default function CollectionsNav({ isVisible, setIsVisible }) {
         </TabList>
       </Tabs>
       <IconButton
-        size={"lg"}
+        size={"md"}
         colorScheme="grey"
+        background={"black"}
         aria-label="hide"
         icon={<CopyIcon />}
         onClick={toggleFullScreen}
@@ -132,7 +135,8 @@ export default function CollectionsNav({ isVisible, setIsVisible }) {
         right="4rem"
       />
       <IconButton
-        size={"lg"}
+        size={"md"}
+        background={"black"}
         colorScheme="grey"
         aria-label="hide"
         icon={isVisible ? <ChevronUpIcon /> : <ChevronDownIcon />}

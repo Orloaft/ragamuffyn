@@ -203,7 +203,7 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
           next turn
         </IconButton>
       </Box>{" "}
-      <Flex zIndex={"20"} position={"fixed"} right={"0"}>
+      <Flex zIndex={"20"} position={"fixed"} right={"0"} top={"10%"}>
         <InitiativeTracker
           setInitiativeOrder={setInitiativeOrder}
           initiativeOrder={initiativeOrder}

@@ -30,12 +30,13 @@ export default function CollectionsView({ data, q, model }: any) {
     new URLSearchParams(navigation.location.search).has("q");
   return (
     <Box
-      backgroundImage={"url('/marble.avif')"}
+      background={"black"}
       color="#dddddd"
       padding="1rem"
       height="100vh"
       zIndex="5"
       overflow={"auto"}
+      border={"1px #dddddd solid"}
     >
       <div id="sidebar">
         <h1>{model}</h1>
