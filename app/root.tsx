@@ -86,7 +86,7 @@ const Document = withEmotionCache(
         </head>
         <body
           style={{
-            background: `linear-gradient(90deg, rgba(2,0,36,0.9316059187346813) 0%, rgba(20,73,72,1) 47%)`,
+            background: `black`,
             backgroundAttachment: "fixed",
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
