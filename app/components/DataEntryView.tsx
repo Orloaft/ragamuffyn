@@ -155,7 +155,7 @@ export default function DataEntryView({ data, type, useStore, id }: any) {
         </div>
         <Button>
           {" "}
-          <NavLink to={`/grid/${id}`}>Battle grid</NavLink>
+          <NavLink to={`/collections/grid/${id}`}>Battle grid</NavLink>
         </Button>
       </div>
     );

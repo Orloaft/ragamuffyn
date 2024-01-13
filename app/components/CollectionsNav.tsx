@@ -45,7 +45,7 @@ export default function CollectionsNav({ isVisible, setIsVisible }) {
     { label: "Encounters", path: "/collections/encounters" },
     { label: "Locations", path: "/collections/locations" },
     { label: "Notes", path: "/collections/notes" },
-    { label: "Upload", path: "/upload" },
+    { label: "Upload", path: "/collections/upload" },
   ];
   type TabIndexMapping = {
     [key: string]: number;
@@ -58,7 +58,7 @@ export default function CollectionsNav({ isVisible, setIsVisible }) {
     "/collections/encounters": 4,
     "/collections/locations": 5,
     "/collections/notes": 6,
-    "/upload": 7,
+    "/collections/upload": 7,
   }; // Default to first tab if path not found
   let tabIndex = tabIndexMapping[extractPath()] ?? 0;
   const controls = useAnimation();

@@ -1,7 +1,7 @@
 // root.tsx
 import React, { useContext, useEffect, useState } from "react";
 import { withEmotionCache } from "@emotion/react";
-import { Box, ChakraProvider } from "@chakra-ui/react";
+import { Box, ChakraProvider, Image } from "@chakra-ui/react";
 
 import {
   Links,
@@ -32,11 +32,7 @@ export let links: LinksFunction = () => {
   return [
     {
       rel: "stylesheet",
-      href: "/styles/rpg-awesome.min.css",
-    },
-    {
-      rel: "stylesheet",
-      href: "/styles/globals.css",
+      href: "/styles/characterSheet.css",
     },
     { rel: "icon", href: "/favicon.ico" },
     { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -103,20 +99,22 @@ const Document = withEmotionCache(
   }
 );
 export default function App() {
-  const [isVisible, setIsVisible] = useState(true);
   return (
     <Document>
       <ChakraProvider>
-        <CollectionsNav isVisible={isVisible} setIsVisible={setIsVisible} />
         <Provider store={store}>
+          {/* <Image
+            position={"fixed"}
+            top={"-30%"}
+            height={"100%"}
+            width={"95%"}
+            left={"2.5%"}
+            src={`/title.png`}
+            alt={"logo"}
+            zIndex={"0"}
+          /> */}
           <Box>
-            <Box
-              minWidth="100vw"
-              minHeight="100vh"
-              paddingTop={isVisible ? "3rem" : "0"}
-            >
-              <Outlet />
-            </Box>
+            <Outlet />
           </Box>
         </Provider>
       </ChakraProvider>
