@@ -87,8 +87,8 @@ const MapMenu = ({
           <Text>X Position</Text>
           <Slider
             value={bgPosX}
-            min={0}
-            max={100}
+            min={-500}
+            max={500}
             orientation="horizontal"
             onChange={(val) => setBgPosX(val)}
           >
@@ -100,8 +100,8 @@ const MapMenu = ({
           <Text>Y Position</Text>
           <Slider
             value={bgPosY}
-            min={0}
-            max={100}
+            min={-500}
+            max={500}
             orientation="horizontal"
             onChange={(val) => setBgPosY(val)}
           >

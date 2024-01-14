@@ -10,7 +10,7 @@ import { setItems } from "~/redux/dataEntrySlice";
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
-
+  console.log("requesting campania");
   const q = url.searchParams.get("q");
   const data = await getDataByModel(params.modelType as string, q);
   return json({ data, q, model: params.modelType });

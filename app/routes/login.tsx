@@ -14,7 +14,7 @@ export let action = async ({ request }) => {
     let session = await getSession(request.headers.get("Cookie"));
     session.set("role", user); // Set role based on the login function's return value
 
-    return redirect("/", {
+    return redirect(`/dashboard/${user}`, {
       headers: {
         "Set-Cookie": await commitSession(session),
       },

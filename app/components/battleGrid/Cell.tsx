@@ -69,7 +69,7 @@ export default function Cell({
       <AspectRatio ratio={1}>
         <Box
           border="1px"
-          borderColor={isMoving ? "red.200" : "gray.200"}
+          borderColor={isSelected ? "white" : "gray.200"}
           opacity={isSelected ? "1" : ".25"}
           position="relative"
         ></Box>

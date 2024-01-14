@@ -9,8 +9,9 @@ export let loader = async ({ request }) => {
   let role = session.get("role");
   if (!role) {
     throw redirect("/login");
+  } else {
+    return redirect(`/dashboard/${role}`);
   }
-  return { role };
 };
 export default function Index() {
   let { role } = useLoaderData<any>();
@@ -22,9 +23,6 @@ export default function Index() {
       width={"100vw"}
       minHeight={"fit-content"}
     >
-      <Button position={"fixed"} top={"0"} right={"0"}>
-        <NavLink to="/login">Log Out</NavLink>
-      </Button>
       <Dashboard role={role} />
     </Flex>
   );

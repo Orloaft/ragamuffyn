@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -32,7 +32,7 @@ export default function BattleGridMenu({
   const [selectedNpc, setSelectedNpc] = useState(null);
   const [selectedCharacter, setSelectedCharacter] = useState(null);
 
-  useState(() => {
+  useEffect(() => {
     setEditStates(
       initiativeOrder.map(() => ({ editing: false, inputValue: "" }))
     );
@@ -86,7 +86,7 @@ export default function BattleGridMenu({
                     <ListItem
                       key={el.name + el.tag + index}
                       display="flex"
-                      justifyContent="space-around"
+                      justifyContent="space-between"
                     >
                       {editStates[index] && editStates[index].editing ? (
                         <Input

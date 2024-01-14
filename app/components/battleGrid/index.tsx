@@ -244,6 +244,7 @@ const BattleGrid: React.FC<any> = ({ socketUrl }) => {
         >
           {" "}
           <Grid
+            background={"black"}
             templateRows={`repeat(${gridSize}, 50px)`}
             templateColumns={`repeat(${gridSize}, 50px)`}
             gap={0}
