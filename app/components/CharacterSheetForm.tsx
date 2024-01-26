@@ -26,7 +26,7 @@ export interface CharacterSheet {
 
 const races = ["Human", "Elf", "Dwarf", "Halfling", "Orc"];
 const classes = ["Warrior", "Mage", "Rogue", "Cleric", "Ranger"];
-function calculateModifier(attribute: number): string {
+export function calculateModifier(attribute: number): string {
   const modifier = Math.floor((attribute - 10) / 2);
   return modifier >= 0 ? `+${modifier}` : `${modifier}`;
 }

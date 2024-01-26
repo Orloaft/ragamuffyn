@@ -1,28 +1,43 @@
-import { Box, Button } from "@chakra-ui/react";
-import { NavLink } from "@remix-run/react";
+import { Box, Flex } from "@chakra-ui/react";
+import type { LoaderFunctionArgs } from "@remix-run/node";
+import { json } from "@remix-run/node";
+import { NavLink, Outlet } from "@remix-run/react";
 
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+  return json({});
+};
 export default function Index() {
   return (
     <Box
       display={"flex"}
-      justifyContent={"center"}
+      justifyContent={"flex-start"}
       alignItems={"center"}
       width={"100vw"}
       height={"100vh"}
+      flexDirection={"column"}
+      paddingTop={"4%"}
     >
-      {" "}
-      <Button position={"fixed"} top={"0"} right={"0"}>
-        <NavLink to="/login">Log Out</NavLink>
-      </Button>
-      <Box
+      <Flex
         background={"black"}
         border={"1px #dddddd solid"}
-        color={"#dddddd"}
         padding={"1rem"}
+        overflow={"auto"}
+        color={"#dddddd"}
+        width="100vw"
+        alignItems={"center"}
+        position="absolute"
+        zIndex="25"
+        top="0"
+        gap="1rem"
       >
-        {" "}
-        playeeer
-      </Box>
+        <NavLink to={"/dashboard/player/characters/create"}>
+          New character
+        </NavLink>
+        <NavLink to="">Load character</NavLink>
+
+        <NavLink to="/login">Log Out</NavLink>
+      </Flex>
+      <Outlet />{" "}
     </Box>
   );
 }

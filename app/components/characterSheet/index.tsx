@@ -1,8 +1,13 @@
+import { Checkbox } from "@chakra-ui/react";
 import React from "react";
+import { calculateModifier } from "../CharacterSheetForm";
 
-const CharacterSheet: React.FC = () => {
+const CharacterSheet: React.FC<any> = ({ characterData }) => {
   return (
-    <form className="charsheet" style={{ background: "white" }}>
+    <form
+      className="charsheet"
+      style={{ background: "white", borderRadius: ".5rem", marginTop: "0" }}
+    >
       <header>
         <section className="charname">
           <label htmlFor="charname">Character Name</label>
@@ -12,11 +17,19 @@ const CharacterSheet: React.FC = () => {
           <ul>
             <li>
               <label htmlFor="classlevel">Class & Level</label>
-              <input name="classlevel" placeholder="Paladin 2" />
+              <input
+                value={characterData.class + " 1"}
+                name="classlevel"
+                placeholder="Paladin 2"
+              />
             </li>
             <li>
               <label htmlFor="background">Background</label>
-              <input name="background" placeholder="Acolyte" />
+              <input
+                value={characterData.background}
+                name="background"
+                placeholder="Acolyte"
+              />
             </li>
             <li>
               <label htmlFor="playername">Player Name</label>
@@ -24,11 +37,19 @@ const CharacterSheet: React.FC = () => {
             </li>
             <li>
               <label htmlFor="race">Race</label>
-              <input name="race" placeholder="Half-elf" />
+              <input
+                value={characterData.race}
+                name="race"
+                placeholder="Half-elf"
+              />
             </li>
             <li>
               <label htmlFor="alignment">Alignment</label>
-              <input name="alignment" placeholder="Lawful Good" />
+              <input
+                value={characterData.alignment}
+                name="alignment"
+                placeholder="Lawful Good"
+              />
             </li>
             <li>
               <label htmlFor="experiencepoints">Experience Points</label>
@@ -45,55 +66,113 @@ const CharacterSheet: React.FC = () => {
                 <li>
                   <div className="score">
                     <label htmlFor="Strengthscore">Strength</label>
-                    <input name="Strengthscore" placeholder="10" />
+                    <input
+                      value={characterData.attributes.Strength}
+                      name="Strengthscore"
+                      placeholder="10"
+                    />
                   </div>
                   <div className="modifier">
-                    <input name="Strengthmod" placeholder="+0" />
+                    <input
+                      value={calculateModifier(
+                        characterData.attributes.Strength
+                      )}
+                      name="Strengthmod"
+                      placeholder="+0"
+                    />
                   </div>
                 </li>
                 <li>
                   <div className="score">
                     <label htmlFor="Dexterityscore">Dexterity</label>
-                    <input name="Dexterityscore" placeholder="10" />
+                    <input
+                      value={characterData.attributes.Dexterity}
+                      name="Dexterityscore"
+                      placeholder="10"
+                    />
                   </div>
                   <div className="modifier">
-                    <input name="Dexteritymod" placeholder="+0" />
+                    <input
+                      value={calculateModifier(
+                        characterData.attributes.Dexterity
+                      )}
+                      name="Dexteritymod"
+                      placeholder="+0"
+                    />
                   </div>
                 </li>
                 <li>
                   <div className="score">
                     <label htmlFor="Constitutionscore">Constitution</label>
-                    <input name="Constitutionscore" placeholder="10" />
+                    <input
+                      value={characterData.attributes.Constitution}
+                      name="Constitutionscore"
+                      placeholder="10"
+                    />
                   </div>
                   <div className="modifier">
-                    <input name="Constitutionmod" placeholder="+0" />
+                    <input
+                      value={calculateModifier(
+                        characterData.attributes.Constitution
+                      )}
+                      name="Constitutionmod"
+                      placeholder="+0"
+                    />
                   </div>
                 </li>
                 <li>
                   <div className="score">
                     <label htmlFor="Wisdomscore">Wisdom</label>
-                    <input name="Wisdomscore" placeholder="10" />
+                    <input
+                      value={characterData.attributes.Wisdom}
+                      name="Wisdomscore"
+                      placeholder="10"
+                    />
                   </div>
                   <div className="modifier">
-                    <input name="Wisdommod" placeholder="+0" />
+                    <input
+                      value={calculateModifier(characterData.attributes.Wisdom)}
+                      name="Wisdommod"
+                      placeholder="+0"
+                    />
                   </div>
                 </li>
                 <li>
                   <div className="score">
                     <label htmlFor="Intelligencescore">Intelligence</label>
-                    <input name="Intelligencescore" placeholder="10" />
+                    <input
+                      value={characterData.attributes.Intelligence}
+                      name="Intelligencescore"
+                      placeholder="10"
+                    />
                   </div>
                   <div className="modifier">
-                    <input name="Intelligencemod" placeholder="+0" />
+                    <input
+                      value={calculateModifier(
+                        characterData.attributes.Intelligence
+                      )}
+                      name="Intelligencemod"
+                      placeholder="+0"
+                    />
                   </div>
                 </li>
                 <li>
                   <div className="score">
                     <label htmlFor="Charismascore">Charisma</label>
-                    <input name="Charismascore" placeholder="10" />
+                    <input
+                      value={characterData.attributes.Charisma}
+                      name="Charismascore"
+                      placeholder="10"
+                    />
                   </div>
                   <div className="modifier">
-                    <input name="Charismamod" placeholder="+0" />
+                    <input
+                      value={calculateModifier(
+                        characterData.attributes.Charisma
+                      )}
+                      name="Charismamod"
+                      placeholder="+0"
+                    />
                   </div>
                 </li>
               </ul>
@@ -103,7 +182,12 @@ const CharacterSheet: React.FC = () => {
                 <div className="label-container">
                   <label htmlFor="inspiration">Inspiration</label>
                 </div>
-                <input name="inspiration" type="checkbox" />
+                <Checkbox
+                  name="inspiration"
+                  border={"1px solid black"}
+                  padding={"4%"}
+                  borderRadius={".5rem"}
+                />
               </div>
               <div className="proficiencybonus box">
                 <div className="label-container">
