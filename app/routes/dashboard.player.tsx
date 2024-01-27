@@ -18,7 +18,7 @@ export default function Index() {
       paddingTop={"4%"}
     >
       <Flex
-        background={"black"}
+        background={"rgba(0,0,0,0.75)"}
         border={"1px #dddddd solid"}
         padding={"1rem"}
         overflow={"auto"}

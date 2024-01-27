@@ -153,7 +153,7 @@ export default function DataEntryView({ data, type, useStore, id }: any) {
               return <IdToEntry key={i} id={i} model="npcs" isList={true} />;
             })}
         </div>
-        <Button>
+        <Button colorScheme="black">
           {" "}
           <NavLink to={`/collections/grid/${id}`}>Battle grid</NavLink>
         </Button>
@@ -235,7 +235,7 @@ export default function DataEntryView({ data, type, useStore, id }: any) {
     );
   return (
     <Box
-      background={"black"}
+      background={"rgba(0,0,0,0.75)"}
       border={"1px solid #dddddd"}
       color="#dddddd"
       className="flow-root"

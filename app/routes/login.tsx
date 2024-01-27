@@ -36,7 +36,7 @@ export default function Login() {
       height={"100vh"}
     >
       <Box
-        background={"black"}
+        background={"rgba(0,0,0,0.75)"}
         border={"1px #dddddd solid"}
         color={"#dddddd"}
         padding={"1rem"}
@@ -51,7 +51,7 @@ export default function Login() {
               <Text>Password:</Text>
               <Input type="password" id="password" name="password" required />
             </Box>
-            <Button type="submit" colorScheme={"blue"}>
+            <Button type="submit" colorScheme={"black"}>
               Login
             </Button>
             {actionData?.error && <p>{actionData.error}</p>}

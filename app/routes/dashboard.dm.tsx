@@ -1,4 +1,4 @@
-import { Box, Button } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { NavLink } from "@remix-run/react";
 
 export default function Index() {
@@ -10,19 +10,16 @@ export default function Index() {
       width={"100vw"}
       height={"100vh"}
     >
-      <Button position={"fixed"} top={"0"} right={"0"}>
-        <NavLink to="/login">Log Out</NavLink>
-      </Button>
-      <Box
-        background={"black"}
+      <Flex
+        background={"rgba(0,0,0,0.75)"}
         border={"1px #dddddd solid"}
         color={"#dddddd"}
         padding={"1rem"}
+        direction={"column"}
       >
-        <Button>
-          <NavLink to="/collections">Collections</NavLink>
-        </Button>
-      </Box>
+        <NavLink to="/collections">Collections</NavLink>
+        <NavLink to="/login">Log Out</NavLink>
+      </Flex>
     </Box>
   );
 }

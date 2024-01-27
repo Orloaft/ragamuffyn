@@ -17,17 +17,17 @@ import {
   Image,
 } from "@chakra-ui/react";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { calculateModifier } from "~/components/CharacterSheetForm";
 import CharacterSheet from "~/components/characterSheet";
 
 const CharacterCreation = () => {
   const [step, setStep] = useState(0);
   const [characterData, setCharacterData] = useState<any>({
-    race: "",
-    class: "",
-    alignment: "",
-    background: "",
+    race: "Human",
+    class: "Artificer",
+    alignment: "Lawful_good",
+    background: "Acolyte",
     attributes: {
       Strength: 0,
       Dexterity: 0,
@@ -84,15 +84,15 @@ const CharacterCreation = () => {
   const [currentDescription, setCurrentDescription] = useState("");
 
   const alignments: any = [
-    "Lawful good",
-    "Neutral good",
-    "Chaotic good",
-    "Lawful neutral",
-    "Chaotic neutral",
-    "True neutral",
-    "Lawful evil",
-    "Chaotic evil",
-    "Neutral evil",
+    "Lawful_good",
+    "Neutral_good",
+    "Chaotic_good",
+    "Lawful_neutral",
+    "Chaotic_neutral",
+    "True_neutral",
+    "Lawful_evil",
+    "Chaotic_evil",
+    "Neutral_evil",
   ];
   const alignmentDescriptions: any = {
     Lawful_good:
@@ -214,9 +214,9 @@ const CharacterCreation = () => {
       "A criminal has a history in breaking the law. They are experienced in stealth, evasion, and the underworld.",
     Entertainer:
       "An entertainer thrives in performing for others. They are skilled in a variety of arts such as music, dance, and comedy.",
-    FolkHero:
+    Folk_hero:
       "A folk hero is a champion of the common people, having performed a great deed or risen from humble beginnings.",
-    GuildArtisan:
+    Guild_artisan:
       "A guild artisan is a member of a trade guild. They are skilled in a specific craft and are familiar with the business aspects of their trade.",
     Hermit:
       "A hermit has lived in seclusion for a significant period. They might have been seeking knowledge, spiritual enlightenment, or hiding from society.",
@@ -233,6 +233,25 @@ const CharacterCreation = () => {
       "An urchin grew up on the streets, alone and impoverished. They have developed the skills to survive in a harsh urban environment.",
   };
   const backgrounds = Object.keys(backgroundDescriptions);
+  const getDescription = (s: number) => {
+    switch (s) {
+      case 0:
+        return raceDescriptions[characterData.race];
+        break;
+      case 1:
+        return classDescriptions[characterData.class];
+        break;
+      case 2:
+        return alignmentDescriptions[characterData.alignment];
+        break;
+      case 3:
+        return attributeDescriptions["Strength"];
+        break;
+      case 4:
+        return backgroundDescriptions[characterData.background];
+        break;
+    }
+  };
   const handleSelection = (key, value) => {
     setCharacterData({ ...characterData, [key]: value });
     let description;
@@ -275,7 +294,10 @@ const CharacterCreation = () => {
       setCurrentDescription("");
     }
   };
-
+  useEffect(() => {
+    setCurrentDescription(getDescription(step));
+    console.log("Setting descr", getDescription(step));
+  }, [step]);
   const renderDialogBox = () => {
     switch (step) {
       case 0:
@@ -334,7 +356,7 @@ const CharacterCreation = () => {
             justifyContent={"space-around"}
           >
             {" "}
-            <Box width={"50%"} maxHeight={"80%"} overflow={"auto"}>
+            <Box width={"25%"} maxHeight={"80%"} overflow={"auto"}>
               <Flex width={"10rem"} direction={"column"}>
                 {classes.map((cls) => (
                   <Tag
@@ -359,7 +381,7 @@ const CharacterCreation = () => {
               height={"fit-content"}
             >
               {characterData.class && (
-                <Image src={`/classes/${characterData.race}.jpg`} />
+                <Image src={`/classes/${characterData.class}.jpg`} />
               )}
             </Box>
             <Box
@@ -374,9 +396,13 @@ const CharacterCreation = () => {
         );
       case 2:
         return (
-          <Flex width={"100%"} paddingTop={"5%"}>
+          <Flex
+            width={"100%"}
+            paddingTop={"5%"}
+            justifyContent={"space-around"}
+          >
             {" "}
-            <Box width={"50%"} maxHeight={"80%"} overflow={"auto"}>
+            <Box width={"25%"} maxHeight={"80%"} overflow={"auto"}>
               <Flex width={"10rem"} direction={"column"}>
                 {alignments.map((cls) => (
                   <Tag
@@ -395,7 +421,22 @@ const CharacterCreation = () => {
                 ))}
               </Flex>
             </Box>
-            <Box width={"50%"}>
+            <Box
+              width={"25%"}
+              border={"1px solid #dddddd"}
+              height={"fit-content"}
+              background={"black"}
+            >
+              {characterData.alignment && (
+                <Image src={`/alignments/${characterData.alignment}.jpeg`} />
+              )}
+            </Box>
+            <Box
+              width={"25%"}
+              border={"1px solid #dddddd"}
+              height={"fit-content"}
+              padding={"1%"}
+            >
               <Text>{currentDescription}</Text>
             </Box>
           </Flex>
@@ -407,9 +448,17 @@ const CharacterCreation = () => {
             justifyContent={"space-around"}
             paddingTop={"2%"}
           >
-            <Flex direction={"column"} align="center" justify="flex-start">
-              <Text mb={4}>Set Attributes</Text>
-              <Flex direction={"column"}>
+            <Flex
+              width={"25%"}
+              direction={"column"}
+              align="center"
+              justify="flex-start"
+            >
+              <Flex
+                direction={"column"}
+                border={"1px solid #dddddd"}
+                padding={"5%"}
+              >
                 {Object.keys(characterData.attributes).map((attribute) => (
                   <Flex key={attribute} mb={2} justifyContent={"space-between"}>
                     <Text
@@ -446,20 +495,43 @@ const CharacterCreation = () => {
                   </Flex>
                 ))}
               </Flex>
-              <Button mt={4} onClick={rollForAttributes}>
+              <Button mt={4} onClick={rollForAttributes} colorScheme="black">
                 Roll for Attributes
               </Button>
             </Flex>
-            <Box width={"50%"}>
+            <Box
+              width={"25%"}
+              border={"1px solid #dddddd"}
+              height={"fit-content"}
+              background={"black"}
+            >
+              {characterData.attributes && (
+                <Image
+                  src={`/attributes/${Object.keys(attributeDescriptions).find(
+                    (key) => attributeDescriptions[key] === currentDescription
+                  )}.jpg`}
+                />
+              )}
+            </Box>
+            <Box
+              width={"25%"}
+              border={"1px solid #dddddd"}
+              height={"fit-content"}
+              padding={"1%"}
+            >
               <Text>{currentDescription}</Text>
             </Box>
           </Flex>
         );
       case 4:
         return (
-          <Flex width={"100%"} paddingTop={"5%"}>
+          <Flex
+            width={"100%"}
+            paddingTop={"5%"}
+            justifyContent={"space-around"}
+          >
             {" "}
-            <Box width={"50%"} maxHeight={"80%"} overflow={"auto"}>
+            <Box width={"25%"} maxHeight={"80%"} overflow={"auto"}>
               <Flex width={"10rem"} direction={"column"}>
                 {backgrounds.map((cls) => (
                   <Tag
@@ -478,7 +550,22 @@ const CharacterCreation = () => {
                 ))}
               </Flex>
             </Box>
-            <Box width={"50%"}>
+            <Box
+              width={"25%"}
+              border={"1px solid #dddddd"}
+              height={"fit-content"}
+              background={"black"}
+            >
+              {characterData.background && (
+                <Image src={`/backgrounds/${characterData.background}.jpg`} />
+              )}
+            </Box>
+            <Box
+              width={"25%"}
+              border={"1px solid #dddddd"}
+              height={"fit-content"}
+              padding={"1%"}
+            >
               <Text>{currentDescription}</Text>
             </Box>
           </Flex>
@@ -501,7 +588,7 @@ const CharacterCreation = () => {
 
   return (
     <Box
-      background={"black"}
+      background={"rgba(0,0,0,0.75)"}
       border={"1px #dddddd solid"}
       padding={"1rem"}
       color={"#dddddd"}

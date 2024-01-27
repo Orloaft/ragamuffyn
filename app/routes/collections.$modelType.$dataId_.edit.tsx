@@ -48,7 +48,7 @@ export default function EditContact() {
       <Center>
         <Box
           style={{ display: "flex", flexDirection: "column" }}
-          background={"black"}
+          background={"rgba(0,0,0,0.75)"}
           border={"1px solid #dddddd"}
           width="50%"
           padding="1rem"

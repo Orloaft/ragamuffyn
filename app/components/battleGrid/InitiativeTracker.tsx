@@ -31,7 +31,7 @@ const InitiativeTracker = ({
   return (
     <>
       <Button
-        background={"black"}
+        background={"rgba(0,0,0,0.75)"}
         color={"#dddddd"}
         onClick={() => setShowInitiative(() => !showInitiative)}
       >
@@ -42,7 +42,7 @@ const InitiativeTracker = ({
           {initiativeOrder.map((i, index) => (
             <Flex key={i.id + index} justifyContent="space-between">
               <NumberInput
-                background="black"
+                background={"rgba(0,0,0,0.75)"}
                 color="#dddddd"
                 width="fit-content"
                 value={i.damageTrack || 0}
@@ -69,7 +69,7 @@ const InitiativeTracker = ({
                 </NumberInputStepper>
               </NumberInput>
               <Tag
-                background={i.tag === currentTurn ? "gray" : "black"}
+                background={i.tag === currentTurn ? "gray" : "rgba(0,0,0,0.75)"}
                 color="#dddddd"
                 padding=".5rem"
                 width="100%"

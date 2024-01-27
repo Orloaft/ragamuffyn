@@ -25,7 +25,7 @@ export default function Index() {
     <Center paddingTop={"5%"}>
       <Box
         p={4}
-        background={"black"}
+        background={"rgba(0,0,0,0.75)"}
         border={"1px #dddddd solid"}
         color={"#dddddd"}
       >

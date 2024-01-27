@@ -234,11 +234,11 @@ const UpdateForm = <T extends { [key: string]: any; items?: string[] }>({
       <Center>
         {" "}
         <Flex>
-          <Button colorScheme="blue" type="submit">
+          <Button colorScheme="black" type="submit">
             Save
           </Button>
           <Button
-            colorScheme="blue"
+            colorScheme="black"
             onClick={(e) => {
               e.preventDefault();
               navigate(-1);

@@ -46,6 +46,7 @@ export default function CollectionsNav({ isVisible, setIsVisible }) {
     { label: "Locations", path: "/collections/locations" },
     { label: "Notes", path: "/collections/notes" },
     { label: "Upload", path: "/collections/upload" },
+    { label: "Log out", path: "/login" },
   ];
   type TabIndexMapping = {
     [key: string]: number;
@@ -91,7 +92,7 @@ export default function CollectionsNav({ isVisible, setIsVisible }) {
         display={isVisible ? "block" : "none"}
       >
         <TabList
-          background={"black"}
+          background={"rgba(0,0,0,0.75)"}
           color="#dddddd"
           height="3rem"
           overflowX={isSmallScreen ? "auto" : "initial"}

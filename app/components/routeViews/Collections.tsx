@@ -30,7 +30,7 @@ export default function CollectionsView({ data, q, model }: any) {
     new URLSearchParams(navigation.location.search).has("q");
   return (
     <Box
-      background={"black"}
+      background={"rgba(0,0,0,0.75)"}
       color="#dddddd"
       padding="1rem"
       height="100vh"
@@ -69,7 +69,7 @@ export default function CollectionsView({ data, q, model }: any) {
             <div id="search-spinner" hidden={!searching} aria-hidden />
           </Form>
           <Form method="post">
-            <Button colorScheme="blue" type="submit">
+            <Button colorScheme="black" type="submit">
               New
             </Button>
           </Form>
