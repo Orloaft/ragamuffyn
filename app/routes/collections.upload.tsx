@@ -22,7 +22,7 @@ export default function Index() {
   };
 
   return (
-    <Center>
+    <Center paddingTop={"5%"}>
       <Box
         p={4}
         background={"black"}

@@ -14,7 +14,7 @@ import {
   Stepper,
   Tag,
   Text,
-  calc,
+  Image,
 } from "@chakra-ui/react";
 
 import React, { useState } from "react";
@@ -39,7 +39,25 @@ const CharacterCreation = () => {
   });
   // Utility function to roll a d6
   const rollDice = () => Math.floor(Math.random() * 6) + 1;
+  const attributeDescriptions: any = {
+    Strength:
+      "Strength is a measure of physical power and brute force. It determines how much weight a character can carry, the damage they can inflict with physical attacks, and their effectiveness in tasks requiring sheer physical force, such as breaking down doors or arm wrestling. Characters with high Strength are typically powerful warriors and are adept at using heavy weapons and armor.",
 
+    Dexterity:
+      "Dexterity assesses agility, reflexes, and balance. This attribute is crucial for characters needing to perform acrobatic feats, stealth movements, or precise actions. It affects a character's ability in ranged combat, their armor class (which represents how hard they are to hit), and skills like sleight of hand and acrobatics. Rogues and archers often have high Dexterity.",
+
+    Constitution:
+      "Constitution represents health, stamina, and vital force. It affects a character's hit points (HP), which determine how much damage they can take before falling unconscious or dying. It also influences their resistance to poison, disease, and other bodily ailments. Characters like frontline fighters and anyone who needs to endure physical hardship benefit from a high Constitution.",
+
+    Intelligence:
+      "Intelligence is a measure of mental acuity, accuracy of recall, and the ability to reason. This attribute is important for wizards and other spellcasters who rely on knowledge to harness magical energies. It influences how many languages a character can learn, the effectiveness of investigation and knowledge-based skills, and the number of spells a magic-user can prepare.",
+
+    Wisdom:
+      "Wisdom reflects how attuned one is to the world around them and represents perceptiveness and intuition. It affects a character's insight into others' intentions, their resistance to mental influence, and their connection to nature or the divine. Clerics, druids, and characters who rely on perception and insight typically have high Wisdom scores.",
+
+    Charisma:
+      "Charisma is the ability to interact effectively with others. It includes factors like confidence, eloquence, and leadership. This attribute influences social interactions, the ability to persuade or deceive, and the effectiveness of certain types of magic. Charismatic characters are often leaders, diplomats, or spellcasters who weave magic through force of personality, like bards and sorcerers.",
+  };
   // Function to handle attribute change
   const handleAttributeChange = (attribute, value) => {
     setCharacterData({
@@ -262,15 +280,21 @@ const CharacterCreation = () => {
     switch (step) {
       case 0:
         return (
-          <Flex width={"100%"} paddingTop={"5%"}>
+          <Flex
+            width={"100%"}
+            paddingTop={"5%"}
+            justifyContent={"space-around"}
+          >
             {" "}
-            <Box width={"50%"} maxHeight={"80%"} overflow={"auto"}>
+            <Box width={"25%"} maxHeight={"80%"} overflow={"auto"}>
               <Flex width={"10rem"} direction={"column"}>
                 {races.map((race) => (
                   <Tag
                     key={race}
-                    color={"#dddddd"}
-                    background={"black"}
+                    color={characterData.race === race ? "black" : "#ddddddd"}
+                    background={
+                      characterData.race === race ? "orange" : "black"
+                    }
                     height={"2rem"}
                     width={"100%"}
                     zIndex={"20"}
@@ -283,14 +307,32 @@ const CharacterCreation = () => {
                 ))}
               </Flex>
             </Box>
-            <Box width={"50%"}>
+            <Box
+              width={"25%"}
+              border={"1px solid #dddddd"}
+              height={"fit-content"}
+            >
+              {characterData.race && (
+                <Image src={`/races/${characterData.race}.jpg`} />
+              )}
+            </Box>
+            <Box
+              width={"25%"}
+              border={"1px solid #dddddd"}
+              height={"fit-content"}
+              padding={"1%"}
+            >
               <Text>{currentDescription}</Text>
             </Box>
           </Flex>
         );
       case 1:
         return (
-          <Flex width={"100%"} paddingTop={"5%"}>
+          <Flex
+            width={"100%"}
+            paddingTop={"5%"}
+            justifyContent={"space-around"}
+          >
             {" "}
             <Box width={"50%"} maxHeight={"80%"} overflow={"auto"}>
               <Flex width={"10rem"} direction={"column"}>
@@ -311,7 +353,21 @@ const CharacterCreation = () => {
                 ))}
               </Flex>
             </Box>
-            <Box width={"50%"}>
+            <Box
+              width={"25%"}
+              border={"1px solid #dddddd"}
+              height={"fit-content"}
+            >
+              {characterData.class && (
+                <Image src={`/classes/${characterData.race}.jpg`} />
+              )}
+            </Box>
+            <Box
+              width={"25%"}
+              border={"1px solid #dddddd"}
+              height={"fit-content"}
+              padding={"1%"}
+            >
               <Text>{currentDescription}</Text>
             </Box>
           </Flex>
@@ -348,34 +404,55 @@ const CharacterCreation = () => {
         return (
           <Flex
             width={"100%"}
-            direction={"column"}
-            align="center"
-            justify="flex-start"
+            justifyContent={"space-around"}
+            paddingTop={"2%"}
           >
-            <Text mb={4}>Set Attributes</Text>
-            <Flex direction={"column"}>
-              {Object.keys(characterData.attributes).map((attribute) => (
-                <Flex key={attribute} mb={2} justifyContent={"space-between"}>
-                  <Text width={"30%"} mr={2}>
-                    {attribute}:
-                  </Text>
-                  <Input
-                    width={"20%"}
-                    type="number"
-                    value={characterData.attributes[attribute]}
-                    onChange={(e) =>
-                      handleAttributeChange(attribute, parseInt(e.target.value))
-                    }
-                  />{" "}
-                  <Text width={"30%"} mr={2}>
-                    {calculateModifier(characterData.attributes[attribute])}:
-                  </Text>
-                </Flex>
-              ))}
+            <Flex direction={"column"} align="center" justify="flex-start">
+              <Text mb={4}>Set Attributes</Text>
+              <Flex direction={"column"}>
+                {Object.keys(characterData.attributes).map((attribute) => (
+                  <Flex key={attribute} mb={2} justifyContent={"space-between"}>
+                    <Text
+                      width={"30%"}
+                      mr={2}
+                      cursor={"pointer"}
+                      border={
+                        currentDescription === attributeDescriptions[attribute]
+                          ? "1px solid #dddddd"
+                          : ""
+                      }
+                      onClick={() =>
+                        setCurrentDescription(
+                          () => attributeDescriptions[attribute]
+                        )
+                      }
+                    >
+                      {attribute}:
+                    </Text>
+                    <Input
+                      width={"20%"}
+                      type="number"
+                      value={characterData.attributes[attribute]}
+                      onChange={(e) =>
+                        handleAttributeChange(
+                          attribute,
+                          parseInt(e.target.value)
+                        )
+                      }
+                    />{" "}
+                    <Text width={"30%"} mr={2}>
+                      {calculateModifier(characterData.attributes[attribute])}:
+                    </Text>
+                  </Flex>
+                ))}
+              </Flex>
+              <Button mt={4} onClick={rollForAttributes}>
+                Roll for Attributes
+              </Button>
             </Flex>
-            <Button mt={4} onClick={rollForAttributes}>
-              Roll for Attributes
-            </Button>
+            <Box width={"50%"}>
+              <Text>{currentDescription}</Text>
+            </Box>
           </Flex>
         );
       case 4:
@@ -469,6 +546,9 @@ const CharacterCreation = () => {
         </Button>{" "}
         <Button onClick={handleForward} background={"black"} color={"#dddddd"}>
           Next
+        </Button>
+        <Button onClick={handleForward} background={"black"} color={"#dddddd"}>
+          Save
         </Button>
       </Flex>
     </Box>

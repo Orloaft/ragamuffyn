@@ -83,11 +83,14 @@ const Document = withEmotionCache(
         </head>
         <body
           style={{
-            background: `url("/oig.jpg")`,
+            height: "100vh",
+            width: "100vw",
+            background: `url("/oig.png")`,
             backgroundAttachment: "fixed",
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center",
+            overflow: "auto",
           }}
         >
           {children}
